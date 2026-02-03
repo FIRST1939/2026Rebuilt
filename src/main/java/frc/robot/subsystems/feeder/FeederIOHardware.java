@@ -4,5 +4,5 @@ import com.revrobotics.spark.SparkFlex;
 
 public class FeederIOHardware implements FeederIO {
     
-    protected final SparkFlex m_motor;
+    protected final SparkFlex m_motor = new SparkFlex(0, null);
 }
