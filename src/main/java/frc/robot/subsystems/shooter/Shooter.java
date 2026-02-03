@@ -4,16 +4,20 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Shooter extends SubsystemBase {
 
-    public void setShooterVelocity () {
-
-    }
-
-    public void setShooterPercentage () {
+    public void setFlywheelPercentage () {
         
     }
 
-    public void getShooterVelocity () {
+    public void setFlywheelVelocity () {
 
+    }
+
+    public void getFlywheelVelocity () {
+
+    }
+
+    public void setHoodPercentage () {
+        
     }
 
     public void setHoodPosition () {

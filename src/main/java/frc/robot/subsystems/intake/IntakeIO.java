@@ -15,4 +15,8 @@ public interface IntakeIO {
     }
 
     public default void updateInputs (IntakeIOInputs inputs) {}
+    public default void setRollerPercentage (double percent) {}
+    public default void setRollerVelocity (double velocity) {}
+    public default void setPivotPercentage (double percent) {}
+    public default void setPivotPosition (double position) {}
 }
