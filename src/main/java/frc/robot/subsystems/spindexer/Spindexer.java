@@ -4,6 +4,10 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Spindexer extends SubsystemBase {
  
+    public void setSpindexerPercentage () {
+    
+    }
+
     public void setSpindexerVelocity () {
 
     }
@@ -11,13 +15,4 @@ public class Spindexer extends SubsystemBase {
     public void getSpindexerVelocity () {
     
     }
-
-    public void setSpindexerPercentage () {
-    
-    }
-
-    public void getSpindexerPercentage () {
-    
-    }
-
 }

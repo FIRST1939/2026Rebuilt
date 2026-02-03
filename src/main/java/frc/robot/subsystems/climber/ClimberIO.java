@@ -15,4 +15,6 @@ public interface ClimberIO {
     }
 
     public default void updateInputs (ClimberIOInputs inputs) {}
+    public default void setClimerPercentage (double percent) {}
+    public default void setClimberPosition (double position) {}
 }

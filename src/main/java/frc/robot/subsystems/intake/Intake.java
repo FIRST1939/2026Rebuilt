@@ -4,6 +4,10 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Intake extends SubsystemBase {
 
+    public void setRollerPercentage () {
+
+    }
+
     public void setRollerVelocity () {
 
     }
@@ -12,29 +16,16 @@ public class Intake extends SubsystemBase {
     
     }
 
-    public void setIntakePosition () {
-
-    }
-    
-    public void getIntakePosition () {
+    public void setPivotPercentage () {
     
     }
 
-    public void setIntakePercentage () {
-    
-    }
-    
-    public void setRollerPercentage () {
+    public void setPivotPosition () {
 
     }
-
-    public void getIntakePercentage () {
+    
+    public void getPivotPosition () {
     
     }
-    
-    public void getRollerPercentage () {
-        
-    }
-    
 }
 

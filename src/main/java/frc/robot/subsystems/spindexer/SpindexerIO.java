@@ -15,4 +15,6 @@ public interface SpindexerIO {
     }
 
     public default void updateInputs (SpindexerIOInputs inputs) {}
+    public default void setSpindexerPercentage (double percent) {}
+    public default void setSpindexerVelocity (double velocity) {}
 }
