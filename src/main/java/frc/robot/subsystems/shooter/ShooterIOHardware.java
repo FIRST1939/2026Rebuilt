@@ -5,9 +5,9 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 
 public class ShooterIOHardware implements ShooterIO {
     
-    protected final SparkFlex m_flywheelOne = new SparkFlex(ShooterConstants.flywheelOneCan, MotorType.kBrushless);
+    protected final SparkFlex m_flywheelOne = new SparkFlex(ShooterConstants.kFlywheelOneCAN, MotorType.kBrushless);
 
-    protected final SparkFlex m_flywheelTwo = new SparkFlex(ShooterConstants.flywheelTwoCan, MotorType.kBrushless);
+    protected final SparkFlex m_flywheelTwo = new SparkFlex(ShooterConstants.kFlywheelTwoCAN, MotorType.kBrushless);
 
-    protected final SparkFlex m_hood = new SparkFlex(ShooterConstants.hoodCan, MotorType.kBrushless);
+    protected final SparkFlex m_hood = new SparkFlex(ShooterConstants.kHoodCAN, MotorType.kBrushless);
 }
