@@ -8,6 +8,10 @@ public class Shooter extends SubsystemBase {
 
     }
 
+    public void setShooterPercentage () {
+        
+    }
+
     public void getShooterVelocity () {
 
     }
@@ -17,7 +21,7 @@ public class Shooter extends SubsystemBase {
     }
 
     public void getHoodPosition () {
-        
+
     }
     
 }
