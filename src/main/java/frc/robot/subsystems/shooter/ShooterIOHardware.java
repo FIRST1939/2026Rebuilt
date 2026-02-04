@@ -19,17 +19,17 @@ public class ShooterIOHardware implements ShooterIO {
     @Override
     public void updateInputs (ShooterIOInputs inputs) {
 
-        inputs.flywheelOnePosition = m_flywheelLeaderEncoder.getPosition();
-        inputs.flyWheelOneVelocity = m_flywheelLeaderEncoder.getVelocity();
-        inputs.flywheelOneVoltage = m_flywheelLeader.getAppliedOutput() * m_flywheelLeader.getBusVoltage();
-        inputs.flywheelOneCurrent = m_flywheelLeader.getOutputCurrent();
-        inputs.flywheelOneTemperature = m_flywheelLeader.getMotorTemperature();
+        inputs.flywheelLeaderPosition = m_flywheelLeaderEncoder.getPosition();
+        inputs.flyWheelLeaderVelocity = m_flywheelLeaderEncoder.getVelocity();
+        inputs.flywheelLeaderVoltage = m_flywheelLeader.getAppliedOutput() * m_flywheelLeader.getBusVoltage();
+        inputs.flywheelLeaderCurrent = m_flywheelLeader.getOutputCurrent();
+        inputs.flywheelLeaderTemperature = m_flywheelLeader.getMotorTemperature();
 
-        inputs.flywheelTwoPosition = m_flywheelFollowerEncoder.getPosition();
-        inputs.flyWheelTwoVelocity = m_flywheelFollowerEncoder.getVelocity();
-        inputs.flywheelTwoVoltage = m_flywheelFollower.getAppliedOutput() * m_flywheelFollower.getBusVoltage();
-        inputs.flywheelTwoCurrent = m_flywheelFollower.getOutputCurrent();
-        inputs.flywheelTwoTemperature = m_flywheelFollower.getMotorTemperature();
+        inputs.flywheelFollowerPosition = m_flywheelFollowerEncoder.getPosition();
+        inputs.flyWheelFollowerVelocity = m_flywheelFollowerEncoder.getVelocity();
+        inputs.flywheelFollowerVoltage = m_flywheelFollower.getAppliedOutput() * m_flywheelFollower.getBusVoltage();
+        inputs.flywheelFollowerCurrent = m_flywheelFollower.getOutputCurrent();
+        inputs.flywheelFollowerTemperature = m_flywheelFollower.getMotorTemperature();
 
         inputs.hoodPosition = m_hoodEncoder.getPosition();
         inputs.hoodVelocity = m_hoodEncoder.getVelocity();
