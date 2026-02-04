@@ -7,11 +7,23 @@ public interface IntakeIO {
     @AutoLog
     public static class IntakeIOInputs {
         
-        public double intakePosition = 0.0;
-        public double intakeVelocity = 0.0;
-        public double intakeVoltage = 0.0;
-        public double intakeCurrent = 0.0;
-        public double intakeTemperature = 0.0;
+        public double rollerPosition = 0.0;
+        public double rollerVelocity = 0.0;
+        public double rollerVoltage = 0.0;
+        public double rollerCurrent = 0.0;
+        public double rollerTemperature = 0.0;
+
+        public double pivotLeaderPosition = 0.0;
+        public double pivotLeaderVelocity = 0.0;
+        public double pivotLeaderVoltage = 0.0;
+        public double pivotLeaderCurrent = 0.0;
+        public double pivotLeaderTemperature = 0.0;
+
+        public double pivotFollowerPosition = 0.0;
+        public double pivotFollowerVelocity = 0.0;
+        public double pivotFollowerVoltage = 0.0;
+        public double pivotFollowerCurrent = 0.0;
+        public double pivotFollowerTemperature = 0.0;
     }
 
     public default void updateInputs (IntakeIOInputs inputs) {}
