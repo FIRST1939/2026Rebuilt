@@ -10,9 +10,10 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Spindexer.runSpindexer;
 import frc.robot.subsystems.spindexer.Spindexer;
+import frc.robot.subsystems.spindexer.SpindexerIOHardware;
 
 public class RobotContainer {
-  private final Spindexer spindexer = new Spindexer ();
+  private final Spindexer spindexer = new Spindexer (new SpindexerIOHardware());
   private final runSpindexer spindexer_cmd = new runSpindexer(spindexer, 0.5);
   private final CommandXboxController m_driverController =
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
