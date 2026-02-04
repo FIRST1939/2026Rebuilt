@@ -4,15 +4,13 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
-import frc.robot.subsystems.climber.ClimberIO.ClimberIOInputs;
-
 public class ShooterIOHardware implements ShooterIO {
     
-    protected final SparkFlex m_flywheelOne = new SparkFlex(ShooterConstants.kFlywheelOneCAN, MotorType.kBrushless);
-    protected final RelativeEncoder m_flywheelOneEncoder = m_flywheelOne.getEncoder();
+    protected final SparkFlex m_flywheelLeader = new SparkFlex(ShooterConstants.kFlywheelLeaderCAN, MotorType.kBrushless);
+    protected final RelativeEncoder m_flywheelLeaderEncoder = m_flywheelLeader.getEncoder();
 
-    protected final SparkFlex m_flywheelTwo = new SparkFlex(ShooterConstants.kFlywheelTwoCAN, MotorType.kBrushless);
-    protected final RelativeEncoder m_flywheelTwoEncoder = m_flywheelTwo.getEncoder();
+    protected final SparkFlex m_flywheelFollower = new SparkFlex(ShooterConstants.kFlywheelFollowerCAN, MotorType.kBrushless);
+    protected final RelativeEncoder m_flywheelFollowerEncoder = m_flywheelFollower.getEncoder();
 
     protected final SparkFlex m_hood = new SparkFlex(ShooterConstants.kHoodCAN, MotorType.kBrushless);
     protected final RelativeEncoder m_hoodEncoder = m_hood.getEncoder();
@@ -21,17 +19,17 @@ public class ShooterIOHardware implements ShooterIO {
     @Override
     public void updateInputs (ShooterIOInputs inputs) {
 
-        inputs.flywheelOnePosition = m_flywheelOneEncoder.getPosition();
-        inputs.flyWheelOneVelocity = m_flywheelOneEncoder.getVelocity();
-        inputs.flywheelOneVoltage = m_flywheelOne.getAppliedOutput() * m_flywheelOne.getBusVoltage();
-        inputs.flywheelOneCurrent = m_flywheelOne.getOutputCurrent();
-        inputs.flywheelOneTemperature = m_flywheelOne.getMotorTemperature();
+        inputs.flywheelOnePosition = m_flywheelLeaderEncoder.getPosition();
+        inputs.flyWheelOneVelocity = m_flywheelLeaderEncoder.getVelocity();
+        inputs.flywheelOneVoltage = m_flywheelLeader.getAppliedOutput() * m_flywheelLeader.getBusVoltage();
+        inputs.flywheelOneCurrent = m_flywheelLeader.getOutputCurrent();
+        inputs.flywheelOneTemperature = m_flywheelLeader.getMotorTemperature();
 
-        inputs.flywheelTwoPosition = m_flywheelTwoEncoder.getPosition();
-        inputs.flyWheelTwoVelocity = m_flywheelTwoEncoder.getVelocity();
-        inputs.flywheelTwoVoltage = m_flywheelTwo.getAppliedOutput() * m_flywheelTwo.getBusVoltage();
-        inputs.flywheelTwoCurrent = m_flywheelTwo.getOutputCurrent();
-        inputs.flywheelTwoTemperature = m_flywheelTwo.getMotorTemperature();
+        inputs.flywheelTwoPosition = m_flywheelFollowerEncoder.getPosition();
+        inputs.flyWheelTwoVelocity = m_flywheelFollowerEncoder.getVelocity();
+        inputs.flywheelTwoVoltage = m_flywheelFollower.getAppliedOutput() * m_flywheelFollower.getBusVoltage();
+        inputs.flywheelTwoCurrent = m_flywheelFollower.getOutputCurrent();
+        inputs.flywheelTwoTemperature = m_flywheelFollower.getMotorTemperature();
 
         inputs.hoodPosition = m_hoodEncoder.getPosition();
         inputs.hoodVelocity = m_hoodEncoder.getVelocity();
@@ -43,7 +41,7 @@ public class ShooterIOHardware implements ShooterIO {
     @Override
     public void setFlywheelPercentage (double percent) {
 
-        m_flywheelOne.set(percent);
-        m_flywheelTwo.set(percent * -1);
+        m_flywheelLeader.set(percent);
+        m_flywheelFollower.set(percent * -1);
     }
 }
