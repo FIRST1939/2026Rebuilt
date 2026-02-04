@@ -26,7 +26,7 @@ public class ShooterIOHardware implements ShooterIO {
         inputs.flywheelLeaderTemperature = m_flywheelLeader.getMotorTemperature();
 
         inputs.flywheelFollowerPosition = m_flywheelFollowerEncoder.getPosition();
-        inputs.flyWheelFollowerVelocity = m_flywheelFollowerEncoder.getVelocity();
+        inputs.flywheelFollowerVelocity = m_flywheelFollowerEncoder.getVelocity();
         inputs.flywheelFollowerVoltage = m_flywheelFollower.getAppliedOutput() * m_flywheelFollower.getBusVoltage();
         inputs.flywheelFollowerCurrent = m_flywheelFollower.getOutputCurrent();
         inputs.flywheelFollowerTemperature = m_flywheelFollower.getMotorTemperature();

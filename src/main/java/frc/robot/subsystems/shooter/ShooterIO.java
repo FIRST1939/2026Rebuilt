@@ -19,7 +19,7 @@ public interface ShooterIO {
         public double flywheelLeaderCurrent = 0.0;
         public double flywheelLeaderTemperature = 0.0;
 
-        public double flyWheelFollowerVelocity = 0.0;
+        public double flywheelFollowerVelocity = 0.0;
         public double flywheelFollowerPosition = 0.0;
         public double flywheelFollowerVoltage = 0.0;
         public double flywheelFollowerCurrent = 0.0;
