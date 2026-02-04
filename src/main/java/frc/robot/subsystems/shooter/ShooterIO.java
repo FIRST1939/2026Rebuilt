@@ -7,7 +7,6 @@ public interface ShooterIO {
     @AutoLog
     public static class ShooterIOInputs {
         
-       
         public double hoodPosition = 0.0;
         public double hoodVelocity = 0.0;
         public double hoodVoltage = 0.0;
