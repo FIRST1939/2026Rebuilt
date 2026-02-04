@@ -26,7 +26,12 @@ public class Climber extends SubsystemBase {
         m_io.setClimberPercentage(percent);
     }
     
-    public void setClimberPosition() {
+    public void setClimberPosition(double position) {
+        m_io.setClimberPosition(position);
+    }
+
+    public double getClimberPosition() {
+        return this.m_inputs.climberPosition;
     }
 
 }
