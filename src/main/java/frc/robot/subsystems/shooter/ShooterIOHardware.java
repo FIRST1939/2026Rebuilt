@@ -20,7 +20,7 @@ public class ShooterIOHardware implements ShooterIO {
     public void updateInputs (ShooterIOInputs inputs) {
 
         inputs.flywheelLeaderPosition = m_flywheelLeaderEncoder.getPosition();
-        inputs.flyWheelLeaderVelocity = m_flywheelLeaderEncoder.getVelocity();
+        inputs.flywheelLeaderVelocity = m_flywheelLeaderEncoder.getVelocity();
         inputs.flywheelLeaderVoltage = m_flywheelLeader.getAppliedOutput() * m_flywheelLeader.getBusVoltage();
         inputs.flywheelLeaderCurrent = m_flywheelLeader.getOutputCurrent();
         inputs.flywheelLeaderTemperature = m_flywheelLeader.getMotorTemperature();

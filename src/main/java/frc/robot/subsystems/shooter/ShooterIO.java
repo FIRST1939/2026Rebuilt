@@ -12,11 +12,13 @@ public interface ShooterIO {
         public double hoodVoltage = 0.0;
         public double hoodCurrent = 0.0;
         public double hoodTemperature = 0.0;
+
         public double flywheelLeaderPosition = 0.0;
-        public double flyWheelLeaderVelocity = 0.0;
+        public double flywheelLeaderVelocity = 0.0;
         public double flywheelLeaderVoltage = 0.0;
         public double flywheelLeaderCurrent = 0.0;
         public double flywheelLeaderTemperature = 0.0;
+
         public double flyWheelFollowerVelocity = 0.0;
         public double flywheelFollowerPosition = 0.0;
         public double flywheelFollowerVoltage = 0.0;
