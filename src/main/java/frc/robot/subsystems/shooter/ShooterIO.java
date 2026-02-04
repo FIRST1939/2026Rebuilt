@@ -7,11 +7,22 @@ public interface ShooterIO {
     @AutoLog
     public static class ShooterIOInputs {
         
-        public double shooterPosition = 0.0;
-        public double shooterVelocity = 0.0;
-        public double shooterVoltage = 0.0;
-        public double shooterCurrent = 0.0;
-        public double shooterTemperature = 0.0;
+       
+        public double hoodPosition = 0.0;
+        public double hoodVelocity = 0.0;
+        public double hoodVoltage = 0.0;
+        public double hoodCurrent = 0.0;
+        public double hoodTemperature = 0.0;
+        public double flywheelLeaderPosition = 0.0;
+        public double flyWheelLeaderVelocity = 0.0;
+        public double flywheelLeaderVoltage = 0.0;
+        public double flywheelLeaderCurrent = 0.0;
+        public double flywheelLeaderTemperature = 0.0;
+        public double flyWheelFollowerVelocity = 0.0;
+        public double flywheelFollowerPosition = 0.0;
+        public double flywheelFollowerVoltage = 0.0;
+        public double flywheelFollowerCurrent = 0.0;
+        public double flywheelFollowerTemperature = 0.0;
     }
 
     public default void updateInputs (ShooterIOInputs inputs) {}
