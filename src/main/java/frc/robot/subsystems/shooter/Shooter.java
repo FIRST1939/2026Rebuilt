@@ -3,8 +3,6 @@ package frc.robot.subsystems.shooter;
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.subsystems.climber.ClimberIO;
-import frc.robot.subsystems.climber.ClimberIOInputsAutoLogged;
 
 
 public class Shooter extends SubsystemBase {
@@ -16,6 +14,7 @@ public class Shooter extends SubsystemBase {
         m_io = io;
     }
 
+    @Override    
     public void periodic () {
 
         m_io.updateInputs(m_inputs);
@@ -23,22 +22,24 @@ public class Shooter extends SubsystemBase {
     }
 
     public void setFlywheelPercentage (double percent) {
+        m_io.setFlywheelPercentage(percent);
     }
 
     public void setFlywheelVelocity (double percent) {
+        m_io.setFlywheelVelocity(percent);
+    }
+
+    public void getFlywheelPercentage () {
 
     }
 
-    public void getFlywheelVelocity () {
-
-    }
 
     public void setHoodPercentage (double percent) {
-        
+        m_io.setHoodPercentage(percent);
     }
 
     public void setHoodPosition (double percent) {
-
+        m_io.setHoodPosition(percent);
     }
 
     public void getHoodPosition () {
