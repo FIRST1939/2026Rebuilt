@@ -37,11 +37,4 @@ public class ShooterIOHardware implements ShooterIO {
         inputs.hoodCurrent = m_hood.getOutputCurrent();
         inputs.hoodTemperature = m_hood.getMotorTemperature();
     }
-
-    @Override
-    public void setFlywheelPercentage (double percent) {
-
-        m_flywheelLeader.set(percent);
-        m_flywheelFollower.set(percent * -1);
-    }
 }
