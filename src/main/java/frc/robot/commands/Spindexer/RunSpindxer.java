@@ -8,8 +8,7 @@ import frc.robot.subsystems.spindexer.*;
 import edu.wpi.first.wpilibj2.command.Command;
 
 /** An example command that uses an example subsystem. */
-public class runSpindexer extends Command {
-  @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
+public class RunSpindxer extends Command {
   private final Spindexer m_subsystem;
   private final double m_percent;
 
@@ -18,7 +17,7 @@ public class runSpindexer extends Command {
    *
    * @param subsystem The subsystem used by this command.
    */
-  public runSpindexer(Spindexer subsystem, double percent) {
+  public RunSpindxer(Spindexer subsystem, double percent) {
     m_subsystem = subsystem;
     m_percent = percent;
     // Use addRequirements() here to declare subsystem dependencies.
@@ -38,7 +37,7 @@ public class runSpindexer extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-   m_subsystem.setSpindexerPercentage(m_percent);
+   m_subsystem.setSpindexerPercentage(0.0);
   }
 
   // Returns true when the command should end.
