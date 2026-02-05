@@ -16,47 +16,33 @@ public class Shooter extends SubsystemBase {
 
     @Override    
     public void periodic () {
-
         m_io.updateInputs(m_inputs);
         Logger.processInputs("Shooter", m_inputs);
-
     }
 
     public void setFlywheelPercentage (double percent) {
-
         m_io.setFlywheelPercentage(percent);
-
     }
 
     public void setFlywheelVelocity (double percent) {
-
         m_io.setFlywheelVelocity(percent);
-
     }
 
     public double getFlywheelVelocity () {
-
         return this.m_inputs.flywheelLeaderVelocity;
-
     }
 
 
     public void setHoodPercentage (double percent) {
-
         m_io.setHoodPercentage(percent);
-
     }
 
     public void setHoodPosition (double percent) {
-
         m_io.setHoodPosition(percent);
-
     }
 
     public double getHoodPosition () {
-
-        return this.m_inputs.hoodPosition;
-        
+        return this.m_inputs.hoodPosition;   
     }
     
 }
