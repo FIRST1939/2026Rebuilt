@@ -1,8 +1,15 @@
 package frc.robot.subsystems.intake;
 
+import com.revrobotics.PersistMode;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.ResetMode;
+import com.revrobotics.spark.ClosedLoopSlot;
+import com.revrobotics.spark.SparkBase.ControlType;
+import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.config.SparkFlexConfig;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 public class IntakeIOHardware implements IntakeIO {
     
@@ -12,6 +19,25 @@ public class IntakeIOHardware implements IntakeIO {
     protected final RelativeEncoder m_rollerEncoder = m_roller.getEncoder();
     protected final RelativeEncoder m_pivotLeaderEncoder = m_pivotLeader.getEncoder();
     protected final RelativeEncoder m_pivotFollowerEncoder = m_pivotFollower.getEncoder();
+    protected final SparkClosedLoopController m_pivotController = m_pivotLeader.getClosedLoopController();
+    protected final SparkClosedLoopController m_rollerController = m_roller.getClosedLoopController();
+
+    public IntakeIOHardware () {
+
+        SparkFlexConfig config = new SparkFlexConfig();
+
+        config
+            .idleMode(IdleMode.kBrake)
+            .smartCurrentLimit(IntakeConstants.kRollerCurrentLimit);
+
+        config.encoder
+        .positionConversionFactor(1.0 / IntakeConstants.kRollerGearReduction)
+        .velocityConversionFactor(1.0 / IntakeConstants.kRollerGearReduction)
+        .inverted(IntakeConstants.kInverted);
+
+        m_roller.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        
+    }
 
     @Override
     public void updateInputs (IntakeIOInputs inputs) {
@@ -33,5 +59,15 @@ public class IntakeIOHardware implements IntakeIO {
         inputs.rollerPosition = m_pivotFollowerEncoder.getPosition();
         inputs.rollerVoltage = m_pivotFollower.getAppliedOutput() * m_pivotFollower.getBusVoltage();
         inputs.rollerTemperature = m_pivotFollower.getMotorTemperature();
+    }
+
+    @Override
+    public void setPivotPosition (double position) {
+        m_pivotController.setSetpoint(position, ControlType.kMAXMotionPositionControl, ClosedLoopSlot.kSlot0, 0.0);
+    }
+
+    @Override
+    public void setRollerVelocity (double velocity) {
+        m_rollerController.setSetpoint(velocity, ControlType.kVelocity, ClosedLoopSlot.kSlot0, 0.0);
     }
 }
