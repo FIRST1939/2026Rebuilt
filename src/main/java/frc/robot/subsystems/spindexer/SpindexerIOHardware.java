@@ -7,11 +7,13 @@ import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkFlexConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+import com.revrobotics.spark.SparkClosedLoopController;
 
 public class SpindexerIOHardware implements SpindexerIO {
 
     protected final SparkFlex m_motor = new SparkFlex(SpindexerConstants.kSpindexerCAN, MotorType.kBrushless);
     protected final RelativeEncoder m_encoder = m_motor.getEncoder(); 
+    protected final SparkClosedLoopController m_controller = m_motor.getClosedLoopController();
 
     public SpindexerIOHardware() {
 
@@ -27,8 +29,6 @@ public class SpindexerIOHardware implements SpindexerIO {
             .inverted(SpindexerConstants.kInverted);
 
         m_motor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-
-
 
     }
 
