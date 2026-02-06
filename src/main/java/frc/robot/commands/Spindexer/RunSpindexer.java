@@ -8,7 +8,7 @@ import frc.robot.subsystems.spindexer.*;
 import edu.wpi.first.wpilibj2.command.Command;
 
 /** An example command that uses an example subsystem. */
-public class RunSpindxer extends Command {
+public class RunSpindexer extends Command {
   private final Spindexer m_subsystem;
   private final double m_percent;
 
@@ -17,7 +17,7 @@ public class RunSpindxer extends Command {
    *
    * @param subsystem The subsystem used by this command.
    */
-  public RunSpindxer(Spindexer subsystem, double percent) {
+  public RunSpindexer(Spindexer subsystem, double percent) {
     m_subsystem = subsystem;
     m_percent = percent;
     // Use addRequirements() here to declare subsystem dependencies.
