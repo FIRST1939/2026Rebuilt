@@ -1,13 +1,17 @@
 package frc.robot.subsystems.feeder;
 
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.spark.ClosedLoopSlot;
+import com.revrobotics.spark.SparkBase.ControlType;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkFlex;
 
 public class FeederIOHardware implements FeederIO {
     
-    protected final SparkFlex m_motor = new SparkFlex(0, null);
+    protected final SparkFlex m_motor = new SparkFlex(FeederConstants.kFeederCAN, MotorType.kBrushless);
      protected final RelativeEncoder m_encoder = m_motor.getEncoder();
-
+  protected final SparkClosedLoopController m_controller = m_motor.getClosedLoopController(); 
       @Override
     public void updateInputs (FeederIOInputs inputs) {
 
@@ -22,6 +26,13 @@ public class FeederIOHardware implements FeederIO {
     public void setFeederPercentage (double percent) {
 
         m_motor.set(percent);
+    }
+
+       @Override 
+    public void setFeederVelocity (double velocity) {
+        // Use the PID gains in slot 0 for position control
+        // TODO make a constant?
+        m_controller.setSetpoint(velocity, ControlType.kVelocity, ClosedLoopSlot.kSlot0);
     }
 }
 
