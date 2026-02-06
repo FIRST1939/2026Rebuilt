@@ -5,6 +5,7 @@ import java.lang.ModuleLayer.Controller;
 import com.revrobotics.PersistMode;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.ResetMode;
+import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkBase.ControlType;
@@ -91,11 +92,11 @@ public class ShooterIOHardware implements ShooterIO {
     @Override
     public void setFlywheelPercentage (double percent) {
 
-        m_flywheelController.setSetpoint(percent, ControlType.kMAXMotionVelocityControl);
+        m_flywheelController.setSetpoint(percent, ControlType.kMAXMotionVelocityControl, ClosedLoopSlot.kSlot0);
     }
 
     @Override
     public void setHoodPosition (double position) {
-        m_flywheelController.setSetpoint(position, ControlType.kMAXMotionPositionControl);
+        m_flywheelController.setSetpoint(position, ControlType.kMAXMotionPositionControl, ClosedLoopSlot.kSlot0);
     }    
 }
