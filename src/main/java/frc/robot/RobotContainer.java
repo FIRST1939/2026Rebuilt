@@ -16,7 +16,7 @@ import frc.robot.subsystems.feeder.*;
 public class RobotContainer {
   private final Spindexer spindexer = new Spindexer (new SpindexerIOHardware());
   private final Feeder feeder = new Feeder (new FeederIOHardware());
-  private final RunSpindxer spindexerRunOutput = new RunSpindxer(spindexer, 2400);
+  private final RunSpindexer spindexerRunOutput = new RunSpindexer(spindexer, 2400);
   private final RunFeeder feederRunOutput = new RunFeeder (feeder, 2400);
   private final CommandXboxController m_driverController =
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
