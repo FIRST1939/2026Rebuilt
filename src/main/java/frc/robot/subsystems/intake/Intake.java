@@ -1,16 +1,14 @@
 package frc.robot.subsystems.intake;
-
 import org.littletonrobotics.junction.Logger;
-
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
 public class Intake extends SubsystemBase {
 
     private final IntakeIO m_io;
     private final IntakeIOInputsAutoLogged m_inputs = new IntakeIOInputsAutoLogged();
 
-
+    
     public Intake (IntakeIO io) {
-
         m_io = io;
     }
 
@@ -45,5 +43,6 @@ public class Intake extends SubsystemBase {
     public double getPivotPosition () {
         return ((this.m_inputs.pivotLeaderPosition + this.m_inputs.pivotFollowerPosition) / 2);
     }
+
 }
 
