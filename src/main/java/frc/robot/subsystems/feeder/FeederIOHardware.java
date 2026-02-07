@@ -32,7 +32,7 @@ public class FeederIOHardware implements FeederIO {
     public void setFeederVelocity (double velocity) {
         // Use the PID gains in slot 0 for position control
         // TODO make a constant?
-        m_controller.setSetpoint(velocity, ControlType.kVelocity, ClosedLoopSlot.kSlot0);
+        m_controller.setSetpoint(velocity, ControlType.kVelocity, ClosedLoopSlot.kSlot0, 0.0);
     }
 }
 
