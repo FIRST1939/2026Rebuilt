@@ -1,5 +1,5 @@
 package frc.robot.subsystems.intake;
-import static edu.wpi.first.units.Units.Radians;
+import static edu.wpi.first.units.Units.Rotations;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 import static edu.wpi.first.units.Units.Seconds;
 import static edu.wpi.first.units.Units.Volts;
@@ -32,7 +32,7 @@ public class Intake extends SubsystemBase {
                     log
                         .motor("intakeRoller")
                         .voltage(Volts.of(this.m_inputs.rollerVoltage))
-                        .angularPosition(Radians.of(this.m_inputs.rollerPosition))
+                        .angularPosition(Rotations.of(this.m_inputs.rollerPosition))
                         .angularVelocity(RotationsPerSecond.of(this.m_inputs.rollerVelocity));
                 },
                 this, 
@@ -76,7 +76,7 @@ public class Intake extends SubsystemBase {
         this.m_io.setRollerVoltage(magnitude);
     }
     
-     public Command sysIdQuasistaticForward() {
+    public Command sysIdQuasistaticForward() {
         return sysIdRoutine.quasistatic(SysIdRoutine.Direction.kForward);
     }
 
