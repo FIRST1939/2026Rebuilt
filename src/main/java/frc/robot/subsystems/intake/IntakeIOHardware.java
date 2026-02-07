@@ -62,6 +62,19 @@ public class IntakeIOHardware implements IntakeIO {
     }
 
     @Override
+    public void setPivotPercentage (double percent) {
+
+        m_pivotLeader.set(percent);
+        m_pivotFollower.set(-(percent));
+    }
+
+    @Override
+    public void setRollerPercentage (double percent) {
+
+        m_roller.set(percent);
+    }
+
+    @Override
     public void setPivotPosition (double position) {
         m_pivotController.setSetpoint(position, ControlType.kMAXMotionPositionControl, ClosedLoopSlot.kSlot0, 0.0);
     }
