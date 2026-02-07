@@ -68,6 +68,6 @@ public class IntakeIOHardware implements IntakeIO {
 
     @Override
     public void setRollerVelocity (double velocity) {
-        m_rollerController.setSetpoint(velocity, ControlType.kVelocity, ClosedLoopSlot.kSlot0, 0.0);
+        m_rollerController.setSetpoint(velocity, ControlType.kMAXMotionVelocityControl, ClosedLoopSlot.kSlot0, 0.0);
     }
 }
