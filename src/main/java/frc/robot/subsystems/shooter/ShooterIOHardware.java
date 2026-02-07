@@ -94,6 +94,6 @@ public class ShooterIOHardware implements ShooterIO {
 
     @Override
     public void setHoodPosition (double position) {
-        m_flywheelController.setSetpoint(position, ControlType.kPositionControl, ClosedLoopSlot.kSlot0);
+        m_flywheelController.setSetpoint(position, ControlType.kPosition, ClosedLoopSlot.kSlot0);
     }    
 }
