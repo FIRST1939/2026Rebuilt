@@ -12,7 +12,9 @@ public class ShooterConstants {
     public static final int kFlywheelFollowerCAN = 36;
     public static final double kFlywheelFollowerGearReduction = kFlywheelGearReduction;
     public static final boolean kFlywheelFollowerInverted = false;
+    public static final int kFlywheelFollowerCurrentLimit = 120;
 
     public static final int kHoodCAN = 37;
     public static final double kHoodGearReduction = ((68.0 / 18.0) * (18.0 / 18.0) * (320.0 / 28.0));
+    public static final int kHoodCurrentLimit = 120;
 }
