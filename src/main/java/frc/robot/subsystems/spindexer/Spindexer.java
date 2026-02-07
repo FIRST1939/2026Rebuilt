@@ -1,18 +1,45 @@
 package frc.robot.subsystems.spindexer;
 
+import static edu.wpi.first.units.Units.Rotations;
+import static edu.wpi.first.units.Units.RotationsPerSecond;
+import static edu.wpi.first.units.Units.Seconds;
+import static edu.wpi.first.units.Units.Volts;
+
 import org.littletonrobotics.junction.Logger;
 
+import edu.wpi.first.units.Units;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
 public class Spindexer extends SubsystemBase {
 
     private final SpindexerIO m_io;
     private final SpindexerIOInputsAutoLogged m_inputs = new SpindexerIOInputsAutoLogged();
+    private final SysIdRoutine sysIdRoutine;
 
 
     public Spindexer (SpindexerIO io) {
 
         m_io = io;
+        this.sysIdRoutine = new SysIdRoutine(
+            new SysIdRoutine.Config(
+                Volts.per(Units.Second).of(SpindexerConstants.kSysIdRampUpTime), 
+                Volts.of(SpindexerConstants.kSysIdVoltageIncrement), 
+                Seconds.of(SpindexerConstants.kSysIdDuration)),
+
+            new SysIdRoutine.Mechanism(
+                voltage -> io.setSpindexerVoltage(voltage.magnitude()), 
+                log -> {
+                    log
+                        .motor("intakeRoller")
+                        .voltage(Volts.of(this.m_inputs.spindexerVoltage))
+                        .angularPosition(Rotations.of(this.m_inputs.spindexerPosition))
+                        .angularVelocity(RotationsPerSecond.of(this.m_inputs.spindexerVelocity));
+                },
+                this, 
+                "Intake")
+        );
     }
  
     @Override
@@ -33,5 +60,25 @@ public class Spindexer extends SubsystemBase {
     
     public double getSpindexerVelocity () {
         return this.m_inputs.spindexerVelocity;
+    }
+
+    public void setSpindexerVoltage(double magnitude) {
+        this.m_io.setSpindexerVoltage(magnitude);
+    }
+
+    public Command sysIdQuasistaticForward() {
+        return sysIdRoutine.quasistatic(SysIdRoutine.Direction.kForward);
+    }
+
+    public Command sysIdQuasistaticReverse() {
+        return sysIdRoutine.quasistatic(SysIdRoutine.Direction.kReverse);
+    }
+
+    public Command sysIdDynamicForward() {
+        return sysIdRoutine.dynamic(SysIdRoutine.Direction.kForward);
+    }
+
+    public Command sysIdDynamicReverse() {
+        return sysIdRoutine.dynamic(SysIdRoutine.Direction.kReverse);
     }
 }
