@@ -76,19 +76,19 @@ public class Intake extends SubsystemBase {
         this.m_io.setRollerVoltage(magnitude);
     }
     
-    public Command sysIdQuasistaticForward() {
+    public Command IntakeSysIdQuasistaticForward() {
         return sysIdRoutine.quasistatic(SysIdRoutine.Direction.kForward);
     }
 
-    public Command sysIdQuasistaticReverse() {
+    public Command IntakeSysIdQuasistaticReverse() {
         return sysIdRoutine.quasistatic(SysIdRoutine.Direction.kReverse);
     }
 
-    public Command sysIdDynamicForward() {
+    public Command IntakeSysIdDynamicForward() {
         return sysIdRoutine.dynamic(SysIdRoutine.Direction.kForward);
     }
 
-    public Command sysIdDynamicReverse() {
+    public Command IntakeSysIdDynamicReverse() {
         return sysIdRoutine.dynamic(SysIdRoutine.Direction.kReverse);
     }
 

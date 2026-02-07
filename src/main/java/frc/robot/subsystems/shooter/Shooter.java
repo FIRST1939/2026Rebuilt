@@ -79,19 +79,19 @@ public class Shooter extends SubsystemBase {
         this.m_io.setFlywheelPercentage(magnitude);
     }
 
-     public Command sysIdQuasistaticForward() {
+     public Command ShooterSysIdQuasistaticForward() {
         return sysIdRoutine.quasistatic(SysIdRoutine.Direction.kForward);
     }
 
-    public Command sysIdQuasistaticReverse() {
+    public Command ShooterSysIdQuasistaticReverse() {
         return sysIdRoutine.quasistatic(SysIdRoutine.Direction.kReverse);
     }
 
-    public Command sysIdDynamicForward() {
+    public Command ShooterSysIdDynamicForward() {
         return sysIdRoutine.dynamic(SysIdRoutine.Direction.kForward);
     }
 
-    public Command sysIdDynamicReverse() {
+    public Command ShooterSysIdDynamicReverse() {
         return sysIdRoutine.dynamic(SysIdRoutine.Direction.kReverse);
     }
 }

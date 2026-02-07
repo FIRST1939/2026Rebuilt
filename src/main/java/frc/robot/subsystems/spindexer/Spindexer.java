@@ -66,19 +66,19 @@ public class Spindexer extends SubsystemBase {
         this.m_io.setSpindexerVoltage(magnitude);
     }
 
-    public Command sysIdQuasistaticForward() {
+    public Command SpindexerSysIdQuasistaticForward() {
         return sysIdRoutine.quasistatic(SysIdRoutine.Direction.kForward);
     }
 
-    public Command sysIdQuasistaticReverse() {
+    public Command SpindexerSysIdQuasistaticReverse() {
         return sysIdRoutine.quasistatic(SysIdRoutine.Direction.kReverse);
     }
 
-    public Command sysIdDynamicForward() {
+    public Command SpindexerSysIdDynamicForward() {
         return sysIdRoutine.dynamic(SysIdRoutine.Direction.kForward);
     }
 
-    public Command sysIdDynamicReverse() {
+    public Command SpindexerSysIdDynamicReverse() {
         return sysIdRoutine.dynamic(SysIdRoutine.Direction.kReverse);
     }
 }

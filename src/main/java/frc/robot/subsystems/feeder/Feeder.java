@@ -68,19 +68,19 @@ public class Feeder extends SubsystemBase {
         this.m_io.setFeederVoltage(magnitude);
     }
 
-    public Command sysIdQuasistaticForward() {
+    public Command FeederSysIdQuasistaticForward() {
         return sysIdRoutine.quasistatic(SysIdRoutine.Direction.kForward);
     }
 
-    public Command sysIdQuasistaticReverse() {
+    public Command FeederSysIdQuasistaticReverse() {
         return sysIdRoutine.quasistatic(SysIdRoutine.Direction.kReverse);
     }
 
-    public Command sysIdDynamicForward() {
+    public Command FeederSysIdDynamicForward() {
         return sysIdRoutine.dynamic(SysIdRoutine.Direction.kForward);
     }
 
-    public Command sysIdDynamicReverse() {
+    public Command FeederSysIdDynamicReverse() {
         return sysIdRoutine.dynamic(SysIdRoutine.Direction.kReverse);
     }
 
