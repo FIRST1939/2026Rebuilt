@@ -13,4 +13,8 @@ public class IntakeConstants {
 
     public static final int kRollerCurrentLimit = 120;
     public static final boolean kInverted = false;
+
+    public static final int kSysIdRampUpTime = 1;
+    public static final int kSysIdVoltageIncrement = 2;
+    public static final int kSysIdDuration = 10;
 }
