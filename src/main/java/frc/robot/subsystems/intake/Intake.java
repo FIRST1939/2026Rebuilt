@@ -47,7 +47,7 @@ public class Intake extends SubsystemBase {
                 Seconds.of(IntakeConstants.kPivotSysIdDuration)),
 
             new SysIdRoutine.Mechanism(
-                voltage -> io.setRollerVoltage(voltage.magnitude()), 
+                voltage -> io.setPivotVoltage(voltage.magnitude()), 
                 log -> {
                     log
                         .motor("intakePivot")
@@ -94,6 +94,10 @@ public class Intake extends SubsystemBase {
 
     public void setRollerVoltage(double magnitude) {
         this.m_io.setRollerVoltage(magnitude);
+    }
+
+    public void setPivotVoltage(double magnitude) {
+        this.m_io.setPivotVoltage(magnitude);
     }
     
     public Command RollerSysIdQuasistaticForward() {
