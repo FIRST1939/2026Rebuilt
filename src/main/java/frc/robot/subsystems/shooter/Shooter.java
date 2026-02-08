@@ -16,18 +16,19 @@ public class Shooter extends SubsystemBase {
 
     private final ShooterIO m_io;
     private final ShooterIOInputsAutoLogged m_inputs = new ShooterIOInputsAutoLogged();
-    private final SysIdRoutine sysIdRoutine;
+    private final SysIdRoutine flywheelSysIdRoutine;
+    private final SysIdRoutine hoodSysIdRoutine;
 
     public Shooter (ShooterIO io) {
         m_io = io;
-        this.sysIdRoutine = new SysIdRoutine(
+        this.flywheelSysIdRoutine = new SysIdRoutine(
             new SysIdRoutine.Config(
-                Volts.per(Units.Second).of(ShooterConstants.kSysIdRampUpTime), 
-                Volts.of(ShooterConstants.kSysIdVoltageIncrement), 
-                Seconds.of(ShooterConstants.kSysIdDuration)),
+                Volts.per(Units.Second).of(ShooterConstants.kFlywheelSysIdRampUpTime), 
+                Volts.of(ShooterConstants.kFlywheelSysIdVoltageIncrement), 
+                Seconds.of(ShooterConstants.kFlywheelSysIdDuration)),
 
             new SysIdRoutine.Mechanism(
-                voltage -> io.setFlyWheelVoltage(voltage.magnitude()), 
+                voltage -> io.setFlywheelVoltage(voltage.magnitude()), 
                 log -> {
                     log
                         .motor("flywheelMotor")
@@ -37,6 +38,25 @@ public class Shooter extends SubsystemBase {
                 },
                 this, 
                 "Flywheel")
+        );
+
+        this.hoodSysIdRoutine = new SysIdRoutine(
+            new SysIdRoutine.Config(
+                Volts.per(Units.Second).of(ShooterConstants.kHoodSysIdRampUpTime), 
+                Volts.of(ShooterConstants.kHoodSysIdVoltageIncrement), 
+                Seconds.of(ShooterConstants.kHoodSysIdDuration)),
+
+            new SysIdRoutine.Mechanism(
+                voltage -> io.setHoodVoltage(voltage.magnitude()), 
+                log -> {
+                    log
+                        .motor("hoodMotor")
+                        .voltage(Volts.of(this.m_inputs.hoodVoltage))
+                        .angularPosition(Rotations.of(getHoodPosition()))
+                        .angularVelocity(RotationsPerSecond.of(this.m_inputs.hoodVelocity));
+                },
+                this, 
+                "Hood")
         );
     }
 
@@ -79,19 +99,39 @@ public class Shooter extends SubsystemBase {
         this.m_io.setFlywheelPercentage(magnitude);
     }
 
-     public Command ShooterSysIdQuasistaticForward() {
-        return sysIdRoutine.quasistatic(SysIdRoutine.Direction.kForward);
+    public void setHoodVoltage(double magnitude) {
+        this.m_io.setHoodVoltage(magnitude);
     }
 
-    public Command ShooterSysIdQuasistaticReverse() {
-        return sysIdRoutine.quasistatic(SysIdRoutine.Direction.kReverse);
+    public Command FlywheelSysIdQuasistaticForward() {
+        return flywheelSysIdRoutine.quasistatic(SysIdRoutine.Direction.kForward);
     }
 
-    public Command ShooterSysIdDynamicForward() {
-        return sysIdRoutine.dynamic(SysIdRoutine.Direction.kForward);
+    public Command FlywheelSysIdQuasistaticReverse() {
+        return flywheelSysIdRoutine.quasistatic(SysIdRoutine.Direction.kReverse);
     }
 
-    public Command ShooterSysIdDynamicReverse() {
-        return sysIdRoutine.dynamic(SysIdRoutine.Direction.kReverse);
+    public Command FlywheelSysIdDynamicForward() {
+        return flywheelSysIdRoutine.dynamic(SysIdRoutine.Direction.kForward);
+    }
+
+    public Command FlywheelSysIdDynamicReverse() {
+        return flywheelSysIdRoutine.dynamic(SysIdRoutine.Direction.kReverse);
+    }
+    
+    public Command HoodSysIdQuasistaticForward() {
+        return hoodSysIdRoutine.quasistatic(SysIdRoutine.Direction.kForward);
+    }
+
+    public Command HoodSysIdQuasistaticReverse() {
+        return hoodSysIdRoutine.quasistatic(SysIdRoutine.Direction.kReverse);
+    }
+
+    public Command HoodSysIdDynamicForward() {
+        return hoodSysIdRoutine.dynamic(SysIdRoutine.Direction.kForward);
+    }
+
+    public Command HoodSysIdDynamicReverse() {
+        return hoodSysIdRoutine.dynamic(SysIdRoutine.Direction.kReverse);
     }
 }
