@@ -15,16 +15,17 @@ public class Intake extends SubsystemBase {
 
     private final IntakeIO m_io;
     private final IntakeIOInputsAutoLogged m_inputs = new IntakeIOInputsAutoLogged();
-    private final SysIdRoutine sysIdRoutine;
+    private final SysIdRoutine rollerSysIdRoutine;
+    private final SysIdRoutine pivotSysIdRoutine;
 
     
     public Intake (IntakeIO io) {
         m_io = io;
-        this.sysIdRoutine = new SysIdRoutine(
+        this.rollerSysIdRoutine = new SysIdRoutine(
             new SysIdRoutine.Config(
-                Volts.per(Units.Second).of(IntakeConstants.kSysIdRampUpTime), 
-                Volts.of(IntakeConstants.kSysIdVoltageIncrement), 
-                Seconds.of(IntakeConstants.kSysIdDuration)),
+                Volts.per(Units.Second).of(IntakeConstants.kRollerSysIdRampUpTime), 
+                Volts.of(IntakeConstants.kRollerSysIdVoltageIncrement), 
+                Seconds.of(IntakeConstants.kRollerSysIdDuration)),
 
             new SysIdRoutine.Mechanism(
                 voltage -> io.setRollerVoltage(voltage.magnitude()), 
@@ -36,7 +37,26 @@ public class Intake extends SubsystemBase {
                         .angularVelocity(RotationsPerSecond.of(this.m_inputs.rollerVelocity));
                 },
                 this, 
-                "Intake")
+                "Roller")
+        );
+
+        this.pivotSysIdRoutine = new SysIdRoutine(
+            new SysIdRoutine.Config(
+                Volts.per(Units.Second).of(IntakeConstants.kPivotSysIdRampUpTime), 
+                Volts.of(IntakeConstants.kPivotSysIdVoltageIncrement), 
+                Seconds.of(IntakeConstants.kPivotSysIdDuration)),
+
+            new SysIdRoutine.Mechanism(
+                voltage -> io.setRollerVoltage(voltage.magnitude()), 
+                log -> {
+                    log
+                        .motor("intakePivot")
+                        .voltage(Volts.of(this.m_inputs.pivotLeaderVoltage))
+                        .angularPosition(Rotations.of(getPivotPosition()))
+                        .angularVelocity(RotationsPerSecond.of(this.m_inputs.pivotLeaderVelocity));
+                },
+                this, 
+                "Pivot")
         );
     }
 
@@ -76,20 +96,36 @@ public class Intake extends SubsystemBase {
         this.m_io.setRollerVoltage(magnitude);
     }
     
-    public Command IntakeSysIdQuasistaticForward() {
-        return sysIdRoutine.quasistatic(SysIdRoutine.Direction.kForward);
+    public Command RollerSysIdQuasistaticForward() {
+        return rollerSysIdRoutine.quasistatic(SysIdRoutine.Direction.kForward);
     }
 
-    public Command IntakeSysIdQuasistaticReverse() {
-        return sysIdRoutine.quasistatic(SysIdRoutine.Direction.kReverse);
+    public Command RollerSysIdQuasistaticReverse() {
+        return rollerSysIdRoutine.quasistatic(SysIdRoutine.Direction.kReverse);
     }
 
-    public Command IntakeSysIdDynamicForward() {
-        return sysIdRoutine.dynamic(SysIdRoutine.Direction.kForward);
+    public Command RollerSysIdDynamicForward() {
+        return rollerSysIdRoutine.dynamic(SysIdRoutine.Direction.kForward);
     }
 
-    public Command IntakeSysIdDynamicReverse() {
-        return sysIdRoutine.dynamic(SysIdRoutine.Direction.kReverse);
+    public Command RollerSysIdDynamicReverse() {
+        return rollerSysIdRoutine.dynamic(SysIdRoutine.Direction.kReverse);
+    }
+
+    public Command PivotSysIdQuasistaticForward() {
+        return pivotSysIdRoutine.quasistatic(SysIdRoutine.Direction.kForward);
+    }
+
+    public Command PivotSysIdQuasistaticReverse() {
+        return pivotSysIdRoutine.quasistatic(SysIdRoutine.Direction.kReverse);
+    }
+
+    public Command PivotSysIdDynamicForward() {
+        return pivotSysIdRoutine.dynamic(SysIdRoutine.Direction.kForward);
+    }
+
+    public Command PivotSysIdDynamicReverse() {
+        return pivotSysIdRoutine.dynamic(SysIdRoutine.Direction.kReverse);
     }
 
 }
