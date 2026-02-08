@@ -32,13 +32,13 @@ public class Climber extends SubsystemBase {
                 voltage -> io.setClimberVoltage(voltage.magnitude()), 
                 log -> {
                     log
-                        .motor("intakeRoller")
+                        .motor("climbeMotor")
                         .voltage(Volts.of(this.m_inputs.climberVoltage))
                         .angularPosition(Rotations.of(this.m_inputs.climberPosition))
                         .angularVelocity(RotationsPerSecond.of(this.m_inputs.climberVelocity));
                 },
                 this, 
-                "Intake")
+                "Climber")
         );
     }
 

@@ -32,13 +32,13 @@ public class Feeder extends SubsystemBase {
                 voltage -> io.setFeederVoltage(voltage.magnitude()), 
                 log -> {
                     log
-                        .motor("intakeRoller")
+                        .motor("feederMotor")
                         .voltage(Volts.of(this.m_inputs.feederVoltage))
                         .angularPosition(Rotations.of(this.m_inputs.feederPosition))
                         .angularVelocity(RotationsPerSecond.of(this.m_inputs.feederVelocity));
                 },
                 this, 
-                "Intake")
+                "Feeder")
         );
     }
 

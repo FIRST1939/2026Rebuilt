@@ -30,13 +30,13 @@ public class Shooter extends SubsystemBase {
                 voltage -> io.setFlyWheelVoltage(voltage.magnitude()), 
                 log -> {
                     log
-                        .motor("intakeRoller")
+                        .motor("flywheelMotor")
                         .voltage(Volts.of(this.m_inputs.flywheelLeaderVoltage))
                         .angularPosition(Rotations.of(getFlywheelPosition()))
                         .angularVelocity(RotationsPerSecond.of(this.m_inputs.flywheelLeaderVelocity));
                 },
                 this, 
-                "Intake")
+                "Flywheel")
         );
     }
 

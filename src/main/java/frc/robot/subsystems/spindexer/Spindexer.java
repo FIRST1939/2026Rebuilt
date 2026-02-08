@@ -22,7 +22,9 @@ public class Spindexer extends SubsystemBase {
     public Spindexer (SpindexerIO io) {
 
         m_io = io;
+
         this.sysIdRoutine = new SysIdRoutine(
+
             new SysIdRoutine.Config(
                 Volts.per(Units.Second).of(SpindexerConstants.kSysIdRampUpTime), 
                 Volts.of(SpindexerConstants.kSysIdVoltageIncrement), 
@@ -32,13 +34,13 @@ public class Spindexer extends SubsystemBase {
                 voltage -> io.setSpindexerVoltage(voltage.magnitude()), 
                 log -> {
                     log
-                        .motor("intakeRoller")
+                        .motor("spindexerRoller")
                         .voltage(Volts.of(this.m_inputs.spindexerVoltage))
                         .angularPosition(Rotations.of(this.m_inputs.spindexerPosition))
                         .angularVelocity(RotationsPerSecond.of(this.m_inputs.spindexerVelocity));
                 },
                 this, 
-                "Intake")
+                "Spindexer")
         );
     }
  
