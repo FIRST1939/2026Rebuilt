@@ -6,7 +6,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.button.CommandPS4Controller;
+import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Spindexer.*;
@@ -22,7 +22,7 @@ public class RobotContainer {
   private final Intake intake = new Intake(new IntakeIOHardware());
   private final RunSpindexer spindexerRunOutput = new RunSpindexer(spindexer, 2400);
   private final RunFeeder feederRunOutput = new RunFeeder (feeder, 2400);
-  private final CommandPS4Controller m_driverController = new CommandPS4Controller(OperatorConstants.kDriverControllerPort);
+  private final CommandPS5Controller m_driverController = new CommandPS5Controller(OperatorConstants.kDriverControllerPort);
 
   public RobotContainer() {
     configureBindings();

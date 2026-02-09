@@ -34,7 +34,7 @@ public class Spindexer extends SubsystemBase {
                 voltage -> io.setSpindexerVoltage(voltage.magnitude()), 
                 log -> {
                     log
-                        .motor("spindexerRoller")
+                        .motor("spindexerMotor")
                         .voltage(Volts.of(this.m_inputs.spindexerVoltage))
                         .angularPosition(Rotations.of(this.m_inputs.spindexerPosition))
                         .angularVelocity(RotationsPerSecond.of(this.m_inputs.spindexerVelocity));
