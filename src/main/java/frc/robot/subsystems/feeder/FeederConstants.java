@@ -5,4 +5,8 @@ public class FeederConstants {
 public static final int kFeederCAN = 34;
 public static final double feederGearReduction = ((54.0/18.0))*((24.0/24.0));
 
+public static final int kSysIdRampUpTime = 1;
+public static final int kSysIdVoltageIncrement = 2;
+public static final int kSysIdDuration = 10;
+
 }
