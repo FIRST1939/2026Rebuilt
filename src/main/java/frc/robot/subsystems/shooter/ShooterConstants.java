@@ -16,7 +16,11 @@ public class ShooterConstants {
     public static final int kHoodCAN = 37;
     public static final double kHoodGearReduction = ((68.0 / 18.0) * (18.0 / 18.0) * (320.0 / 28.0));
 
-    public static final int kSysIdRampUpTime = 1;
-    public static final int kSysIdVoltageIncrement = 2;
-    public static final int kSysIdDuration = 10;
+    public static final int kFlywheelSysIdRampUpTime = 1;
+    public static final int kFlywheelSysIdVoltageIncrement = 2;
+    public static final int kFlywheelSysIdDuration = 10;
+
+    public static final int kHoodSysIdRampUpTime = 1;
+    public static final int kHoodSysIdVoltageIncrement = 2;
+    public static final int kHoodSysIdDuration = 10;
 }
