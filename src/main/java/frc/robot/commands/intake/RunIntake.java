@@ -15,7 +15,7 @@ public class RunIntake extends Command {
     @Override
     public void initialize () {
 
-        this.intake.setPivotVoltage(5.0);
+        this.intake.setRollerVoltage(5.0);
     }
 
     @Override
