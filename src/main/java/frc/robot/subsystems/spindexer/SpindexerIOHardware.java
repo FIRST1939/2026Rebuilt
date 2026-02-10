@@ -37,7 +37,7 @@ public class SpindexerIOHardware implements SpindexerIO {
     public void setSpindexerPercentage(double percent) {
         
     m_spindexerController.setSetpoint(percent, ControlType.kVelocity, ClosedLoopSlot.kSlot0);
-
+    //NOTE: ControlType.kVelocity here is supposed to be Feed Forward. We will just let PID stuff equal zero.
     }
     @Override
     public void updateInputs (SpindexerIOInputs inputs) {
