@@ -22,7 +22,7 @@ public class RobotContainer {
   private final Intake intake = new Intake(new IntakeIOHardware());
   private final RunSpindexer spindexerRunOutput = new RunSpindexer(spindexer, 2400);
   private final RunFeeder feederRunOutput = new RunFeeder (feeder, 2400);
-  private final CommandPS5Controller m_driverController = new CommandPS5Controller(OperatorConstants.kDriverControllerPort);
+  private final CommandXboxController m_driverController = new CommandXboxController(OperatorConstants.kDriverControllerPort);
 
   public RobotContainer() {
     configureBindings();
@@ -30,15 +30,15 @@ public class RobotContainer {
 
   private void configureBindings() {
 
-    m_driverController.square().whileTrue(spindexer.SpindexerSysIdQuasistaticForward());
-    m_driverController.circle().whileTrue(spindexer.SpindexerSysIdQuasistaticReverse());
-    m_driverController.triangle().whileTrue(spindexer.SpindexerSysIdDynamicForward());
-    m_driverController.cross().whileTrue(spindexer.SpindexerSysIdDynamicReverse());
+    m_driverController.a().whileTrue(spindexer.SpindexerSysIdQuasistaticForward());
+    m_driverController.x().whileTrue(spindexer.SpindexerSysIdQuasistaticReverse());
+    m_driverController.y().whileTrue(spindexer.SpindexerSysIdDynamicForward());
+    m_driverController.b().whileTrue(spindexer.SpindexerSysIdDynamicReverse());
 
-    m_driverController.R2().whileTrue(intake.RollerSysIdQuasistaticForward());
-    m_driverController.L2().whileTrue(intake.RollerSysIdQuasistaticReverse());
-    m_driverController.R1().whileTrue(intake.RollerSysIdDynamicForward());
-    m_driverController.L1().whileTrue(intake.RollerSysIdDynamicReverse());
+    m_driverController.leftBumper().whileTrue(intake.RollerSysIdQuasistaticForward());
+    m_driverController.rightBumper().whileTrue(intake.RollerSysIdQuasistaticReverse());
+    m_driverController.leftTrigger().whileTrue(intake.RollerSysIdDynamicForward());
+    m_driverController.rightTrigger().whileTrue(intake.RollerSysIdDynamicReverse());
     
   }
 
