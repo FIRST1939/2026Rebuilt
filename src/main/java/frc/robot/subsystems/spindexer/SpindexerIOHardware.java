@@ -26,8 +26,8 @@ public class SpindexerIOHardware implements SpindexerIO {
             .smartCurrentLimit(SpindexerConstants.kCurrentLimit);
 
         config.encoder
-            .velocityConversionFactor(1.0 / SpindexerConstants.kSpindexerGearReduction)
-            .positionConversionFactor(1.0 / SpindexerConstants.kSpindexerGearReduction)
+            .velocityConversionFactor(SpindexerConstants.kSpindexerGearing)
+            .positionConversionFactor(SpindexerConstants.kSpindexerGearing)
             .inverted(SpindexerConstants.kInverted);
 
         m_motor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);

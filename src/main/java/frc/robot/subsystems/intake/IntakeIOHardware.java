@@ -31,9 +31,9 @@ public class IntakeIOHardware implements IntakeIO {
             .smartCurrentLimit(IntakeConstants.kRollerCurrentLimit);
 
         config.encoder
-        .positionConversionFactor(1.0 / IntakeConstants.kRollerGearReduction)
-        .velocityConversionFactor(1.0 / IntakeConstants.kRollerGearReduction)
-        .inverted(IntakeConstants.kInverted);
+            .positionConversionFactor(IntakeConstants.kRollerGearing)
+            .velocityConversionFactor(IntakeConstants.kRollerGearing)
+            .inverted(IntakeConstants.kInverted);
 
         m_roller.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
         

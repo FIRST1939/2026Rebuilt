@@ -18,7 +18,6 @@ public class Spindexer extends SubsystemBase {
     private final SpindexerIOInputsAutoLogged m_inputs = new SpindexerIOInputsAutoLogged();
     private final SysIdRoutine sysIdRoutine;
 
-
     public Spindexer (SpindexerIO io) {
 
         m_io = io;
@@ -50,6 +49,11 @@ public class Spindexer extends SubsystemBase {
         m_io.updateInputs(m_inputs);
         Logger.processInputs("Spindexer", m_inputs);
 
+    }
+
+    public double getSpindexerCurrent() {
+
+        return m_inputs.spindexerCurrent;
     }
 
     public void setSpindexerPercentage (double percentage) {

@@ -10,9 +10,10 @@ import com.revrobotics.spark.SparkFlex;
 public class FeederIOHardware implements FeederIO {
     
     protected final SparkFlex m_motor = new SparkFlex(FeederConstants.kFeederCAN, MotorType.kBrushless);
-     protected final RelativeEncoder m_encoder = m_motor.getEncoder();
-  protected final SparkClosedLoopController m_controller = m_motor.getClosedLoopController(); 
-      @Override
+    protected final RelativeEncoder m_encoder = m_motor.getEncoder();
+    protected final SparkClosedLoopController m_controller = m_motor.getClosedLoopController(); 
+
+    @Override
     public void updateInputs (FeederIOInputs inputs) {
 
         inputs.feederPosition = m_encoder.getPosition();
@@ -28,12 +29,9 @@ public class FeederIOHardware implements FeederIO {
         m_motor.set(percent);
     }
 
-       @Override 
+    @Override 
     public void setFeederVelocity (double velocity) {
-        // Use the PID gains in slot 0 for position control
-        // TODO make a constant?
+        
         m_controller.setSetpoint(velocity, ControlType.kVelocity, ClosedLoopSlot.kSlot0, 0.0);
     }
 }
-
-

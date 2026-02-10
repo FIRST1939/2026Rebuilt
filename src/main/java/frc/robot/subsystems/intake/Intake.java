@@ -68,6 +68,11 @@ public class Intake extends SubsystemBase {
 
     }
 
+    public double getRollerCurrent() {
+
+        return m_inputs.rollerCurrent;
+    }
+
     public void setRollerPercentage (double percentage) {
         this.m_io.setRollerPercentage(percentage);
     }

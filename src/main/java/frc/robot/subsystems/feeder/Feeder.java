@@ -48,6 +48,12 @@ public class Feeder extends SubsystemBase {
         m_io.updateInputs(m_inputs);
         Logger.processInputs("Feeder", m_inputs);
     }
+
+    public double getFeederCurrent() {
+
+        return m_inputs.feederCurrent;
+    }
+
     public void setFeederPercentage (double percent) {
       
         m_io.setFeederPercentage(percent);

@@ -4,45 +4,67 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.simulation.BatterySim;
+import edu.wpi.first.wpilibj.simulation.RoboRioSim;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.feeder.*;
-import frc.robot.commands.spindexer.*;
-import frc.robot.subsystems.spindexer.*;
 import frc.robot.subsystems.feeder.*;
-import frc.robot.subsystems.intake.Intake;
-import frc.robot.subsystems.intake.IntakeIOHardware;
+import frc.robot.subsystems.intake.*;
+import frc.robot.subsystems.spindexer.*;
 
 public class RobotContainer {
-  private final Spindexer spindexer = new Spindexer (new SpindexerIOHardware());
-  private final Feeder feeder = new Feeder (new FeederIOHardware());
-  private final Intake intake = new Intake(new IntakeIOHardware());
-  private final RunSpindexer spindexerRunOutput = new RunSpindexer(spindexer, 2400);
-  private final RunFeeder feederRunOutput = new RunFeeder (feeder, 2400);
-  private final CommandXboxController m_driverController = new CommandXboxController(OperatorConstants.kDriverControllerPort);
 
-  public RobotContainer() {
-    configureBindings();
-  }
+    private final Intake m_intake;
+    private final Spindexer m_spindexer;
+    private final Feeder m_feeder;
 
-  private void configureBindings() {
+    private final CommandXboxController m_driverController = new CommandXboxController(OperatorConstants.kDriverControllerPort);
 
-    m_driverController.a().whileTrue(spindexer.SpindexerSysIdQuasistaticForward());
-    m_driverController.x().whileTrue(spindexer.SpindexerSysIdQuasistaticReverse());
-    m_driverController.y().whileTrue(spindexer.SpindexerSysIdDynamicForward());
-    m_driverController.b().whileTrue(spindexer.SpindexerSysIdDynamicReverse());
+    public RobotContainer(boolean isReal) {
 
-    m_driverController.leftBumper().whileTrue(intake.RollerSysIdQuasistaticForward());
-    m_driverController.rightBumper().whileTrue(intake.RollerSysIdQuasistaticReverse());
-    m_driverController.leftTrigger().whileTrue(intake.RollerSysIdDynamicForward());
-    m_driverController.rightTrigger().whileTrue(intake.RollerSysIdDynamicReverse());
-    
-  }
+        if (isReal) {
 
-  public Command getAutonomousCommand() {
-    return Commands.print("No autonomous command configured");
-  }
+            m_intake = new Intake(new IntakeIOHardware());
+            m_spindexer = new Spindexer(new SpindexerIOHardware());
+            m_feeder = new Feeder(new FeederIOHardware());
+        } else {
+
+            m_intake = new Intake(new IntakeIOSim());
+            m_spindexer = new Spindexer(new SpindexerIOSim());
+            m_feeder = new Feeder(new FeederIOSim());
+        }
+
+        configureBindings();
+    }
+
+    private void configureBindings() {
+
+        m_driverController.a().whileTrue(m_spindexer.SpindexerSysIdQuasistaticForward());
+        m_driverController.x().whileTrue(m_spindexer.SpindexerSysIdQuasistaticReverse());
+        m_driverController.y().whileTrue(m_spindexer.SpindexerSysIdDynamicForward());
+        m_driverController.b().whileTrue(m_spindexer.SpindexerSysIdDynamicReverse());
+
+        m_driverController.leftBumper().whileTrue(m_intake.RollerSysIdQuasistaticForward());
+        m_driverController.rightBumper().whileTrue(m_intake.RollerSysIdQuasistaticReverse());
+        m_driverController.leftTrigger().whileTrue(m_intake.RollerSysIdDynamicForward());
+        m_driverController.rightTrigger().whileTrue(m_intake.RollerSysIdDynamicReverse());
+    }
+
+    public Command getAutonomousCommand() {
+      
+        return Commands.print("No autonomous command configured");
+    }
+
+    public void simulateBatteryLoad() {
+
+        RoboRioSim.setVInVoltage(
+            BatterySim.calculateDefaultBatteryLoadedVoltage(
+                m_intake.getRollerCurrent(),
+                m_spindexer.getSpindexerCurrent(),
+                m_feeder.getFeederCurrent()
+            )
+        );
+    }
 }
