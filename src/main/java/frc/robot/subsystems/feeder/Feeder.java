@@ -10,8 +10,11 @@ import org.littletonrobotics.junction.Logger;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+<<<<<<< Updated upstream
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
+=======
+>>>>>>> Stashed changes
 public class Feeder extends SubsystemBase {
     
     private final FeederIO m_io;
