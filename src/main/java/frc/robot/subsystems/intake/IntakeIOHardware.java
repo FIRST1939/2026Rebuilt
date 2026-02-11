@@ -33,7 +33,7 @@ public class IntakeIOHardware implements IntakeIO {
         config.encoder
             .positionConversionFactor(IntakeConstants.kRollerGearing)
             .velocityConversionFactor(IntakeConstants.kRollerGearing);
-            // .inverted(IntakeConstants.kInverted);
+            //.inverted(IntakeConstants.kInverted);
 
         m_roller.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
         
