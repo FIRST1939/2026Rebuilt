@@ -27,8 +27,8 @@ public class SpindexerIOHardware implements SpindexerIO {
 
         config.encoder
             .velocityConversionFactor(SpindexerConstants.kSpindexerGearing)
-            .positionConversionFactor(SpindexerConstants.kSpindexerGearing)
-            .inverted(SpindexerConstants.kInverted);
+            .positionConversionFactor(SpindexerConstants.kSpindexerGearing);
+           //inverted(SpindexerConstants.kInverted);
 
         m_motor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 

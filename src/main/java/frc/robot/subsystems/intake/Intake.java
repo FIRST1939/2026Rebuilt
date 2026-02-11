@@ -106,6 +106,7 @@ public class Intake extends SubsystemBase {
     }
     
     public Command RollerSysIdQuasistaticForward() {
+        System.out.println("true");
         return rollerSysIdRoutine.quasistatic(SysIdRoutine.Direction.kForward);
     }
 

@@ -41,6 +41,8 @@ public class RobotContainer {
 
     private void configureBindings() {
 
+      System.out.println("config working");
+
         m_driverController.a().whileTrue(m_spindexer.SpindexerSysIdQuasistaticForward());
         m_driverController.x().whileTrue(m_spindexer.SpindexerSysIdQuasistaticReverse());
         m_driverController.y().whileTrue(m_spindexer.SpindexerSysIdDynamicForward());

@@ -27,8 +27,8 @@ public class ClimberIOHardware implements ClimberIO {
 
         config.encoder
             .positionConversionFactor(1.0 / ClimberConstants.kClimberGearReduction)
-            .velocityConversionFactor(1.0 / ClimberConstants.kClimberGearReduction)
-            .inverted(ClimberConstants.kInverted);
+            .velocityConversionFactor(1.0 / ClimberConstants.kClimberGearReduction);
+           //.verted(ClimberConstants.kInverted);
 
         m_motor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     }
