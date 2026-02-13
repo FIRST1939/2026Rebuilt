@@ -10,16 +10,16 @@ import edu.wpi.first.wpilibj2.command.Command;
 /** An example command that uses an example subsystem. */
 public class RunSpindexer extends Command {
   private final Spindexer m_subsystem;
-  private final double m_RPM;
+  private final double m_percentage;
 
   /**
    * Creates a new ExampleCommand.
    *
    * @param subsystem The subsystem used by this command.
    */
-  public RunSpindexer(Spindexer subsystem, double RPM) {
+  public RunSpindexer(Spindexer subsystem, double percentage) {
     m_subsystem = subsystem;
-    m_RPM = RPM;
+    m_percentage = percentage;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(subsystem);
   }
@@ -33,7 +33,7 @@ public class RunSpindexer extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void initialize() {
-     m_subsystem.setSpindexerVelocity(m_RPM);
+     m_subsystem.setSpindexerPercentage(m_percentage);
   }
 
   // Called once the command ends or is interrupted.
