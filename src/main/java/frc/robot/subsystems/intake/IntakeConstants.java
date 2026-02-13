@@ -18,6 +18,10 @@ public class IntakeConstants {
     public static final double kRollerSysIdVoltageIncrement = 0.1;
     public static final int kRollerSysIdDuration = 10;
 
+    public static final double kRollerFeedforwardS = 0.0;
+    public static final double kRollerFeedforwardV = 0.0;
+    public static final double kRollerFeedforwardA = 0.0;
+
     public static final int kPivotSysIdRampUpTime = 1;
     public static final int kPivotSysIdVoltageIncrement = 2;
     public static final int kPivotSysIdDuration = 10;
