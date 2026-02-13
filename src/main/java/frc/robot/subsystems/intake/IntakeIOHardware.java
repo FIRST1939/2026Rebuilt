@@ -48,17 +48,35 @@ public class IntakeIOHardware implements IntakeIO {
         inputs.rollerVoltage = m_roller.getAppliedOutput() * m_roller.getBusVoltage();
         inputs.rollerTemperature = m_roller.getMotorTemperature();
 
-        inputs.rollerCurrent = m_pivotLeader.getOutputCurrent();
-        inputs.rollerVelocity = m_pivotLeaderEncoder.getVelocity();
-        inputs.rollerPosition = m_pivotLeaderEncoder.getPosition();
-        inputs.rollerVoltage = m_pivotLeader.getAppliedOutput() * m_pivotLeader.getBusVoltage();
-        inputs.rollerTemperature = m_pivotLeader.getMotorTemperature();
+        inputs.pivotLeaderCurrent = m_pivotLeader.getOutputCurrent();
+        inputs.pivotLeaderVelocity = m_pivotLeaderEncoder.getVelocity();
+        inputs.pivotLeaderPosition = m_pivotLeaderEncoder.getPosition();
+        inputs.pivotLeaderVoltage = m_pivotLeader.getAppliedOutput() * m_pivotLeader.getBusVoltage();
+        inputs.pivotLeaderTemperature = m_pivotLeader.getMotorTemperature();
 
-        inputs.rollerCurrent = m_pivotFollower.getOutputCurrent();
-        inputs.rollerVelocity = m_pivotFollowerEncoder.getVelocity();
-        inputs.rollerPosition = m_pivotFollowerEncoder.getPosition();
-        inputs.rollerVoltage = m_pivotFollower.getAppliedOutput() * m_pivotFollower.getBusVoltage();
-        inputs.rollerTemperature = m_pivotFollower.getMotorTemperature();
+        inputs.pivotFollowerCurrent = m_pivotFollower.getOutputCurrent();
+        inputs.pivotFollowerVelocity = m_pivotFollowerEncoder.getVelocity();
+        inputs.pivotFollowerPosition = m_pivotFollowerEncoder.getPosition();
+        inputs.pivotFollowerVoltage = m_pivotFollower.getAppliedOutput() * m_pivotFollower.getBusVoltage();
+        inputs.pivotFollowerTemperature = m_pivotFollower.getMotorTemperature();
+    }
+
+    @Override
+    public void setRollerPercentage (double percent) {
+
+        m_roller.set(percent);
+    }
+
+    @Override
+    public void setRollerVoltage (double voltage) {
+
+        m_rollerController.setSetpoint(voltage, ControlType.kVoltage);
+    }
+
+    @Override
+    public void setRollerVelocity (double velocity) {
+
+        m_rollerController.setSetpoint(velocity, ControlType.kMAXMotionVelocityControl, ClosedLoopSlot.kSlot0, 0.0);
     }
 
     @Override
@@ -69,18 +87,8 @@ public class IntakeIOHardware implements IntakeIO {
     }
 
     @Override
-    public void setRollerPercentage (double percent) {
-
-        m_roller.set(percent);
-    }
-
-    @Override
     public void setPivotPosition (double position) {
-        m_pivotController.setSetpoint(position, ControlType.kMAXMotionPositionControl, ClosedLoopSlot.kSlot0, 0.0);
-    }
 
-    @Override
-    public void setRollerVelocity (double velocity) {
-        m_rollerController.setSetpoint(velocity, ControlType.kMAXMotionVelocityControl, ClosedLoopSlot.kSlot0, 0.0);
+        m_pivotController.setSetpoint(position, ControlType.kMAXMotionPositionControl, ClosedLoopSlot.kSlot0, 0.0);
     }
 }

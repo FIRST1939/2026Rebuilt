@@ -22,7 +22,7 @@ public class SpindexerIOHardware implements SpindexerIO {
         SparkFlexConfig config = new SparkFlexConfig();
 
         config
-            .idleMode(IdleMode.kBrake)
+            .idleMode(IdleMode.kCoast)
             .inverted(SpindexerConstants.kInverted)
             .smartCurrentLimit(SpindexerConstants.kCurrentLimit);
 
@@ -30,15 +30,19 @@ public class SpindexerIOHardware implements SpindexerIO {
             .velocityConversionFactor(SpindexerConstants.kSpindexerGearing)
             .positionConversionFactor(SpindexerConstants.kSpindexerGearing);
 
+        /*
+        config.closedLoop
+            .pid(0, 0, 0)
+            .feedForward
+                .kS(SpindexerConstants.kSpindexerFeedforwardS, ClosedLoopSlot.kSlot0)
+                .kV(SpindexerConstants.kSpindexerFeedforwardV, ClosedLoopSlot.kSlot0)
+                .kA(SpindexerConstants.kSpindexerFeedforwardA, ClosedLoopSlot.kSlot0);
+        */
+
         m_motor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
     }
 
-    public void setSpindexerPercentage(double percent) {
-        
-    m_spindexerController.setSetpoint(percent, ControlType.kVelocity, ClosedLoopSlot.kSlot0);
-    //NOTE: ControlType.kVelocity here is supposed to be Feed Forward. We will just let PID stuff equal zero.
-    }
     @Override
     public void updateInputs (SpindexerIOInputs inputs) {
 
@@ -47,6 +51,22 @@ public class SpindexerIOHardware implements SpindexerIO {
         inputs.spindexerPosition = m_encoder.getPosition();
         inputs.spindexerVoltage = m_motor.getAppliedOutput() * m_motor.getBusVoltage();
         inputs.spindexerTemperature = m_motor.getMotorTemperature();
+    }
+
+    public void setSpindexerPercentage(double percentage) {
         
+        m_motor.set(percentage);
+    }
+
+    @Override
+    public void setSpindexerVoltage (double voltage) {
+
+        m_spindexerController.setSetpoint(voltage, ControlType.kVoltage);
+    }
+
+    @Override
+    public void setSpindexerVelocity (double velocity) {
+        
+        m_spindexerController.setSetpoint(velocity, ControlType.kVelocity, ClosedLoopSlot.kSlot0);
     }
 }

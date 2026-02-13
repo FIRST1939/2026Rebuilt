@@ -8,7 +8,11 @@ public class SpindexerConstants {
     public static final boolean kInverted = false;
 
     public static final int kSysIdRampUpTime = 1;
-    public static final int kSysIdVoltageIncrement = 2;
+    public static final int kSysIdVoltageIncrement = 12;
     public static final int kSysIdDuration = 10;
+
+    public static final double kSpindexerFeedforwardS = 0.09129;
+    public static final double kSpindexerFeedforwardV = 0.053608;
+    public static final double kSpindexerFeedforwardA = 0.00027996;
 
 }

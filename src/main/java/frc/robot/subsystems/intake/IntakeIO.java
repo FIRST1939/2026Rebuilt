@@ -28,9 +28,9 @@ public interface IntakeIO {
 
     public default void updateInputs (IntakeIOInputs inputs) {}
     public default void setRollerPercentage (double percent) {}
+    public default void setRollerVoltage(double voltage) {}
     public default void setRollerVelocity (double velocity) {}
     public default void setPivotPercentage (double percent) {}
+    public default void setPivotVoltage(double voltage) {}
     public default void setPivotPosition (double position) {}
-    public default void setRollerVoltage(double magnitude) {}
-    public default void setPivotVoltage(double magnitude) {}
 }

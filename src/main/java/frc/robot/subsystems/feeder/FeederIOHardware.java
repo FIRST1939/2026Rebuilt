@@ -24,9 +24,9 @@ public class FeederIOHardware implements FeederIO {
     }
 
     @Override
-    public void setFeederPercentage (double percent) {
+    public void setFeederPercentage (double percentage) {
 
-        m_motor.set(percent);
+        m_motor.set(percentage);
     }
 
     @Override 
