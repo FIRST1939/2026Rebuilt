@@ -14,5 +14,4 @@ public class SpindexerConstants {
     public static final double kSpindexerFeedforwardS = 0.09129;
     public static final double kSpindexerFeedforwardV = 0.053608;
     public static final double kSpindexerFeedforwardA = 0.00027996;
-
 }

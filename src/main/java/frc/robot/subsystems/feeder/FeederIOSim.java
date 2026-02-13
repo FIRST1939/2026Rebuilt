@@ -12,10 +12,9 @@ public class FeederIOSim extends FeederIOHardware {
     private final SparkFlexSim m_motorSim = new SparkFlexSim(m_motor, DCMotor.getNeoVortex(1));
 
     private final FlywheelSim m_physicsSim = new FlywheelSim(
-        LinearSystemId.createFlywheelSystem(
-            DCMotor.getNeoVortex(1), 
-            0.008,
-            FeederConstants.kFeederGearing
+        LinearSystemId.identifyVelocitySystem(
+            FeederConstants.kFeederFeedforwardV,
+            FeederConstants.kFeederFeedforwardA
         ),
         DCMotor.getNeoVortex(1)
     );
@@ -23,7 +22,7 @@ public class FeederIOSim extends FeederIOHardware {
     @Override
     public void updateInputs(FeederIOInputs inputs) {
 
-        m_physicsSim.setInputVoltage(m_motorSim.getAppliedOutput() * m_motorSim.getBusVoltage());
+        m_physicsSim.setInputVoltage(m_motorSim.getAppliedOutput() * m_motorSim.getBusVoltage() - FeederConstants.kFeederFeedforwardA);
         m_physicsSim.update(0.02);
 
         m_motorSim.iterate(

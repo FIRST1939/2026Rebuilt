@@ -12,10 +12,9 @@ public class IntakeIOSim extends IntakeIOHardware {
     private final SparkFlexSim m_rollerMotorSim = new SparkFlexSim(m_roller, DCMotor.getNeoVortex(1));
 
     private final FlywheelSim m_rollerPhysicsSim = new FlywheelSim(
-        LinearSystemId.createFlywheelSystem(
-            DCMotor.getNeoVortex(1), 
-            0.008, 
-            IntakeConstants.kRollerGearing
+        LinearSystemId.identifyVelocitySystem(
+            IntakeConstants.kRollerFeedforwardV,
+            IntakeConstants.kRollerFeedforwardA
         ), 
         DCMotor.getNeoVortex(1)
     );
@@ -23,7 +22,7 @@ public class IntakeIOSim extends IntakeIOHardware {
     @Override
     public void updateInputs(IntakeIOInputs inputs) {
 
-        m_rollerPhysicsSim.setInputVoltage(m_rollerMotorSim.getAppliedOutput() * m_rollerMotorSim.getBusVoltage());
+        m_rollerPhysicsSim.setInputVoltage(m_rollerMotorSim.getAppliedOutput() * m_rollerMotorSim.getBusVoltage() - IntakeConstants.kRollerFeedforwardS);
         m_rollerPhysicsSim.update(0.02);
 
         m_rollerMotorSim.iterate(
