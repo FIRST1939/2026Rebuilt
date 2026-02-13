@@ -4,25 +4,26 @@ import frc.robot.subsystems.shooter.Shooter;
 
 public class RunShooter extends Command {
     
-    private final Shooter shooter;
+    private final Shooter m_shooter;
     private final double m_percentage;
 
     public RunShooter (Shooter shooter, double percentage) {
 
-        this.shooter = shooter;
+        m_shooter = shooter;
         m_percentage = percentage;
-        this.addRequirements(this.shooter);
+
+        addRequirements(shooter);
     }
 
     @Override
     public void initialize () {
 
-        this.shooter.setFlywheelPercentage(m_percentage);
+        m_shooter.setFlywheelPercentage(m_percentage);
     }
 
     @Override
     public void end (boolean interrupted) {
 
-        this.shooter.setFlywheelPercentage(0.0);
+        m_shooter.setFlywheelPercentage(0.0);
     }
 }

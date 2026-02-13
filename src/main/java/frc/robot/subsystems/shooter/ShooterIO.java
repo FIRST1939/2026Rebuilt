@@ -28,9 +28,9 @@ public interface ShooterIO {
 
     public default void updateInputs (ShooterIOInputs inputs) {}
     public default void setFlywheelPercentage (double percent) {}
+    public default void setFlywheelVoltage(double magnitude) {}
     public default void setFlywheelVelocity (double velocity) {}
     public default void setHoodPercentage (double percent) {}
-    public default void setHoodPosition (double position) {}
-    public default void setFlywheelVoltage(double magnitude) {}
     public default void setHoodVoltage(double magnitude) {}
+    public default void setHoodPosition (double position) {}
 }

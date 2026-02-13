@@ -36,21 +36,22 @@ public class ShooterIOHardware implements ShooterIO {
             .positionConversionFactor(1.0 / ShooterConstants.kFlywheelGearReduction)
             .velocityConversionFactor(1.0 / ShooterConstants.kFlywheelGearReduction);
 
-
         SparkFlexConfig flywheelLeaderConfig = new SparkFlexConfig();
+
         flywheelLeaderConfig
             .apply(globalConfig)
             .inverted(ShooterConstants.kFlywheelLeaderInverted);
+        
         m_flywheelLeader.configure(flywheelLeaderConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
-
         SparkFlexConfig flywheelFollowerConfig = new SparkFlexConfig();
+
         flywheelFollowerConfig
             .apply(globalConfig)
             .inverted(ShooterConstants.kFlywheelFollowerInverted);
             //.follow(m_flywheelLeader);
-        m_flywheelFollower.configure(flywheelFollowerConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
+        m_flywheelFollower.configure(flywheelFollowerConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
         SparkFlexConfig hoodConfig = new SparkFlexConfig();
 
@@ -60,9 +61,9 @@ public class ShooterIOHardware implements ShooterIO {
         hoodConfig.encoder
             .positionConversionFactor(1.0 / ShooterConstants.kHoodGearReduction)
             .velocityConversionFactor(1.0 / ShooterConstants.kHoodGearReduction);
+
         m_hood.configure(hoodConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     }
-
 
     @Override
     public void updateInputs (ShooterIOInputs inputs) {
@@ -88,6 +89,7 @@ public class ShooterIOHardware implements ShooterIO {
 
     @Override
     public void setFlywheelPercentage (double percent) {
+
         m_flywheelLeader.set(percent);
         m_flywheelFollower.set(percent);
         //m_flywheelController.setSetpoint(percent, ControlType.kMAXMotionVelocityControl, ClosedLoopSlot.kSlot0);
@@ -95,6 +97,7 @@ public class ShooterIOHardware implements ShooterIO {
 
     @Override
     public void setHoodPosition (double position) {
+
         m_flywheelController.setSetpoint(position, ControlType.kPosition, ClosedLoopSlot.kSlot0);
     }    
 }

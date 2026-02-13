@@ -44,12 +44,6 @@ public class SpindexerIOHardware implements SpindexerIO {
 
     }
 
-    public void setSpindexerPercentage(double percentage) {
-        
-    m_motor.set(percentage);
-    //m_spindexerController.setSetpoint(percent, ControlType.kVelocity, ClosedLoopSlot.kSlot0);
-    //NOTE: ControlType.kVelocity here is supposed to be Feed Forward. We will just let PID stuff equal zero.
-    }
     @Override
     public void updateInputs (SpindexerIOInputs inputs) {
 
@@ -58,16 +52,22 @@ public class SpindexerIOHardware implements SpindexerIO {
         inputs.spindexerPosition = m_encoder.getPosition();
         inputs.spindexerVoltage = m_motor.getAppliedOutput() * m_motor.getBusVoltage();
         inputs.spindexerTemperature = m_motor.getMotorTemperature();
+    }
+
+    public void setSpindexerPercentage(double percentage) {
         
+        m_motor.set(percentage);
     }
 
     @Override
     public void setSpindexerVoltage (double voltage) {
+
         m_spindexerController.setSetpoint(voltage, ControlType.kVoltage);
     }
 
     @Override
     public void setSpindexerVelocity (double velocity) {
+        
         m_spindexerController.setSetpoint(velocity, ControlType.kVelocity, ClosedLoopSlot.kSlot0);
     }
 }
