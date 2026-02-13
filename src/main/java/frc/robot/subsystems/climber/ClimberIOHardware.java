@@ -23,12 +23,12 @@ public class ClimberIOHardware implements ClimberIO {
 
         config
             .idleMode(IdleMode.kBrake)
+            .inverted(ClimberConstants.kInverted)
             .smartCurrentLimit(ClimberConstants.kCurrentLimit);
 
         config.encoder
             .positionConversionFactor(1.0 / ClimberConstants.kClimberGearReduction)
             .velocityConversionFactor(1.0 / ClimberConstants.kClimberGearReduction);
-            //.inverted(ClimberConstants.kInverted)
 
         m_motor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     }

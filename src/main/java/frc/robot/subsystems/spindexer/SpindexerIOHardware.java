@@ -23,12 +23,12 @@ public class SpindexerIOHardware implements SpindexerIO {
 
         config
             .idleMode(IdleMode.kBrake)
+            .inverted(SpindexerConstants.kInverted)
             .smartCurrentLimit(SpindexerConstants.kCurrentLimit);
 
         config.encoder
             .velocityConversionFactor(SpindexerConstants.kSpindexerGearing)
             .positionConversionFactor(SpindexerConstants.kSpindexerGearing);
-            //inverted(SpindexerConstants.kInverted);
 
         m_motor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 

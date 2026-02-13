@@ -28,12 +28,12 @@ public class IntakeIOHardware implements IntakeIO {
 
         config
             .idleMode(IdleMode.kBrake)
+            .inverted(IntakeConstants.kInverted)
             .smartCurrentLimit(IntakeConstants.kRollerCurrentLimit);
 
         config.encoder
             .positionConversionFactor(IntakeConstants.kRollerGearing)
             .velocityConversionFactor(IntakeConstants.kRollerGearing);
-            //.inverted(IntakeConstants.kInverted);
 
         m_roller.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
         
