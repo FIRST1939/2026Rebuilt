@@ -8,8 +8,8 @@ import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
-import com.revrobotics.spark.config.SparkFlexConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+import com.revrobotics.spark.config.SparkFlexConfig;
 
 public class IntakeIOHardware implements IntakeIO {
     
@@ -28,12 +28,12 @@ public class IntakeIOHardware implements IntakeIO {
 
         config
             .idleMode(IdleMode.kBrake)
+            .inverted(IntakeConstants.kInverted)
             .smartCurrentLimit(IntakeConstants.kRollerCurrentLimit);
 
         config.encoder
             .positionConversionFactor(IntakeConstants.kRollerGearing)
-            .velocityConversionFactor(IntakeConstants.kRollerGearing)
-            .inverted(IntakeConstants.kInverted);
+            .velocityConversionFactor(IntakeConstants.kRollerGearing);
 
         m_roller.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
         

@@ -15,7 +15,7 @@ public class IntakeConstants {
     public static final boolean kInverted = false;
 
     public static final int kRollerSysIdRampUpTime = 1;
-    public static final int kRollerSysIdVoltageIncrement = 2;
+    public static final double kRollerSysIdVoltageIncrement = 0.1;
     public static final int kRollerSysIdDuration = 10;
 
     public static final int kPivotSysIdRampUpTime = 1;

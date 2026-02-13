@@ -4,16 +4,16 @@ import com.revrobotics.PersistMode;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.ResetMode;
 import com.revrobotics.spark.ClosedLoopSlot;
+import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkFlex;
-import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
-import com.revrobotics.spark.config.SparkFlexConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+import com.revrobotics.spark.config.SparkFlexConfig;
 
 public class ClimberIOHardware implements ClimberIO {
     
-    protected final SparkFlex m_motor = new SparkFlex(ClimberConstants.kClimberCAN,MotorType.kBrushless);
+    protected final SparkFlex m_motor = new SparkFlex(ClimberConstants.kClimberCAN, MotorType.kBrushless);
     protected final SparkClosedLoopController m_controller = m_motor.getClosedLoopController();
     protected final RelativeEncoder m_encoder = m_motor.getEncoder();
 
@@ -23,12 +23,12 @@ public class ClimberIOHardware implements ClimberIO {
 
         config
             .idleMode(IdleMode.kBrake)
+            .inverted(ClimberConstants.kInverted)
             .smartCurrentLimit(ClimberConstants.kCurrentLimit);
 
         config.encoder
             .positionConversionFactor(1.0 / ClimberConstants.kClimberGearReduction)
-            .velocityConversionFactor(1.0 / ClimberConstants.kClimberGearReduction)
-            .inverted(ClimberConstants.kInverted);
+            .velocityConversionFactor(1.0 / ClimberConstants.kClimberGearReduction);
 
         m_motor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     }

@@ -8,8 +8,8 @@ import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
-import com.revrobotics.spark.config.SparkFlexConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+import com.revrobotics.spark.config.SparkFlexConfig;
 
 
 public class ShooterIOHardware implements ShooterIO {
@@ -36,21 +36,23 @@ public class ShooterIOHardware implements ShooterIO {
             .positionConversionFactor(1.0 / ShooterConstants.kFlywheelGearReduction)
             .velocityConversionFactor(1.0 / ShooterConstants.kFlywheelGearReduction);
 
-
         SparkFlexConfig flywheelLeaderConfig = new SparkFlexConfig();
+
         flywheelLeaderConfig
             .apply(globalConfig)
             .inverted(ShooterConstants.kFlywheelLeaderInverted);
+        
         m_flywheelLeader.configure(flywheelLeaderConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
 
         SparkFlexConfig flywheelFollowerConfig = new SparkFlexConfig();
+
         flywheelFollowerConfig
             .apply(globalConfig)
             .inverted(ShooterConstants.kFlywheelFollowerInverted)
             .follow(m_flywheelLeader);
+        
         m_flywheelFollower.configure(flywheelFollowerConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-
 
         SparkFlexConfig hoodConfig = new SparkFlexConfig();
 
@@ -60,6 +62,7 @@ public class ShooterIOHardware implements ShooterIO {
         hoodConfig.encoder
             .positionConversionFactor(1.0 / ShooterConstants.kHoodGearReduction)
             .velocityConversionFactor(1.0 / ShooterConstants.kHoodGearReduction);
+        
         m_hood.configure(hoodConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     }
 
