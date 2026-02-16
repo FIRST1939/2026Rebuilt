@@ -15,12 +15,12 @@ public class RunIntake extends Command {
     @Override
     public void initialize () {
 
-        this.intake.setRollerVoltage(5.0);
+        this.intake.setRollerPercentage(0.5);
     }
 
     @Override
     public void end (boolean interrupted) {
 
-        this.intake.setRollerVoltage(0.0);
+        this.intake.setRollerPercentage(0.0);
     }
 }

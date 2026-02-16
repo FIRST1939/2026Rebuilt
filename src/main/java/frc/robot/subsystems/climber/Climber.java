@@ -16,26 +16,26 @@ public class Climber extends SubsystemBase {
 
     private final ClimberIO m_io;
     private final ClimberIOInputsAutoLogged m_inputs = new ClimberIOInputsAutoLogged();
-    private final SysIdRoutine sysIdRoutine;
+    private final SysIdRoutine m_sysIdRoutine;
 
     public Climber (ClimberIO io) {
 
         m_io = io;
 
-        this.sysIdRoutine = new SysIdRoutine(
+        m_sysIdRoutine = new SysIdRoutine(
             new SysIdRoutine.Config(
                 Volts.per(Units.Second).of(ClimberConstants.kSysIdRampUpTime), 
                 Volts.of(ClimberConstants.kSysIdVoltageIncrement), 
                 Seconds.of(ClimberConstants.kSysIdDuration)),
 
             new SysIdRoutine.Mechanism(
-                voltage -> io.setClimberVoltage(voltage.magnitude()), 
+                voltage -> m_io.setClimberVoltage(voltage.magnitude()), 
                 log -> {
                     log
                         .motor("climberMotor")
-                        .voltage(Volts.of(this.m_inputs.climberVoltage))
-                        .angularPosition(Rotations.of(this.m_inputs.climberPosition))
-                        .angularVelocity(RotationsPerSecond.of(this.m_inputs.climberVelocity));
+                        .voltage(Volts.of(m_inputs.climberVoltage))
+                        .angularPosition(Rotations.of(m_inputs.climberPosition))
+                        .angularVelocity(RotationsPerSecond.of(m_inputs.climberVelocity));
                 },
                 this, 
                 "Climber")
@@ -49,36 +49,38 @@ public class Climber extends SubsystemBase {
         Logger.processInputs("Climber", m_inputs);
     }
 
+    public double getClimberPosition () {
+
+        return m_inputs.climberPosition;
+    }
+
     public void setClimberPercentage (double percent) {
         
         m_io.setClimberPercentage(percent);
     }
     
-    public void setClimberPosition(double position) {
+    public void setClimberPosition (double position) {
+
         m_io.setClimberPosition(position);
     }
 
-    public double getClimberPosition() {
-        return this.m_inputs.climberPosition;
+    public Command sysIdQuasistaticForward () {
+
+        return m_sysIdRoutine.quasistatic(SysIdRoutine.Direction.kForward);
     }
 
-    public void setClimberVoltage(double magnitude) {
-        m_io.setClimberVoltage(magnitude);
+    public Command sysIdQuasistaticReverse () {
+
+        return m_sysIdRoutine.quasistatic(SysIdRoutine.Direction.kReverse);
     }
 
-    public Command ClimberSysIdQuasistaticForward() {
-        return sysIdRoutine.quasistatic(SysIdRoutine.Direction.kForward);
+    public Command sysIdDynamicForward () {
+
+        return m_sysIdRoutine.dynamic(SysIdRoutine.Direction.kForward);
     }
 
-    public Command ClimberSysIdQuasistaticReverse() {
-        return sysIdRoutine.quasistatic(SysIdRoutine.Direction.kReverse);
-    }
+    public Command sysIdDynamicReverse () {
 
-    public Command ClimberSysIdDynamicForward() {
-        return sysIdRoutine.dynamic(SysIdRoutine.Direction.kForward);
-    }
-
-    public Command ClimberSysIdDynamicReverse() {
-        return sysIdRoutine.dynamic(SysIdRoutine.Direction.kReverse);
+        return m_sysIdRoutine.dynamic(SysIdRoutine.Direction.kReverse);
     }
 }

@@ -13,24 +13,27 @@ public interface IntakeIO {
         public double rollerCurrent = 0.0;
         public double rollerTemperature = 0.0;
 
-        public double pivotLeaderPosition = 0.0;
-        public double pivotLeaderVelocity = 0.0;
-        public double pivotLeaderVoltage = 0.0;
-        public double pivotLeaderCurrent = 0.0;
-        public double pivotLeaderTemperature = 0.0;
+        public double leftPivotPosition = 0.0;
+        public double leftPivotVelocity = 0.0;
+        public double leftPivotVoltage = 0.0;
+        public double leftPivotCurrent = 0.0;
+        public double leftPivotTemperature = 0.0;
 
-        public double pivotFollowerPosition = 0.0;
-        public double pivotFollowerVelocity = 0.0;
-        public double pivotFollowerVoltage = 0.0;
-        public double pivotFollowerCurrent = 0.0;
-        public double pivotFollowerTemperature = 0.0;
+        public double rightPivotPosition = 0.0;
+        public double rightPivotVelocity = 0.0;
+        public double rightPivotVoltage = 0.0;
+        public double rightPivotCurrent = 0.0;
+        public double rightPivotTemperature = 0.0;
     }
 
     public default void updateInputs (IntakeIOInputs inputs) {}
     public default void setRollerPercentage (double percent) {}
     public default void setRollerVoltage(double voltage) {}
     public default void setRollerVelocity (double velocity) {}
-    public default void setPivotPercentage (double percent) {}
-    public default void setPivotVoltage(double voltage) {}
-    public default void setPivotPosition (double position) {}
+    public default void setLeftPivotPercentage (double percent) {}
+    public default void setLeftPivotVoltage(double voltage) {}
+    public default void setLeftPivotPosition (double position) {}
+    public default void setRightPivotPercentage (double percent) {}
+    public default void setRightPivotVoltage(double voltage) {}
+    public default void setRightPivotPosition (double position) {}
 }

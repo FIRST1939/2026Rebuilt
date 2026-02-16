@@ -24,11 +24,12 @@ public class ClimberIOHardware implements ClimberIO {
         config
             .idleMode(IdleMode.kBrake)
             .inverted(ClimberConstants.kInverted)
-            .smartCurrentLimit(ClimberConstants.kCurrentLimit);
+            .smartCurrentLimit(ClimberConstants.kCurrentLimit)
+            .voltageCompensation(12.0);
 
         config.encoder
-            .positionConversionFactor(1.0 / ClimberConstants.kClimberGearReduction)
-            .velocityConversionFactor(1.0 / ClimberConstants.kClimberGearReduction);
+            .positionConversionFactor(ClimberConstants.kClimberGearing)
+            .velocityConversionFactor(ClimberConstants.kClimberGearing);
 
         m_motor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     }
@@ -50,8 +51,14 @@ public class ClimberIOHardware implements ClimberIO {
     }
 
     @Override
+    public void setClimberVoltage (double voltage) {
+
+        m_controller.setSetpoint(voltage, ControlType.kVoltage);
+    }
+
+    @Override
     public void setClimberPosition (double position) {
 
-        m_controller.setSetpoint(position, ControlType.kMAXMotionPositionControl, ClosedLoopSlot.kSlot0, 0.0);
+        m_controller.setSetpoint(position, ControlType.kMAXMotionPositionControl, ClosedLoopSlot.kSlot0);
     }
 }

@@ -14,26 +14,26 @@ public class Feeder extends SubsystemBase {
     
     private final FeederIO m_io;
     private final FeederIOInputsAutoLogged m_inputs = new FeederIOInputsAutoLogged();
-    private final SysIdRoutine sysIdRoutine;
+    private final SysIdRoutine m_sysIdRoutine;
 
     public Feeder (FeederIO io) {
         
         m_io = io;
 
-        this.sysIdRoutine = new SysIdRoutine(
+        m_sysIdRoutine = new SysIdRoutine(
             new SysIdRoutine.Config(
                 Volts.per(Units.Second).of(FeederConstants.kSysIdRampUpTime), 
                 Volts.of(FeederConstants.kSysIdVoltageIncrement), 
                 Seconds.of(FeederConstants.kSysIdDuration)),
 
             new SysIdRoutine.Mechanism(
-                voltage -> io.setFeederVoltage(voltage.magnitude()), 
+                voltage -> m_io.setFeederVoltage(voltage.magnitude()), 
                 log -> {
                     log
                         .motor("feederMotor")
-                        .voltage(Volts.of(this.m_inputs.feederVoltage))
-                        .angularPosition(Rotations.of(this.m_inputs.feederPosition))
-                        .angularVelocity(RotationsPerSecond.of(this.m_inputs.feederVelocity));
+                        .voltage(Volts.of(m_inputs.feederVoltage))
+                        .angularPosition(Rotations.of(m_inputs.feederPosition))
+                        .angularVelocity(RotationsPerSecond.of(m_inputs.feederVelocity));
                 },
                 this, 
                 "Feeder")
@@ -47,7 +47,12 @@ public class Feeder extends SubsystemBase {
         Logger.processInputs("Feeder", m_inputs);
     }
 
-    public double getFeederCurrent() {
+    public double getFeederVelocity () {
+        
+        return this.m_inputs.feederVelocity;
+    }
+
+    public double getFeederCurrent () {
 
         return m_inputs.feederCurrent;
     }
@@ -63,29 +68,24 @@ public class Feeder extends SubsystemBase {
         m_io.setFeederVelocity (velocity);
     }
 
-    public double getFeederVelocity () {
-        
-        return this.m_inputs.feederVelocity;
+    public Command sysIdQuasistaticForward () {
+
+        return m_sysIdRoutine.quasistatic(SysIdRoutine.Direction.kForward);
     }
 
-    public void setFeederVoltage(double magnitude) {
-        this.m_io.setFeederVoltage(magnitude);
+    public Command sysIdQuasistaticReverse () {
+
+        return m_sysIdRoutine.quasistatic(SysIdRoutine.Direction.kReverse);
     }
 
-    public Command FeederSysIdQuasistaticForward() {
-        return sysIdRoutine.quasistatic(SysIdRoutine.Direction.kForward);
+    public Command sysIdDynamicForward () {
+
+        return m_sysIdRoutine.dynamic(SysIdRoutine.Direction.kForward);
     }
 
-    public Command FeederSysIdQuasistaticReverse() {
-        return sysIdRoutine.quasistatic(SysIdRoutine.Direction.kReverse);
-    }
+    public Command sysIdDynamicReverse () {
 
-    public Command FeederSysIdDynamicForward() {
-        return sysIdRoutine.dynamic(SysIdRoutine.Direction.kForward);
-    }
-
-    public Command FeederSysIdDynamicReverse() {
-        return sysIdRoutine.dynamic(SysIdRoutine.Direction.kReverse);
+        return m_sysIdRoutine.dynamic(SysIdRoutine.Direction.kReverse);
     }
 
 }

@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.OperatorConstants;
 
+import frc.robot.subsystems.intake.*;
 import frc.robot.subsystems.spindexer.*;
 import frc.robot.subsystems.feeder.*;
 import frc.robot.subsystems.shooter.*;
@@ -21,7 +22,7 @@ import frc.robot.commands.shooter.*;
 
 public class RobotContainer {
 
-    //private final Intake m_intake;
+    private final Intake m_intake;
     private final Spindexer m_spindexer;
     private final Feeder m_feeder;
     private final Shooter m_shooter;
@@ -32,13 +33,13 @@ public class RobotContainer {
 
         if (isReal) {
 
-            //m_intake = new Intake(new IntakeIOHardware());
+            m_intake = new Intake(new IntakeIOHardware());
             m_spindexer = new Spindexer(new SpindexerIOHardware());
             m_feeder = new Feeder(new FeederIOHardware());
             m_shooter = new Shooter(new ShooterIOHardware());
         } else {
 
-            //m_intake = new Intake(new IntakeIOSim());
+            m_intake = new Intake(new IntakeIOSim());
             m_spindexer = new Spindexer(new SpindexerIOSim());
             m_feeder = new Feeder(new FeederIOSim());
             m_shooter = new Shooter(new ShooterIOHardware());
@@ -73,9 +74,9 @@ public class RobotContainer {
 
         RoboRioSim.setVInVoltage(
             BatterySim.calculateDefaultBatteryLoadedVoltage(
-                //m_intake.getRollerCurrent(),
-                m_spindexer.getSpindexerCurrent()
-                //m_feeder.getFeederCurrent()
+                m_intake.getRollerCurrent(),
+                m_spindexer.getSpindexerCurrent(),
+                m_feeder.getFeederCurrent()
             )
         );
     }

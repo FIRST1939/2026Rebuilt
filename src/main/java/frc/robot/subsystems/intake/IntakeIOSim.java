@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 
 public class IntakeIOSim extends IntakeIOHardware {
     
-    private final SparkFlexSim m_rollerMotorSim = new SparkFlexSim(m_roller, DCMotor.getNeoVortex(1));
+    private final SparkFlexSim m_rollerMotorSim = new SparkFlexSim(m_rollerMotor, DCMotor.getNeoVortex(1));
 
     private final FlywheelSim m_rollerPhysicsSim = new FlywheelSim(
         LinearSystemId.identifyVelocitySystem(

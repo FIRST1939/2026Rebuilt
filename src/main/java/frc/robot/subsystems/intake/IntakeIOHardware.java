@@ -3,7 +3,6 @@ package frc.robot.subsystems.intake;
 import com.revrobotics.PersistMode;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.ResetMode;
-import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkFlex;
@@ -13,58 +12,85 @@ import com.revrobotics.spark.config.SparkFlexConfig;
 
 public class IntakeIOHardware implements IntakeIO {
     
-    protected final SparkFlex m_roller = new SparkFlex(IntakeConstants.kRollerCAN, MotorType.kBrushless);
-    protected final SparkFlex m_pivotLeader = new SparkFlex(IntakeConstants.kPivotFollowerCAN, MotorType.kBrushless);
-    protected final SparkFlex m_pivotFollower = new SparkFlex(IntakeConstants.kPivotLeaderCAN, MotorType.kBrushless);
-    protected final RelativeEncoder m_rollerEncoder = m_roller.getEncoder();
-    protected final RelativeEncoder m_pivotLeaderEncoder = m_pivotLeader.getEncoder();
-    protected final RelativeEncoder m_pivotFollowerEncoder = m_pivotFollower.getEncoder();
-    protected final SparkClosedLoopController m_pivotController = m_pivotLeader.getClosedLoopController();
-    protected final SparkClosedLoopController m_rollerController = m_roller.getClosedLoopController();
+    protected final SparkFlex m_rollerMotor = new SparkFlex(IntakeConstants.kRollerCAN, MotorType.kBrushless);
+    protected final SparkFlex m_leftPivotMotor = new SparkFlex(IntakeConstants.kLeftPivotCAN, MotorType.kBrushless);
+    protected final SparkFlex m_rightPivotMotor = new SparkFlex(IntakeConstants.kRightPivotCAN, MotorType.kBrushless);
+    protected final RelativeEncoder m_rollerEncoder = m_rollerMotor.getEncoder();
+    protected final RelativeEncoder m_leftPivotEncoder = m_leftPivotMotor.getEncoder();
+    protected final RelativeEncoder m_rightPivotEncoder = m_rightPivotMotor.getEncoder();
+    protected final SparkClosedLoopController m_rollerController = m_rollerMotor.getClosedLoopController();
+    protected final SparkClosedLoopController m_leftPivotController = m_leftPivotMotor.getClosedLoopController();
+    protected final SparkClosedLoopController m_rightPivotController = m_rightPivotMotor.getClosedLoopController();
 
     public IntakeIOHardware () {
 
-        SparkFlexConfig config = new SparkFlexConfig();
+        SparkFlexConfig rollerConfig = new SparkFlexConfig();
 
-        config
+        rollerConfig
             .idleMode(IdleMode.kBrake)
-            .inverted(IntakeConstants.kInverted)
-            .smartCurrentLimit(IntakeConstants.kRollerCurrentLimit);
+            .inverted(IntakeConstants.kRollerInverted)
+            .voltageCompensation(12.0);
 
-        config.encoder
+        rollerConfig.encoder
             .positionConversionFactor(IntakeConstants.kRollerGearing)
             .velocityConversionFactor(IntakeConstants.kRollerGearing);
 
-        m_roller.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        m_rollerMotor.configure(rollerConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+
+        SparkFlexConfig globalPivotConfig = new SparkFlexConfig();
+
+        globalPivotConfig
+            .idleMode(IdleMode.kCoast)
+            .smartCurrentLimit(IntakeConstants.kPivotCurrentLimit)
+            .voltageCompensation(12.0);
+
+        globalPivotConfig.encoder
+            .positionConversionFactor(IntakeConstants.kPivotGearing)
+            .velocityConversionFactor(IntakeConstants.kPivotGearing);
+
+        SparkFlexConfig leftPivotConfig = new SparkFlexConfig();
+
+        leftPivotConfig
+            .apply(globalPivotConfig)
+            .inverted(IntakeConstants.kLeftPivotInverted);
         
+        m_leftPivotMotor.configure(leftPivotConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+
+        SparkFlexConfig rightPivotConfig = new SparkFlexConfig();
+
+        rightPivotConfig
+            .apply(globalPivotConfig)
+            .inverted(IntakeConstants.kRightPivotInverted);
+        
+        m_rightPivotMotor.configure(rightPivotConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     }
 
     @Override
     public void updateInputs (IntakeIOInputs inputs) {
 
-        inputs.rollerCurrent = m_roller.getOutputCurrent();
+        inputs.rollerCurrent = m_rollerMotor.getOutputCurrent();
         inputs.rollerVelocity = m_rollerEncoder.getVelocity();
         inputs.rollerPosition = m_rollerEncoder.getPosition();
-        inputs.rollerVoltage = m_roller.getAppliedOutput() * m_roller.getBusVoltage();
-        inputs.rollerTemperature = m_roller.getMotorTemperature();
+        inputs.rollerVoltage = m_rollerMotor.getAppliedOutput() * m_rollerMotor.getBusVoltage();
+        inputs.rollerTemperature = m_rollerMotor.getMotorTemperature();
 
-        inputs.pivotLeaderCurrent = m_pivotLeader.getOutputCurrent();
-        inputs.pivotLeaderVelocity = m_pivotLeaderEncoder.getVelocity();
-        inputs.pivotLeaderPosition = m_pivotLeaderEncoder.getPosition();
-        inputs.pivotLeaderVoltage = m_pivotLeader.getAppliedOutput() * m_pivotLeader.getBusVoltage();
-        inputs.pivotLeaderTemperature = m_pivotLeader.getMotorTemperature();
+        inputs.leftPivotCurrent = m_leftPivotMotor.getOutputCurrent();
+        inputs.leftPivotVelocity = m_leftPivotEncoder.getVelocity();
+        inputs.leftPivotPosition = m_leftPivotEncoder.getPosition();
+        inputs.leftPivotVoltage = m_leftPivotMotor.getAppliedOutput() * m_leftPivotMotor.getBusVoltage();
+        inputs.leftPivotTemperature = m_leftPivotMotor.getMotorTemperature();
 
-        inputs.pivotFollowerCurrent = m_pivotFollower.getOutputCurrent();
-        inputs.pivotFollowerVelocity = m_pivotFollowerEncoder.getVelocity();
-        inputs.pivotFollowerPosition = m_pivotFollowerEncoder.getPosition();
-        inputs.pivotFollowerVoltage = m_pivotFollower.getAppliedOutput() * m_pivotFollower.getBusVoltage();
-        inputs.pivotFollowerTemperature = m_pivotFollower.getMotorTemperature();
+        inputs.rightPivotCurrent = m_rightPivotMotor.getOutputCurrent();
+        inputs.rightPivotVelocity = m_rightPivotEncoder.getVelocity();
+        inputs.rightPivotPosition = m_rightPivotEncoder.getPosition();
+        inputs.rightPivotVoltage = m_rightPivotMotor.getAppliedOutput() * m_rightPivotMotor.getBusVoltage();
+        inputs.rightPivotTemperature = m_rightPivotMotor.getMotorTemperature();
     }
 
     @Override
     public void setRollerPercentage (double percent) {
 
-        m_roller.set(percent);
+        m_rollerMotor.set(percent);
     }
 
     @Override
@@ -76,19 +102,42 @@ public class IntakeIOHardware implements IntakeIO {
     @Override
     public void setRollerVelocity (double velocity) {
 
-        m_rollerController.setSetpoint(velocity, ControlType.kMAXMotionVelocityControl, ClosedLoopSlot.kSlot0, 0.0);
+        m_rollerController.setSetpoint(velocity, ControlType.kVelocity);
     }
 
     @Override
-    public void setPivotPercentage (double percent) {
+    public void setLeftPivotPercentage (double percent) {
 
-        m_pivotLeader.set(percent);
-        m_pivotFollower.set(-(percent));
+        m_leftPivotMotor.set(percent);
+    }
+    
+    @Override
+    public void setLeftPivotVoltage (double voltage) {
+
+        m_leftPivotController.setSetpoint(voltage, ControlType.kVoltage);
     }
 
     @Override
-    public void setPivotPosition (double position) {
+    public void setLeftPivotPosition (double position) {
 
-        m_pivotController.setSetpoint(position, ControlType.kMAXMotionPositionControl, ClosedLoopSlot.kSlot0, 0.0);
+        m_leftPivotController.setSetpoint(position, ControlType.kMAXMotionPositionControl);
+    }
+
+    @Override
+    public void setRightPivotPercentage (double percent) {
+
+        m_rightPivotMotor.set(percent);
+    }
+
+    @Override
+    public void setRightPivotVoltage (double voltage) {
+
+        m_rightPivotController.setSetpoint(voltage, ControlType.kVoltage);
+    }
+
+    @Override
+    public void setRightPivotPosition (double position) {
+
+        m_rightPivotController.setSetpoint(position, ControlType.kMAXMotionPositionControl);
     }
 }

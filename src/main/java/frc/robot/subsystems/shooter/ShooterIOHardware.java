@@ -3,7 +3,6 @@ package frc.robot.subsystems.shooter;
 import com.revrobotics.PersistMode;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.ResetMode;
-import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkBase.ControlType;
@@ -27,19 +26,20 @@ public class ShooterIOHardware implements ShooterIO {
 
     public ShooterIOHardware () {
        
-        SparkFlexConfig globalConfig = new SparkFlexConfig();
+        SparkFlexConfig globalFlywheelConfig = new SparkFlexConfig();
 
-        globalConfig
-            .idleMode(IdleMode.kCoast);
+        globalFlywheelConfig
+            .idleMode(IdleMode.kCoast)
+            .voltageCompensation(12.0);
 
-        globalConfig.encoder
-            .positionConversionFactor(1.0 / ShooterConstants.kFlywheelGearReduction)
-            .velocityConversionFactor(1.0 / ShooterConstants.kFlywheelGearReduction);
+        globalFlywheelConfig.encoder
+            .positionConversionFactor(ShooterConstants.kFlywheelGearing)
+            .velocityConversionFactor(ShooterConstants.kFlywheelGearing);
 
         SparkFlexConfig flywheelLeaderConfig = new SparkFlexConfig();
 
         flywheelLeaderConfig
-            .apply(globalConfig)
+            .apply(globalFlywheelConfig)
             .inverted(ShooterConstants.kFlywheelLeaderInverted);
         
         m_flywheelLeader.configure(flywheelLeaderConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
@@ -47,16 +47,18 @@ public class ShooterIOHardware implements ShooterIO {
         SparkFlexConfig flywheelFollowerConfig = new SparkFlexConfig();
 
         flywheelFollowerConfig
-            .apply(globalConfig)
-            .inverted(ShooterConstants.kFlywheelFollowerInverted);
-            //.follow(m_flywheelLeader);
+            .apply(globalFlywheelConfig)
+            .inverted(ShooterConstants.kFlywheelFollowerInverted)
+            .follow(m_flywheelLeader);
         
         m_flywheelFollower.configure(flywheelFollowerConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
         SparkFlexConfig hoodConfig = new SparkFlexConfig();
 
         hoodConfig
-            .idleMode(IdleMode.kBrake);
+            .idleMode(IdleMode.kBrake)
+            .smartCurrentLimit(ShooterConstants.kHoodCurrentLimit)
+            .voltageCompensation(12.0);
 
         hoodConfig.encoder
             .positionConversionFactor(1.0 / ShooterConstants.kHoodGearReduction)
@@ -91,13 +93,35 @@ public class ShooterIOHardware implements ShooterIO {
     public void setFlywheelPercentage (double percent) {
 
         m_flywheelLeader.set(percent);
-        m_flywheelFollower.set(percent);
-        //m_flywheelController.setSetpoint(percent, ControlType.kMAXMotionVelocityControl, ClosedLoopSlot.kSlot0);
     }
+
+    @Override
+    public void setFlywheelVoltage (double voltage) {
+
+        m_flywheelController.setSetpoint(voltage, ControlType.kVoltage);
+    }
+
+    @Override
+    public void setFlywheelVelocity (double velocity) {
+
+        m_flywheelController.setSetpoint(velocity, ControlType.kMAXMotionVelocityControl);
+    }
+
+    @Override
+    public void setHoodPercentage (double percent) {
+
+        m_hood.set(percent);
+    }   
+
+    @Override
+    public void setHoodVoltage (double voltage) {
+
+        m_flywheelController.setSetpoint(voltage, ControlType.kVoltage);
+    }   
 
     @Override
     public void setHoodPosition (double position) {
 
-        m_flywheelController.setSetpoint(position, ControlType.kPosition, ClosedLoopSlot.kSlot0);
+        m_flywheelController.setSetpoint(position, ControlType.kPosition);
     }    
 }
