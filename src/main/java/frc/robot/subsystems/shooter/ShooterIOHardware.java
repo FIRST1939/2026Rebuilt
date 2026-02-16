@@ -9,6 +9,9 @@ import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkFlexConfig;
+
+// frc.robot.subsystems.spindexer.SpindexerConstants;
+
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 
@@ -60,6 +63,19 @@ public class ShooterIOHardware implements ShooterIO {
         hoodConfig.encoder
             .positionConversionFactor(1.0 / ShooterConstants.kHoodGearReduction)
             .velocityConversionFactor(1.0 / ShooterConstants.kHoodGearReduction);
+
+         hoodConfig
+         .closedLoop
+               .pid(0.0010000000474974513, 0, 0,ClosedLoopSlot.kSlot0)
+               .maxMotion.maxAcceleration(24000000,ClosedLoopSlot.kSlot0)
+               .cruiseVelocity(2400000,ClosedLoopSlot.kSlot0)
+             .allowedProfileError(.02,ClosedLoopSlot.kSlot0);
+              
+        
+            // .feedForward
+            //     .kS(SpindexerConstants.kSpindexerFeedforwardS, ClosedLoopSlot.kSlot0)
+            //     .kV(SpindexerConstants.kSpindexerFeedforwardV, ClosedLoopSlot.kSlot0)
+            //     .kA(SpindexerConstants.kSpindexerFeedforwardA, ClosedLoopSlot.kSlot0);    
         m_hood.configure(hoodConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     }
 
@@ -94,7 +110,13 @@ public class ShooterIOHardware implements ShooterIO {
     }
 
     @Override
+    public void setHoodPercentage (double percentage) {
+        m_hood.set(percentage);
+    }   
+
+    @Override
     public void setHoodPosition (double position) {
-        m_flywheelController.setSetpoint(position, ControlType.kPosition, ClosedLoopSlot.kSlot0);
+       // m_hoodController.setSetpoint(position, ControlType.kVelocity, ClosedLoopSlot.kSlot1);
+        m_hoodController.setSetpoint(position, ControlType.kMAXMotionPositionControl, ClosedLoopSlot.kSlot0);
     }    
 }
