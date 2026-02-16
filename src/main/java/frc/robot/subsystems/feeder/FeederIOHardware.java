@@ -30,6 +30,14 @@ public class FeederIOHardware implements FeederIO {
             .positionConversionFactor(FeederConstants.kFeederGearing)
             .velocityConversionFactor(FeederConstants.kFeederGearing);
 
+        config.closedLoop
+            .p(FeederConstants.kFeederFeedbackP)
+            .d(FeederConstants.kFeederFeedbackD)
+            .feedForward
+                .kS(FeederConstants.kFeederFeedforwardS)
+                .kV(FeederConstants.kFeederFeedforwardV)
+                .kA(FeederConstants.kFeederFeedforwardA);
+
         m_motor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     }
 

@@ -36,6 +36,18 @@ public class ShooterIOHardware implements ShooterIO {
             .positionConversionFactor(ShooterConstants.kFlywheelGearing)
             .velocityConversionFactor(ShooterConstants.kFlywheelGearing);
 
+        globalFlywheelConfig.closedLoop
+            .p(ShooterConstants.kFlywheelFeedbackP)
+            .d(ShooterConstants.kFlywheelFeedbackD)
+            .feedForward
+                .kS(ShooterConstants.kFlywheelFeedforwardS)
+                .kV(ShooterConstants.kFlywheelFeedforwardV)
+                .kA(ShooterConstants.kFlywheelFeedforwardA);
+
+        globalFlywheelConfig.closedLoop.maxMotion
+            .maxAcceleration(ShooterConstants.kFlywheelProfileMaxAcceleration)
+            .allowedProfileError(ShooterConstants.kFlywheelProfileAllowedError);
+
         SparkFlexConfig flywheelLeaderConfig = new SparkFlexConfig();
 
         flywheelLeaderConfig
@@ -61,8 +73,16 @@ public class ShooterIOHardware implements ShooterIO {
             .voltageCompensation(12.0);
 
         hoodConfig.encoder
-            .positionConversionFactor(1.0 / ShooterConstants.kHoodGearReduction)
-            .velocityConversionFactor(1.0 / ShooterConstants.kHoodGearReduction);
+            .positionConversionFactor(ShooterConstants.kHoodGearing)
+            .velocityConversionFactor(ShooterConstants.kHoodGearing);
+
+        hoodConfig.closedLoop
+            .p(ShooterConstants.kHoodFeedbackP)
+            .d(ShooterConstants.kHoodFeedbackD)
+            .feedForward
+                .kS(ShooterConstants.kHoodFeedforwardS)
+                .kV(ShooterConstants.kHoodFeedforwardV)
+                .kA(ShooterConstants.kHoodFeedforwardA);
         
         m_hood.configure(hoodConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     }

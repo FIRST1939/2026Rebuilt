@@ -35,6 +35,14 @@ public class IntakeIOHardware implements IntakeIO {
             .positionConversionFactor(IntakeConstants.kRollerGearing)
             .velocityConversionFactor(IntakeConstants.kRollerGearing);
 
+        rollerConfig.closedLoop
+            .p(IntakeConstants.kRollerFeedbackP)
+            .d(IntakeConstants.kRollerFeedbackD)
+            .feedForward
+                .kS(IntakeConstants.kRollerFeedforwardS)
+                .kV(IntakeConstants.kRollerFeedforwardV)
+                .kA(IntakeConstants.kRollerFeedforwardA);
+
         m_rollerMotor.configure(rollerConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
         SparkFlexConfig globalPivotConfig = new SparkFlexConfig();
@@ -47,6 +55,20 @@ public class IntakeIOHardware implements IntakeIO {
         globalPivotConfig.encoder
             .positionConversionFactor(IntakeConstants.kPivotGearing)
             .velocityConversionFactor(IntakeConstants.kPivotGearing);
+
+        globalPivotConfig.closedLoop
+            .p(IntakeConstants.kPivotFeedbackP)
+            .d(IntakeConstants.kPivotFeedbackD)
+            .feedForward
+                .kS(IntakeConstants.kPivotFeedforwardS)
+                .kV(IntakeConstants.kPivotFeedforwardV)
+                .kA(IntakeConstants.kPivotFeedforwardA)
+                .kCos(IntakeConstants.kPivotFeedforwardG);
+
+        globalPivotConfig.closedLoop.maxMotion
+            .cruiseVelocity(IntakeConstants.kPivotProfileCruiseVelocity)
+            .maxAcceleration(IntakeConstants.kPivotProfileMaxAcceleration)
+            .allowedProfileError(IntakeConstants.kPivotProfileAllowedError);
 
         SparkFlexConfig leftPivotConfig = new SparkFlexConfig();
 
