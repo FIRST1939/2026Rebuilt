@@ -140,9 +140,9 @@ public class RobotContainer {
         spindexerCharacterizationMode.and(m_driverController.rightTrigger()).whileTrue(m_spindexer.sysIdDynamicReverse());
 
         feederCharacterizationMode.and(m_driverController.leftBumper()).whileTrue(m_feeder.sysIdQuasistaticForward());
-        feederCharacterizationMode.and(m_driverController.leftBumper()).whileTrue(m_feeder.sysIdQuasistaticReverse());
-        feederCharacterizationMode.and(m_driverController.leftBumper()).whileTrue(m_feeder.sysIdDynamicForward());
-        feederCharacterizationMode.and(m_driverController.leftBumper()).whileTrue(m_feeder.sysIdDynamicReverse());
+        feederCharacterizationMode.and(m_driverController.rightBumper()).whileTrue(m_feeder.sysIdQuasistaticReverse());
+        feederCharacterizationMode.and(m_driverController.leftTrigger()).whileTrue(m_feeder.sysIdDynamicForward());
+        feederCharacterizationMode.and(m_driverController.rightTrigger()).whileTrue(m_feeder.sysIdDynamicReverse());
 
         feederCharacterizationMode.and(m_driverController.leftStick()).onTrue(Commands.sequence(
             Commands.runOnce(() -> {
