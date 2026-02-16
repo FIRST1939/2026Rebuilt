@@ -110,6 +110,44 @@ public class ShooterIOHardware implements ShooterIO {
     }
 
     @Override
+    public void updateFlywheelControllerFeedback (double kP, double kD) {
+
+        SparkFlexConfig config = new SparkFlexConfig();
+
+        config.closedLoop
+            .p(kP)
+            .d(kD);
+
+        m_flywheelLeader.configure(config, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
+        m_flywheelFollower.configure(config, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
+    }
+
+    @Override
+    public void updateFlywheelControllerProfile (double kMaxAcceleration, double kAllowedError) {
+
+        SparkFlexConfig config = new SparkFlexConfig();
+
+        config.closedLoop.maxMotion
+            .maxAcceleration(kMaxAcceleration)
+            .allowedProfileError(kAllowedError);
+
+        m_flywheelLeader.configure(config, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
+        m_flywheelFollower.configure(config, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
+    }
+
+    @Override
+    public void updateHoodControllerFeedback (double kP, double kD) {
+
+        SparkFlexConfig config = new SparkFlexConfig();
+
+        config.closedLoop
+            .p(kP)
+            .d(kD);
+
+        m_hood.configure(config, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
+    }
+
+    @Override
     public void setFlywheelPercentage (double percent) {
 
         m_flywheelLeader.set(percent);

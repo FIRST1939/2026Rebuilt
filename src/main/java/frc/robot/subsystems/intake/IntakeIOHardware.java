@@ -110,6 +110,45 @@ public class IntakeIOHardware implements IntakeIO {
     }
 
     @Override
+    public void updateRollerControllerFeedback (double kP, double kD) {
+
+        SparkFlexConfig config = new SparkFlexConfig();
+
+        config.closedLoop
+            .p(kP)
+            .d(kD);
+
+        m_rollerMotor.configure(config, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
+    }
+
+    @Override
+    public void updatePivotControllerFeedback (double kP, double kD) {
+
+        SparkFlexConfig config = new SparkFlexConfig();
+
+        config.closedLoop
+            .p(kP)
+            .d(kD);
+
+        m_leftPivotMotor.configure(config, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
+        m_rightPivotMotor.configure(config, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
+    }
+
+    @Override
+    public void updatePivotControllerProfile (double kCruiseVelocity, double kMaxAcceleration, double kAllowedError) {
+
+        SparkFlexConfig config = new SparkFlexConfig();
+
+        config.closedLoop.maxMotion
+            .cruiseVelocity(kCruiseVelocity)
+            .maxAcceleration(kMaxAcceleration)
+            .allowedProfileError(kAllowedError);
+
+        m_leftPivotMotor.configure(config, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
+        m_rightPivotMotor.configure(config, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
+    }
+
+    @Override
     public void setRollerPercentage (double percent) {
 
         m_rollerMotor.set(percent);

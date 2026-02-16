@@ -69,6 +69,21 @@ public class Shooter extends SubsystemBase {
         Logger.processInputs("Shooter", m_inputs);
     }
 
+    public void updateFlywheelControllerFeedback (double kP, double kD) {
+
+        m_io.updateFlywheelControllerFeedback(kP, kD);
+    }
+
+    public void updateFlywheelControllerProfile (double maxAcceleration, double allowedError) {
+
+        m_io.updateFlywheelControllerProfile(maxAcceleration, allowedError);
+    }
+
+    public void updateHoodControllerFeedback (double kP, double kD) {
+
+        m_io.updateHoodControllerFeedback(kP, kD);
+    }
+
     public double getFlywheelPosition () {
 
         return (m_inputs.flywheelLeaderPosition + this.m_inputs.flywheelFollowerPosition) / 2.0;

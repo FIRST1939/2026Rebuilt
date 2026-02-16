@@ -15,6 +15,7 @@ public interface FeederIO {
     }
 
     public default void updateInputs (FeederIOInputs inputs) {}
+    public default void updateControllerFeedback (double kP, double kD) {}
     public default void setFeederPercentage (double percentage) {}
     public default void setFeederVoltage (double magnitude) {}
     public default void setFeederVelocity (double position) {}

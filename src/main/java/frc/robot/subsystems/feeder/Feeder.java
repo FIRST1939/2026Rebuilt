@@ -47,6 +47,11 @@ public class Feeder extends SubsystemBase {
         Logger.processInputs("Feeder", m_inputs);
     }
 
+    public void updateControllerFeedback (double kP, double kD) {
+
+        m_io.updateControllerFeedback(kP, kD);
+    }
+
     public double getFeederVelocity () {
         
         return this.m_inputs.feederVelocity;

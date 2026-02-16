@@ -52,6 +52,18 @@ public class FeederIOHardware implements FeederIO {
     }
 
     @Override
+    public void updateControllerFeedback (double kP, double kD) {
+
+        SparkFlexConfig config = new SparkFlexConfig();
+
+        config.closedLoop
+            .p(kP)
+            .d(kD);
+
+        m_motor.configure(config, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
+    }
+
+    @Override
     public void setFeederPercentage (double percentage) {
 
         m_motor.set(percentage);

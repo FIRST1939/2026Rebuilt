@@ -86,7 +86,21 @@ public class Intake extends SubsystemBase {
 
         m_io.updateInputs(m_inputs);
         Logger.processInputs("Intake", m_inputs);
+    }
 
+    public void updateRollerControllerFeedback (double kP, double kD) {
+
+        m_io.updateRollerControllerFeedback(kP, kD);
+    }
+
+    public void updatePivotControllerFeedback (double kP, double kD) {
+
+        m_io.updatePivotControllerFeedback(kP, kD);
+    }
+
+    public void updatePivotControllerProfile (double maxVelocity, double maxAcceleration, double allowedError) {
+
+        m_io.updatePivotControllerProfile(maxVelocity, maxAcceleration, allowedError);
     }
 
     public double getRollerCurrent() {

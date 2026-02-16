@@ -5,6 +5,7 @@
 package frc.robot;
 
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
+import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
 
 import edu.wpi.first.wpilibj.simulation.BatterySim;
 import edu.wpi.first.wpilibj.simulation.RoboRioSim;
@@ -40,6 +41,13 @@ public class RobotContainer {
     }
 
     private final LoggedDashboardChooser<OpModes> m_opModeSelector = new LoggedDashboardChooser<>("Op Mode Selector");
+    private final LoggedNetworkNumber m_controllerSetpoint = new LoggedNetworkNumber("Controller Setpoint");
+    private final LoggedNetworkNumber m_updateFeedbackP = new LoggedNetworkNumber("Feedback P");
+    private final LoggedNetworkNumber m_updateFeedbackD = new LoggedNetworkNumber("Feedback D");
+    private final LoggedNetworkNumber m_updateProfileCruiseVelocity = new LoggedNetworkNumber("Profile Cruise Velocity");
+    private final LoggedNetworkNumber m_updateProfileMaxAcceleration = new LoggedNetworkNumber("Profile Max Acceleration");
+    private final LoggedNetworkNumber m_updateProfileAllowedError = new LoggedNetworkNumber("Profile Allowed Error");
+
     private final CommandXboxController m_driverController = new CommandXboxController(OperatorConstants.kDriverControllerPort);
 
     public RobotContainer(boolean isReal) {
@@ -95,6 +103,37 @@ public class RobotContainer {
         intakeCharacterizationMode.and(m_driverController.a()).whileTrue(m_intake.rightPivotSysIdDynamicForward());
         intakeCharacterizationMode.and(m_driverController.x()).whileTrue(m_intake.rightPivotSysIdDynamicReverse());
 
+        intakeCharacterizationMode.and(m_driverController.leftStick()).onTrue(Commands.sequence(
+            Commands.runOnce(() -> {
+                m_intake.updateRollerControllerFeedback(
+                    m_updateFeedbackP.getAsDouble(),
+                    m_updateFeedbackD.getAsDouble()
+                );
+            }),
+            Commands.runOnce(() -> {
+                m_intake.setRollerVelocity(m_controllerSetpoint.getAsDouble());
+            }, m_intake)
+        ));
+
+        intakeCharacterizationMode.and(m_driverController.rightStick()).onTrue(Commands.sequence(
+            Commands.runOnce(() -> {
+                m_intake.updatePivotControllerFeedback(
+                    m_updateFeedbackP.getAsDouble(),
+                    m_updateFeedbackD.getAsDouble()
+                );
+            }),
+            Commands.runOnce(() -> {
+                m_intake.updatePivotControllerProfile(
+                    m_updateProfileCruiseVelocity.getAsDouble(),
+                    m_updateProfileMaxAcceleration.getAsDouble(),
+                    m_updateProfileAllowedError.getAsDouble()
+                );
+            }),
+            Commands.runOnce(() -> {
+                m_intake.setPivotPosition(m_controllerSetpoint.getAsDouble());
+            }, m_intake)
+        ));
+
         spindexerCharacterizationMode.and(m_driverController.leftBumper()).whileTrue(m_spindexer.sysIdQuasistaticForward());
         spindexerCharacterizationMode.and(m_driverController.rightBumper()).whileTrue(m_spindexer.sysIdQuasistaticReverse());
         spindexerCharacterizationMode.and(m_driverController.leftTrigger()).whileTrue(m_spindexer.sysIdDynamicForward());
@@ -105,6 +144,18 @@ public class RobotContainer {
         feederCharacterizationMode.and(m_driverController.leftBumper()).whileTrue(m_feeder.sysIdDynamicForward());
         feederCharacterizationMode.and(m_driverController.leftBumper()).whileTrue(m_feeder.sysIdDynamicReverse());
 
+        feederCharacterizationMode.and(m_driverController.leftStick()).onTrue(Commands.sequence(
+            Commands.runOnce(() -> {
+                m_feeder.updateControllerFeedback(
+                    m_updateFeedbackP.getAsDouble(),
+                    m_updateFeedbackD.getAsDouble()
+                );
+            }),
+            Commands.runOnce(() -> {
+                m_feeder.setFeederVelocity(m_controllerSetpoint.getAsDouble());
+            }, m_feeder)
+        ));
+
         shooterCharacterizationMode.and(m_driverController.leftBumper()).whileTrue(m_shooter.flywheelSysIdQuasistaticForward());
         shooterCharacterizationMode.and(m_driverController.leftBumper()).whileTrue(m_shooter.flywheelSysIdQuasistaticReverse());
         shooterCharacterizationMode.and(m_driverController.leftBumper()).whileTrue(m_shooter.flywheelSysIdDynamicForward());
@@ -114,6 +165,36 @@ public class RobotContainer {
         shooterCharacterizationMode.and(m_driverController.b()).whileTrue(m_shooter.hoodSysIdQuasistaticReverse());
         shooterCharacterizationMode.and(m_driverController.a()).whileTrue(m_shooter.hoodSysIdDynamicForward());
         shooterCharacterizationMode.and(m_driverController.x()).whileTrue(m_shooter.hoodSysIdDynamicReverse());
+
+        shooterCharacterizationMode.and(m_driverController.leftStick()).onTrue(Commands.sequence(
+            Commands.runOnce(() -> {
+                m_shooter.updateFlywheelControllerFeedback(
+                    m_updateFeedbackP.getAsDouble(),
+                    m_updateFeedbackD.getAsDouble()
+                );
+            }),
+            Commands.runOnce(() -> {
+                m_shooter.updateFlywheelControllerProfile(
+                    m_updateProfileMaxAcceleration.getAsDouble(),
+                    m_updateProfileAllowedError.getAsDouble()
+                );
+            }),
+            Commands.runOnce(() -> {
+                m_shooter.setFlywheelVelocity(m_controllerSetpoint.getAsDouble());
+            }, m_shooter)
+        ));
+
+        shooterCharacterizationMode.and(m_driverController.rightStick()).onTrue(Commands.sequence(
+            Commands.runOnce(() -> {
+                m_shooter.updateHoodControllerFeedback(
+                    m_updateFeedbackP.getAsDouble(),
+                    m_updateFeedbackD.getAsDouble()
+                );
+            }),
+            Commands.runOnce(() -> {
+                m_shooter.setHoodPosition(m_controllerSetpoint.getAsDouble());
+            }, m_intake)
+        ));
     }
 
     public Command getAutonomousCommand() {
