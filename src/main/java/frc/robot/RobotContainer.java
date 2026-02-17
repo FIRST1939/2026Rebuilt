@@ -4,6 +4,9 @@
 
 package frc.robot;
 
+import java.util.function.DoubleSupplier;
+
+import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
 
@@ -47,6 +50,7 @@ public class RobotContainer {
     private final LoggedNetworkNumber m_updateProfileCruiseVelocity = new LoggedNetworkNumber("Profile Cruise Velocity");
     private final LoggedNetworkNumber m_updateProfileMaxAcceleration = new LoggedNetworkNumber("Profile Max Acceleration");
     private final LoggedNetworkNumber m_updateProfileAllowedError = new LoggedNetworkNumber("Profile Allowed Error");
+    private DoubleSupplier m_errorSupplier = () -> 0.0;
 
     private final CommandXboxController m_driverController = new CommandXboxController(OperatorConstants.kDriverControllerPort);
 
@@ -109,9 +113,10 @@ public class RobotContainer {
                     m_updateFeedbackP.getAsDouble(),
                     m_updateFeedbackD.getAsDouble()
                 );
-            }),
-            Commands.runOnce(() -> {
-                m_intake.setRollerVelocity(m_controllerSetpoint.getAsDouble());
+
+                double setpoint = m_controllerSetpoint.getAsDouble();
+                m_errorSupplier = () -> setpoint - m_intake.getRollerVelocity();
+                m_intake.setRollerVelocity(setpoint);
             }, m_intake)
         ));
 
@@ -121,16 +126,16 @@ public class RobotContainer {
                     m_updateFeedbackP.getAsDouble(),
                     m_updateFeedbackD.getAsDouble()
                 );
-            }),
-            Commands.runOnce(() -> {
+
                 m_intake.updatePivotControllerProfile(
                     m_updateProfileCruiseVelocity.getAsDouble(),
                     m_updateProfileMaxAcceleration.getAsDouble(),
                     m_updateProfileAllowedError.getAsDouble()
                 );
-            }),
-            Commands.runOnce(() -> {
-                m_intake.setPivotPosition(m_controllerSetpoint.getAsDouble());
+
+                double setpoint = m_controllerSetpoint.getAsDouble();
+                m_errorSupplier = () -> setpoint - m_intake.getAveragePivotPosition();
+                m_intake.setPivotPosition(setpoint);
             }, m_intake)
         ));
 
@@ -150,9 +155,10 @@ public class RobotContainer {
                     m_updateFeedbackP.getAsDouble(),
                     m_updateFeedbackD.getAsDouble()
                 );
-            }),
-            Commands.runOnce(() -> {
-                m_feeder.setFeederVelocity(m_controllerSetpoint.getAsDouble());
+
+                double setpoint = m_controllerSetpoint.getAsDouble();
+                m_errorSupplier = () -> setpoint - m_feeder.getFeederVelocity();
+                m_feeder.setFeederVelocity(setpoint);
             }, m_feeder)
         ));
 
@@ -172,15 +178,15 @@ public class RobotContainer {
                     m_updateFeedbackP.getAsDouble(),
                     m_updateFeedbackD.getAsDouble()
                 );
-            }),
-            Commands.runOnce(() -> {
+
                 m_shooter.updateFlywheelControllerProfile(
                     m_updateProfileMaxAcceleration.getAsDouble(),
                     m_updateProfileAllowedError.getAsDouble()
                 );
-            }),
-            Commands.runOnce(() -> {
-                m_shooter.setFlywheelVelocity(m_controllerSetpoint.getAsDouble());
+
+                double setpoint = m_controllerSetpoint.getAsDouble();
+                m_errorSupplier = () -> setpoint - m_shooter.getFlywheelVelocity();
+                m_shooter.setFlywheelVelocity(setpoint);
             }, m_shooter)
         ));
 
@@ -190,10 +196,18 @@ public class RobotContainer {
                     m_updateFeedbackP.getAsDouble(),
                     m_updateFeedbackD.getAsDouble()
                 );
-            }),
-            Commands.runOnce(() -> {
-                m_shooter.setHoodPosition(m_controllerSetpoint.getAsDouble());
+
+                double setpoint = m_controllerSetpoint.getAsDouble();
+                m_errorSupplier = () -> setpoint - m_shooter.getHoodPosition();
+                m_shooter.setHoodPosition(setpoint);
             }, m_intake)
+        ));
+
+        intakeCharacterizationMode.or(spindexerCharacterizationMode).or(feederCharacterizationMode).or(shooterCharacterizationMode)
+            .whileTrue(Commands.run(() -> {
+
+                Logger.recordOutput("Controller Error", m_errorSupplier.getAsDouble());
+            }
         ));
     }
 

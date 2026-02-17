@@ -103,9 +103,19 @@ public class Intake extends SubsystemBase {
         m_io.updatePivotControllerProfile(maxVelocity, maxAcceleration, allowedError);
     }
 
-    public double getRollerCurrent() {
+    public double getRollerVelocity () {
+
+        return m_inputs.rollerVelocity;
+    }
+
+    public double getRollerCurrent () {
 
         return m_inputs.rollerCurrent;
+    }
+
+    public double getAveragePivotPosition () {
+
+        return (m_inputs.leftPivotPosition + m_inputs.rightPivotPosition) / 2.0;
     }
 
     public void setRollerPercentage (double percentage) {
