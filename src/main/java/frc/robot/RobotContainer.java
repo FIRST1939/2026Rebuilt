@@ -90,7 +90,8 @@ public class RobotContainer {
 
         percentMode.and(m_driverController.a()).whileTrue(new RunSpindexer(m_spindexer, -1.0));
         percentMode.and(m_driverController.x()).whileTrue(new RunFeeder(m_feeder, 1.0));
-        percentMode.and(m_driverController.y()).whileTrue(new RunShooter(m_shooter, 0.6));
+        percentMode.and(m_driverController.y()).whileTrue(new RunHood(m_shooter, -0.2));
+        percentMode.and(m_driverController.b()).whileTrue(new RunHood(m_shooter, 0.2));
 
         intakeCharacterizationMode.and(m_driverController.leftBumper()).whileTrue(m_intake.rollerSysIdQuasistaticForward());
         intakeCharacterizationMode.and(m_driverController.rightBumper()).whileTrue(m_intake.rollerSysIdQuasistaticReverse());
@@ -163,9 +164,9 @@ public class RobotContainer {
         ));
 
         shooterCharacterizationMode.and(m_driverController.leftBumper()).whileTrue(m_shooter.flywheelSysIdQuasistaticForward());
-        shooterCharacterizationMode.and(m_driverController.leftBumper()).whileTrue(m_shooter.flywheelSysIdQuasistaticReverse());
-        shooterCharacterizationMode.and(m_driverController.leftBumper()).whileTrue(m_shooter.flywheelSysIdDynamicForward());
-        shooterCharacterizationMode.and(m_driverController.leftBumper()).whileTrue(m_shooter.flywheelSysIdDynamicReverse());
+        shooterCharacterizationMode.and(m_driverController.rightBumper()).whileTrue(m_shooter.flywheelSysIdQuasistaticReverse());
+        shooterCharacterizationMode.and(m_driverController.leftTrigger()).whileTrue(m_shooter.flywheelSysIdDynamicForward());
+        shooterCharacterizationMode.and(m_driverController.rightTrigger()).whileTrue(m_shooter.flywheelSysIdDynamicReverse());
 
         shooterCharacterizationMode.and(m_driverController.y()).whileTrue(m_shooter.hoodSysIdQuasistaticForward());
         shooterCharacterizationMode.and(m_driverController.b()).whileTrue(m_shooter.hoodSysIdQuasistaticReverse());

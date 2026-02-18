@@ -6,8 +6,8 @@ public class FeederConstants {
     public static final boolean kInverted = false;
     public static final double kFeederGearing = (18.0 / 54.0) * (24.0 / 24.0);
 
-    public static final int kSysIdRampUpTime = 1;
-    public static final int kSysIdVoltageIncrement = 2;
+    public static final double kSysIdRampUpTime = 0.625;
+    public static final int kSysIdVoltageIncrement = 6;
     public static final int kSysIdDuration = 10;
 
     public static final double kFeederFeedforwardS = 0.1;

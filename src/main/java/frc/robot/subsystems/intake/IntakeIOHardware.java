@@ -27,7 +27,7 @@ public class IntakeIOHardware implements IntakeIO {
         SparkFlexConfig rollerConfig = new SparkFlexConfig();
 
         rollerConfig
-            .idleMode(IdleMode.kBrake)
+            .idleMode(IdleMode.kCoast)
             .inverted(IntakeConstants.kRollerInverted)
             .voltageCompensation(12.0);
 

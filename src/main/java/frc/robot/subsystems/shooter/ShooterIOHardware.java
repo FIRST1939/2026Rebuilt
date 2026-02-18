@@ -52,7 +52,7 @@ public class ShooterIOHardware implements ShooterIO {
 
         flywheelLeaderConfig
             .apply(globalFlywheelConfig)
-            .inverted(ShooterConstants.kFlywheelLeaderInverted);
+            .inverted(ShooterConstants.kFlywheelInverted);
         
         m_flywheelLeader.configure(flywheelLeaderConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
@@ -60,8 +60,7 @@ public class ShooterIOHardware implements ShooterIO {
 
         flywheelFollowerConfig
             .apply(globalFlywheelConfig)
-            .inverted(ShooterConstants.kFlywheelFollowerInverted)
-            .follow(m_flywheelLeader);
+            .follow(m_flywheelLeader, true);
         
         m_flywheelFollower.configure(flywheelFollowerConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
@@ -70,7 +69,8 @@ public class ShooterIOHardware implements ShooterIO {
         hoodConfig
             .idleMode(IdleMode.kBrake)
             .smartCurrentLimit(ShooterConstants.kHoodCurrentLimit)
-            .voltageCompensation(12.0);
+            .voltageCompensation(12.0)
+            .inverted(ShooterConstants.kHoodInverted);
 
         hoodConfig.encoder
             .positionConversionFactor(ShooterConstants.kHoodGearing)
@@ -174,7 +174,7 @@ public class ShooterIOHardware implements ShooterIO {
     @Override
     public void setHoodVoltage (double voltage) {
 
-        m_flywheelController.setSetpoint(voltage, ControlType.kVoltage);
+        m_hoodController.setSetpoint(voltage, ControlType.kVoltage);
     }   
 
     @Override
