@@ -44,6 +44,8 @@ public class Robot extends LoggedRobot {
 
         CommandScheduler.getInstance().run();
 
+        m_robotContainer.logControllerError();
+
         if (isSimulation()) {
 
             m_robotContainer.simulateBatteryLoad();

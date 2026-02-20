@@ -93,6 +93,11 @@ public class Intake extends SubsystemBase {
         m_io.updateRollerControllerFeedback(kP, kD);
     }
 
+    public double getAveragePivotControllerSetpoint () {
+
+        return (m_io.getLeftPivotControllerSetpoint() + m_io.getRightPivotControllerSetpoint()) / 2.0;
+    }
+
     public void updatePivotControllerFeedback (double kP, double kD) {
 
         m_io.updatePivotControllerFeedback(kP, kD);

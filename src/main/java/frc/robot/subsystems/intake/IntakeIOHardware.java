@@ -122,6 +122,18 @@ public class IntakeIOHardware implements IntakeIO {
     }
 
     @Override
+    public double getLeftPivotControllerSetpoint () {
+
+        return m_leftPivotController.getMAXMotionSetpointPosition();
+    }
+
+    @Override
+    public double getRightPivotControllerSetpoint () {
+
+        return m_leftPivotController.getMAXMotionSetpointPosition();
+    }
+
+    @Override
     public void updatePivotControllerFeedback (double kP, double kD) {
 
         SparkFlexConfig config = new SparkFlexConfig();

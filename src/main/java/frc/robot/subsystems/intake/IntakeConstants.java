@@ -23,7 +23,7 @@ public class IntakeConstants {
     public static final double kRollerFeedforwardV = 0.0035432;
     public static final double kRollerFeedforwardA = 0.00017563;
 
-    public static final double kRollerFeedbackP = 0.0;
+    public static final double kRollerFeedbackP = 0.00025;
     public static final double kRollerFeedbackD = 0.0;
 
     public static final int kPivotSysIdRampUpTime = 1;

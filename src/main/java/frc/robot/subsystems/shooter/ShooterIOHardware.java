@@ -44,10 +44,6 @@ public class ShooterIOHardware implements ShooterIO {
                 .kV(ShooterConstants.kFlywheelFeedforwardV)
                 .kA(ShooterConstants.kFlywheelFeedforwardA);
 
-        globalFlywheelConfig.closedLoop.maxMotion
-            .maxAcceleration(ShooterConstants.kFlywheelProfileMaxAcceleration)
-            .allowedProfileError(ShooterConstants.kFlywheelProfileAllowedError);
-
         SparkFlexConfig flywheelLeaderConfig = new SparkFlexConfig();
 
         flywheelLeaderConfig
@@ -82,7 +78,8 @@ public class ShooterIOHardware implements ShooterIO {
             .feedForward
                 .kS(ShooterConstants.kHoodFeedforwardS)
                 .kV(ShooterConstants.kHoodFeedforwardV)
-                .kA(ShooterConstants.kHoodFeedforwardA);
+                .kA(ShooterConstants.kHoodFeedforwardA)
+                .kG(ShooterConstants.kHoodFeedforwardG);
         
         m_hood.configure(hoodConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     }
@@ -123,19 +120,6 @@ public class ShooterIOHardware implements ShooterIO {
     }
 
     @Override
-    public void updateFlywheelControllerProfile (double kMaxAcceleration, double kAllowedError) {
-
-        SparkFlexConfig config = new SparkFlexConfig();
-
-        config.closedLoop.maxMotion
-            .maxAcceleration(kMaxAcceleration)
-            .allowedProfileError(kAllowedError);
-
-        m_flywheelLeader.configure(config, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
-        m_flywheelFollower.configure(config, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
-    }
-
-    @Override
     public void updateHoodControllerFeedback (double kP, double kD) {
 
         SparkFlexConfig config = new SparkFlexConfig();
@@ -162,7 +146,7 @@ public class ShooterIOHardware implements ShooterIO {
     @Override
     public void setFlywheelVelocity (double velocity) {
 
-        m_flywheelController.setSetpoint(velocity, ControlType.kMAXMotionVelocityControl);
+        m_flywheelController.setSetpoint(velocity, ControlType.kVelocity);
     }
 
     @Override
@@ -180,6 +164,6 @@ public class ShooterIOHardware implements ShooterIO {
     @Override
     public void setHoodPosition (double position) {
 
-        m_flywheelController.setSetpoint(position, ControlType.kPosition);
+        m_hoodController.setSetpoint(position, ControlType.kPosition);
     }    
 }

@@ -74,11 +74,6 @@ public class Shooter extends SubsystemBase {
         m_io.updateFlywheelControllerFeedback(kP, kD);
     }
 
-    public void updateFlywheelControllerProfile (double maxAcceleration, double allowedError) {
-
-        m_io.updateFlywheelControllerProfile(maxAcceleration, allowedError);
-    }
-
     public void updateHoodControllerFeedback (double kP, double kD) {
 
         m_io.updateHoodControllerFeedback(kP, kD);

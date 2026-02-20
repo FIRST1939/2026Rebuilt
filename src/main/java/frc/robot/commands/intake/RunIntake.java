@@ -15,7 +15,7 @@ public class RunIntake extends Command {
     @Override
     public void initialize () {
 
-        this.intake.setRollerPercentage(0.5);
+        this.intake.setRollerPercentage(0.225);
     }
 
     @Override

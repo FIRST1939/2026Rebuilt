@@ -10,10 +10,10 @@ public class FeederConstants {
     public static final int kSysIdVoltageIncrement = 6;
     public static final int kSysIdDuration = 10;
 
-    public static final double kFeederFeedforwardS = 0.1;
-    public static final double kFeederFeedforwardV = 0.1;
-    public static final double kFeederFeedforwardA = 0.1;
+    public static final double kFeederFeedforwardS = 0.11571;
+    public static final double kFeederFeedforwardV = 0.0052932;
+    public static final double kFeederFeedforwardA = 0.00010337;
 
-    public static final double kFeederFeedbackP = 0.0;
+    public static final double kFeederFeedbackP = 0.00025;
     public static final double kFeederFeedbackD = 0.0;
 }
