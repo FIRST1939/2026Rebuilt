@@ -15,20 +15,18 @@ public class IntakeConstants {
     public static final int kRightPivotCAN = 32;
     public static final boolean kRightPivotInverted = false;
 
-    public static final double kRollerSysIdRampUpTime = 0.5;
-    public static final double kRollerSysIdVoltageIncrement = 6;
-    public static final int kRollerSysIdDuration = 10;
+    public static final double kRollerSysIdQuasistaticRampRate = 0.5;
+    public static final double kRollerSysIdDynamicStepUp = 6;
+    public static final double kRollerSysIdDuration = 10.0;
 
     public static final double kRollerFeedforwardS = 0.13082;
     public static final double kRollerFeedforwardV = 0.0035432;
     public static final double kRollerFeedforwardA = 0.00017563;
-
     public static final double kRollerFeedbackP = 0.00025;
-    public static final double kRollerFeedbackD = 0.0;
 
-    public static final int kPivotSysIdRampUpTime = 1;
-    public static final int kPivotSysIdVoltageIncrement = 2;
-    public static final int kPivotSysIdDuration = 10;
+    public static final double kPivotSysIdQuasistaticRampRate = 1.0;
+    public static final double kPivotSysIdDynamicStepUp = 2.0;
+    public static final double kPivotSysIdDuration = 10.0;
 
     public static final double kPivotFeedforwardS = 0.1;
     public static final double kPivotFeedforwardV = 0.1;

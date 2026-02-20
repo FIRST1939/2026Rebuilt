@@ -25,8 +25,8 @@ public class Intake extends SubsystemBase {
 
         m_rollerSysIdRoutine = new SysIdRoutine(
             new SysIdRoutine.Config(
-                Volts.per(Units.Second).of(IntakeConstants.kRollerSysIdRampUpTime), 
-                Volts.of(IntakeConstants.kRollerSysIdVoltageIncrement), 
+                Volts.per(Units.Second).of(IntakeConstants.kRollerSysIdQuasistaticRampRate), 
+                Volts.of(IntakeConstants.kRollerSysIdDynamicStepUp), 
                 Seconds.of(IntakeConstants.kRollerSysIdDuration)),
 
             new SysIdRoutine.Mechanism(
@@ -44,8 +44,8 @@ public class Intake extends SubsystemBase {
 
         m_leftPivotSysIdRoutine = new SysIdRoutine(
             new SysIdRoutine.Config(
-                Volts.per(Units.Second).of(IntakeConstants.kPivotSysIdRampUpTime), 
-                Volts.of(IntakeConstants.kPivotSysIdVoltageIncrement), 
+                Volts.per(Units.Second).of(IntakeConstants.kPivotSysIdQuasistaticRampRate), 
+                Volts.of(IntakeConstants.kPivotSysIdDynamicStepUp), 
                 Seconds.of(IntakeConstants.kPivotSysIdDuration)),
 
             new SysIdRoutine.Mechanism(
@@ -63,8 +63,8 @@ public class Intake extends SubsystemBase {
 
         m_rightPivotSysIdRoutine = new SysIdRoutine(
             new SysIdRoutine.Config(
-                Volts.per(Units.Second).of(IntakeConstants.kPivotSysIdRampUpTime), 
-                Volts.of(IntakeConstants.kPivotSysIdVoltageIncrement), 
+                Volts.per(Units.Second).of(IntakeConstants.kPivotSysIdQuasistaticRampRate), 
+                Volts.of(IntakeConstants.kPivotSysIdDynamicStepUp), 
                 Seconds.of(IntakeConstants.kPivotSysIdDuration)),
 
             new SysIdRoutine.Mechanism(

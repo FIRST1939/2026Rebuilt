@@ -25,8 +25,8 @@ public class Shooter extends SubsystemBase {
 
         m_flywheelSysIdRoutine = new SysIdRoutine(
             new SysIdRoutine.Config(
-                Volts.per(Units.Second).of(ShooterConstants.kFlywheelSysIdRampUpTime), 
-                Volts.of(ShooterConstants.kFlywheelSysIdVoltageIncrement), 
+                Volts.per(Units.Second).of(ShooterConstants.kFlywheelSysIdQuasistaticRampRate), 
+                Volts.of(ShooterConstants.kFlywheelSysIdDynamicStepUp), 
                 Seconds.of(ShooterConstants.kFlywheelSysIdDuration)),
 
             new SysIdRoutine.Mechanism(
@@ -44,8 +44,8 @@ public class Shooter extends SubsystemBase {
 
         m_hoodSysIdRoutine = new SysIdRoutine(
             new SysIdRoutine.Config(
-                Volts.per(Units.Second).of(ShooterConstants.kHoodSysIdRampUpTime), 
-                Volts.of(ShooterConstants.kHoodSysIdVoltageIncrement), 
+                Volts.per(Units.Second).of(ShooterConstants.kHoodSysIdQuasistaticRampRate), 
+                Volts.of(ShooterConstants.kHoodSysIdDynamicStepUp), 
                 Seconds.of(ShooterConstants.kHoodSysIdDuration)),
 
             new SysIdRoutine.Mechanism(

@@ -37,7 +37,6 @@ public class IntakeIOHardware implements IntakeIO {
 
         rollerConfig.closedLoop
             .p(IntakeConstants.kRollerFeedbackP)
-            .d(IntakeConstants.kRollerFeedbackD)
             .feedForward
                 .kS(IntakeConstants.kRollerFeedforwardS)
                 .kV(IntakeConstants.kRollerFeedforwardV)

@@ -13,19 +13,17 @@ public class ShooterConstants {
     public static final int kHoodCurrentLimit = 20;
     public static final boolean kHoodInverted = true;
 
-    public static final double kFlywheelSysIdRampUpTime = 0.5;
-    public static final double kFlywheelSysIdVoltageIncrement = 4.0;
-    public static final double kFlywheelSysIdDuration = 10;
+    public static final double kFlywheelSysIdQuasistaticRampRate = 0.5;
+    public static final double kFlywheelSysIdDynamicStepUp = 4.0;
+    public static final double kFlywheelSysIdDuration = 10.0;
 
     public static final double kFlywheelFeedforwardS = 0.21691;
     public static final double kFlywheelFeedforwardV = 0.0017369;
     public static final double kFlywheelFeedforwardA = 0.00034818;
-
     public static final double kFlywheelFeedbackP = 0.0004;
-    public static final double kFlywheelFeedbackD = 0.0;
 
-    public static final double kHoodSysIdRampUpTime = 0.05;
-    public static final double kHoodSysIdVoltageIncrement = 0.2;
+    public static final double kHoodSysIdQuasistaticRampRate = 0.05;
+    public static final double kHoodSysIdDynamicStepUp = 0.2;
     public static final double kHoodSysIdDuration = 5.75;
 
     public static final double kHoodFeedforwardS = 0.096436;

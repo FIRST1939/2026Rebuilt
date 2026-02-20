@@ -25,8 +25,8 @@ public class Spindexer extends SubsystemBase {
         m_sysIdRoutine = new SysIdRoutine(
 
             new SysIdRoutine.Config(
-                Volts.per(Units.Second).of(SpindexerConstants.kSysIdRampUpTime), 
-                Volts.of(SpindexerConstants.kSysIdVoltageIncrement), 
+                Volts.per(Units.Second).of(SpindexerConstants.kSysIdQuasistaticRampRate), 
+                Volts.of(SpindexerConstants.kSysIdDynamicStepUp), 
                 Seconds.of(SpindexerConstants.kSysIdDuration)),
 
             new SysIdRoutine.Mechanism(

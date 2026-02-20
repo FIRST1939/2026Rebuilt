@@ -38,7 +38,6 @@ public class ShooterIOHardware implements ShooterIO {
 
         globalFlywheelConfig.closedLoop
             .p(ShooterConstants.kFlywheelFeedbackP)
-            .d(ShooterConstants.kFlywheelFeedbackD)
             .feedForward
                 .kS(ShooterConstants.kFlywheelFeedforwardS)
                 .kV(ShooterConstants.kFlywheelFeedforwardV)

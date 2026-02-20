@@ -22,8 +22,8 @@ public class Feeder extends SubsystemBase {
 
         m_sysIdRoutine = new SysIdRoutine(
             new SysIdRoutine.Config(
-                Volts.per(Units.Second).of(FeederConstants.kSysIdRampUpTime), 
-                Volts.of(FeederConstants.kSysIdVoltageIncrement), 
+                Volts.per(Units.Second).of(FeederConstants.kSysIdQuasistaticRampRate), 
+                Volts.of(FeederConstants.kSysIdDynamicStepUp), 
                 Seconds.of(FeederConstants.kSysIdDuration)),
 
             new SysIdRoutine.Mechanism(

@@ -32,7 +32,6 @@ public class FeederIOHardware implements FeederIO {
 
         config.closedLoop
             .p(FeederConstants.kFeederFeedbackP)
-            .d(FeederConstants.kFeederFeedbackD)
             .feedForward
                 .kS(FeederConstants.kFeederFeedforwardS)
                 .kV(FeederConstants.kFeederFeedforwardV)
