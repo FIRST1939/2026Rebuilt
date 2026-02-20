@@ -38,7 +38,6 @@ public class RobotContainer {
     private enum OpModes {
         MATCH,
         PERCENT,
-        QUICKSHOT,
         INTAKE_CHARACTERIZATION,
         SPINDEXER_CHARACTERIZATION,
         FEEDER_CHARACTERIZATION,
@@ -46,13 +45,14 @@ public class RobotContainer {
     }
 
     private final LoggedDashboardChooser<OpModes> m_opModeSelector = new LoggedDashboardChooser<>("Op Mode Selector");
+
     private final LoggedNetworkNumber m_controllerSetpoint = new LoggedNetworkNumber("/Tuning/Controller Setpoint", 0);
     private final LoggedNetworkNumber m_updateFeedbackP = new LoggedNetworkNumber("/Tuning/Feedback P", 0);
     private final LoggedNetworkNumber m_updateFeedbackD = new LoggedNetworkNumber("/Tuning/Feedback D", 0);
     private final LoggedNetworkNumber m_updateProfileCruiseVelocity = new LoggedNetworkNumber("/Tuning/Profile Cruise Velocity", 0);
     private final LoggedNetworkNumber m_updateProfileMaxAcceleration = new LoggedNetworkNumber("/Tuning/Profile Max Acceleration", 0);
     private final LoggedNetworkNumber m_updateProfileAllowedError = new LoggedNetworkNumber("/Tuning/Profile Allowed Error", 0);
-    private DoubleSupplier m_errorSupplier = () -> 0.0;
+    private DoubleSupplier m_controllerErrorSupplier = () -> 0.0;
 
     private final CommandXboxController m_driverController = new CommandXboxController(OperatorConstants.kDriverControllerPort);
 
@@ -74,22 +74,24 @@ public class RobotContainer {
         
         m_opModeSelector.addDefaultOption("Match", OpModes.MATCH);
         m_opModeSelector.addOption("Percent", OpModes.PERCENT);
-        m_opModeSelector.addOption("QuickShot", OpModes.QUICKSHOT);
         m_opModeSelector.addOption("Intake Characterization", OpModes.INTAKE_CHARACTERIZATION);
         m_opModeSelector.addOption("Spindexer Characterization", OpModes.SPINDEXER_CHARACTERIZATION);
         m_opModeSelector.addOption("Feeder Characterization", OpModes.FEEDER_CHARACTERIZATION);
         m_opModeSelector.addOption("Shooter Characterization", OpModes.SHOOTER_CHARACTERIZATION);
 
-        configureBindings();
+        configureMatchBindings();
+        configurePercentBindings();
+        configureIntakeCharacterizationBindings();
+        configureSpindexerCharacterizationBindings();
+        configureFeederCharacterizationBindings();
+        configureShooterCharacterizationBindings();
     }
 
-    private void configureBindings() {
+    private void configureMatchBindings () {}
+
+    private void configurePercentBindings() {
 
         Trigger percentMode = new Trigger(() -> m_opModeSelector.get() == OpModes.PERCENT);
-        Trigger intakeCharacterizationMode = new Trigger(() -> m_opModeSelector.get() == OpModes.INTAKE_CHARACTERIZATION);
-        Trigger spindexerCharacterizationMode = new Trigger(() -> m_opModeSelector.get() == OpModes.SPINDEXER_CHARACTERIZATION);
-        Trigger feederCharacterizationMode = new Trigger(() -> m_opModeSelector.get() == OpModes.FEEDER_CHARACTERIZATION);
-        Trigger shooterCharacterizationMode = new Trigger(() -> m_opModeSelector.get() == OpModes.SHOOTER_CHARACTERIZATION);
 
         percentMode.and(m_driverController.a()).whileTrue(new RunSpindexerPercentage(m_spindexer, 0.8));
         percentMode.and(m_driverController.x()).whileTrue(new RunFeederPercentage(m_feeder, 0.8));
@@ -97,10 +99,11 @@ public class RobotContainer {
         percentMode.and(m_driverController.b()).whileTrue(new RunHoodPercentage(m_shooter, -0.2));
         percentMode.and(m_driverController.leftTrigger()).whileTrue(new RunFlywheelPercentage(m_shooter, 0.55));
         percentMode.and(m_driverController.rightTrigger()).whileTrue(new RunIntakeRollerPercentage(m_intake, 0.225));
+    }
 
+    public void configureIntakeCharacterizationBindings () {
 
-
-
+        Trigger intakeCharacterizationMode = new Trigger(() -> m_opModeSelector.get() == OpModes.INTAKE_CHARACTERIZATION);
 
         intakeCharacterizationMode.and(m_driverController.leftBumper()).whileTrue(m_intake.rollerSysIdQuasistaticForward());
         intakeCharacterizationMode.and(m_driverController.rightBumper()).whileTrue(m_intake.rollerSysIdQuasistaticReverse());
@@ -125,7 +128,7 @@ public class RobotContainer {
                 );
 
                 double setpoint = m_controllerSetpoint.getAsDouble();
-                m_errorSupplier = () -> setpoint - m_intake.getRollerVelocity();
+                m_controllerErrorSupplier = () -> setpoint - m_intake.getRollerVelocity();
                 m_intake.setRollerVelocity(setpoint);
             }, m_intake)
         ));
@@ -148,7 +151,7 @@ public class RobotContainer {
             );
 
             double setpoint = m_controllerSetpoint.getAsDouble();
-            m_errorSupplier = () -> m_intake.getAveragePivotControllerSetpoint() - m_intake.getAveragePivotPosition();
+            m_controllerErrorSupplier = () -> m_intake.getAveragePivotControllerSetpoint() - m_intake.getAveragePivotPosition();
             m_intake.setPivotPosition(setpoint);
         }, m_intake));
 
@@ -156,11 +159,21 @@ public class RobotContainer {
 
             m_intake.setPivotPosition(0);
         }, m_intake));
+    }
+
+    public void configureSpindexerCharacterizationBindings () {
+
+        Trigger spindexerCharacterizationMode = new Trigger(() -> m_opModeSelector.get() == OpModes.SPINDEXER_CHARACTERIZATION);
 
         spindexerCharacterizationMode.and(m_driverController.leftBumper()).whileTrue(m_spindexer.sysIdQuasistaticForward());
         spindexerCharacterizationMode.and(m_driverController.rightBumper()).whileTrue(m_spindexer.sysIdQuasistaticReverse());
         spindexerCharacterizationMode.and(m_driverController.leftTrigger()).whileTrue(m_spindexer.sysIdDynamicForward());
         spindexerCharacterizationMode.and(m_driverController.rightTrigger()).whileTrue(m_spindexer.sysIdDynamicReverse());
+    }
+
+    public void configureFeederCharacterizationBindings () {
+
+        Trigger feederCharacterizationMode = new Trigger(() -> m_opModeSelector.get() == OpModes.FEEDER_CHARACTERIZATION);
 
         feederCharacterizationMode.and(m_driverController.leftStick()).onTrue(Commands.sequence(
             Commands.runOnce(() -> {
@@ -170,7 +183,7 @@ public class RobotContainer {
                 );
 
                 double setpoint = m_controllerSetpoint.getAsDouble();
-                m_errorSupplier = () -> setpoint - m_feeder.getFeederVelocity();
+                m_controllerErrorSupplier = () -> setpoint - m_feeder.getFeederVelocity();
                 m_feeder.setFeederVelocity(setpoint);
             }, m_feeder)
         ));
@@ -193,7 +206,7 @@ public class RobotContainer {
                 );
 
                 double setpoint = m_controllerSetpoint.getAsDouble();
-                m_errorSupplier = () -> setpoint - m_feeder.getFeederVelocity();
+                m_controllerErrorSupplier = () -> setpoint - m_feeder.getFeederVelocity();
                 m_feeder.setFeederVelocity(setpoint);
             }, m_feeder)
         ));
@@ -202,6 +215,11 @@ public class RobotContainer {
 
             m_feeder.setFeederVelocity(0);
         }, m_feeder));
+    }
+
+    public void configureShooterCharacterizationBindings () {
+
+        Trigger shooterCharacterizationMode = new Trigger(() -> m_opModeSelector.get() == OpModes.SHOOTER_CHARACTERIZATION);
 
         shooterCharacterizationMode.and(m_driverController.leftBumper()).whileTrue(m_shooter.flywheelSysIdQuasistaticForward());
         shooterCharacterizationMode.and(m_driverController.rightBumper()).whileTrue(m_shooter.flywheelSysIdQuasistaticReverse());
@@ -221,7 +239,7 @@ public class RobotContainer {
             );
 
             double setpoint = m_controllerSetpoint.getAsDouble();
-            m_errorSupplier = () -> setpoint - m_shooter.getFlywheelVelocity();
+            m_controllerErrorSupplier = () -> setpoint - m_shooter.getFlywheelVelocity();
             m_shooter.setFlywheelVelocity(setpoint);
         }, m_shooter));
 
@@ -233,7 +251,7 @@ public class RobotContainer {
                 );
 
                 double setpoint = m_controllerSetpoint.getAsDouble();
-                m_errorSupplier = () -> setpoint - m_shooter.getHoodPosition();
+                m_controllerErrorSupplier = () -> setpoint - m_shooter.getHoodPosition();
                 m_shooter.setHoodPosition(setpoint);
             }, m_intake)
         ));
@@ -241,7 +259,7 @@ public class RobotContainer {
 
     public void logControllerError () {
 
-        Logger.recordOutput("Controller Error", m_errorSupplier.getAsDouble());
+        Logger.recordOutput("Controller Error", m_controllerErrorSupplier.getAsDouble());
     }
 
     public Command getAutonomousCommand() {
