@@ -3,12 +3,12 @@ package frc.robot.commands.spindexer;
 import frc.robot.subsystems.spindexer.*;
 import edu.wpi.first.wpilibj2.command.Command;
 
-public class RunSpindexer extends Command {
+public class RunSpindexerPercentage extends Command {
 
     private final Spindexer m_spindexer;
     private final double m_percentage;
 
-    public RunSpindexer(Spindexer spindexer, double percentage) {
+    public RunSpindexerPercentage(Spindexer spindexer, double percentage) {
 
         m_spindexer = spindexer;
         m_percentage = percentage;
@@ -26,11 +26,5 @@ public class RunSpindexer extends Command {
     public void end(boolean interrupted) {
       
         m_spindexer.setSpindexerPercentage(0.0);
-    }
-
-    @Override
-    public boolean isFinished() {
-      
-        return false;
     }
 }

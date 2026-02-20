@@ -2,28 +2,28 @@ package frc.robot.commands.shooter;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.shooter.Shooter;
 
-public class RunShooter extends Command {
+public class RunHoodPercentage extends Command {
     
-    private final Shooter m_shooter;
+    private final Shooter m_hood;
     private final double m_percentage;
 
-    public RunShooter (Shooter shooter, double percentage) {
+    public RunHoodPercentage (Shooter hood, double percentage) {
 
-        m_shooter = shooter;
+        m_hood = hood;
         m_percentage = percentage;
 
-        addRequirements(shooter);
+        addRequirements(hood);
     }
 
     @Override
     public void initialize () {
 
-        m_shooter.setFlywheelPercentage(m_percentage);
+        m_hood.setHoodPercentage(m_percentage);
     }
 
     @Override
     public void end (boolean interrupted) {
 
-        m_shooter.setFlywheelPercentage(0.0);
+        m_hood.setHoodPercentage(0.0);
     }
 }

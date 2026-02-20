@@ -25,7 +25,7 @@ import frc.robot.subsystems.shooter.*;
 
 import frc.robot.commands.spindexer.*;
 import frc.robot.commands.feeder.*;
-import frc.robot.commands.intake.RunIntake;
+import frc.robot.commands.intake.RunIntakeRollerPercentage;
 import frc.robot.commands.shooter.*;
 
 public class RobotContainer {
@@ -91,14 +91,15 @@ public class RobotContainer {
         Trigger feederCharacterizationMode = new Trigger(() -> m_opModeSelector.get() == OpModes.FEEDER_CHARACTERIZATION);
         Trigger shooterCharacterizationMode = new Trigger(() -> m_opModeSelector.get() == OpModes.SHOOTER_CHARACTERIZATION);
 
-        percentMode.and(m_driverController.a()).whileTrue(new RunSpindexer(m_spindexer, 0.8));
-        percentMode.and(m_driverController.x()).whileTrue(new RunFeeder(m_feeder, 0.8));
-        percentMode.and(m_driverController.y()).whileTrue(new RunShooter(m_shooter, 0.3));
-        percentMode.and(m_driverController.b()).whileTrue(new RunHood(m_shooter, -0.2));
-        percentMode.and(m_driverController.leftTrigger()).whileTrue(new RunShooter(m_shooter, 0.55));
-        percentMode.and(m_driverController.rightTrigger()).whileTrue(new RunIntake(m_intake));
+        percentMode.and(m_driverController.a()).whileTrue(new RunSpindexerPercentage(m_spindexer, 0.8));
+        percentMode.and(m_driverController.x()).whileTrue(new RunFeederPercentage(m_feeder, 0.8));
+        percentMode.and(m_driverController.y()).whileTrue(new RunFlywheelPercentage(m_shooter, 0.3));
+        percentMode.and(m_driverController.b()).whileTrue(new RunHoodPercentage(m_shooter, -0.2));
+        percentMode.and(m_driverController.leftTrigger()).whileTrue(new RunFlywheelPercentage(m_shooter, 0.55));
+        percentMode.and(m_driverController.rightTrigger()).whileTrue(new RunIntakeRollerPercentage(m_intake, 0.225));
 
-        
+
+
 
 
         intakeCharacterizationMode.and(m_driverController.leftBumper()).whileTrue(m_intake.rollerSysIdQuasistaticForward());
