@@ -27,6 +27,7 @@ import frc.robot.subsystems.shooter.*;
 
 import frc.robot.commands.spindexer.*;
 import frc.robot.commands.feeder.*;
+import frc.robot.commands.intake.PivotIntakePercantage;
 import frc.robot.commands.intake.RunIntakeRollerPercentage;
 import frc.robot.commands.shooter.*;
 
@@ -107,6 +108,8 @@ public class RobotContainer {
         percentMode.and(m_driverController.b()).whileTrue(new RunHoodPercentage(m_shooter, -0.2));
         percentMode.and(m_driverController.leftTrigger()).whileTrue(new RunFlywheelPercentage(m_shooter, 0.55));
         percentMode.and(m_driverController.rightTrigger()).whileTrue(new RunIntakeRollerPercentage(m_intake, 0.225));
+        percentMode.and(m_driverController.leftBumper()).whileTrue(new PivotIntakePercantage(m_intake, -0.25));
+        percentMode.and(m_driverController.rightBumper()).whileTrue(new PivotIntakePercantage(m_intake, 0.25));
     }
 
     public void configureIntakeCharacterizationBindings () {

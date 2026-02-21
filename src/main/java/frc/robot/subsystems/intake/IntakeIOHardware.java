@@ -55,15 +55,6 @@ public class IntakeIOHardware implements IntakeIO {
             .positionConversionFactor(IntakeConstants.kPivotGearing)
             .velocityConversionFactor(IntakeConstants.kPivotGearing);
 
-        globalPivotConfig.closedLoop
-            .p(IntakeConstants.kPivotFeedbackP)
-            .d(IntakeConstants.kPivotFeedbackD)
-            .feedForward
-                .kS(IntakeConstants.kPivotFeedforwardS)
-                .kV(IntakeConstants.kPivotFeedforwardV)
-                .kA(IntakeConstants.kPivotFeedforwardA)
-                .kCos(IntakeConstants.kPivotFeedforwardG);
-
         globalPivotConfig.closedLoop.maxMotion
             .cruiseVelocity(IntakeConstants.kPivotProfileCruiseVelocity)
             .maxAcceleration(IntakeConstants.kPivotProfileMaxAcceleration)
@@ -73,7 +64,16 @@ public class IntakeIOHardware implements IntakeIO {
 
         leftPivotConfig
             .apply(globalPivotConfig)
-            .inverted(IntakeConstants.kLeftPivotInverted);
+            .inverted(IntakeConstants.kLeftPivotInverted)
+            .idleMode(IdleMode.kCoast);
+
+        leftPivotConfig.closedLoop
+        .p(IntakeConstants.kLeftPivotFeedbackP)
+        .d(IntakeConstants.kLeftPivotFeedbackD)
+        .feedForward
+                .kS(IntakeConstants.kLeftPivotFeedforwardS)
+                .kV(IntakeConstants.kLeftPivotFeedforwardV)
+                .kA(IntakeConstants.kLeftPivotFeedforwardA);
         
         m_leftPivotMotor.configure(leftPivotConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
@@ -81,7 +81,16 @@ public class IntakeIOHardware implements IntakeIO {
 
         rightPivotConfig
             .apply(globalPivotConfig)
-            .inverted(IntakeConstants.kRightPivotInverted);
+            .inverted(IntakeConstants.kRightPivotInverted)
+            .idleMode(IdleMode.kBrake);
+
+        rightPivotConfig.closedLoop
+        .p(IntakeConstants.kRightPivotFeedbackP)
+        .d(IntakeConstants.kRightPivotFeedbackD)
+        .feedForward
+                .kS(IntakeConstants.kRightPivotFeedforwardS)
+                .kV(IntakeConstants.kRightPivotFeedforwardV)
+                .kA(IntakeConstants.kRightPivotFeedforwardA);
         
         m_rightPivotMotor.configure(rightPivotConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     }

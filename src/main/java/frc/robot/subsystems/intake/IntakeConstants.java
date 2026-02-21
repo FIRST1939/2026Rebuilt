@@ -7,7 +7,7 @@ public class IntakeConstants {
     public static final boolean kRollerInverted = false;
 
     public static final double kPivotGearing = (1.0 / 5.0) * (1.0 / 5.0);
-    public static final int kPivotCurrentLimit = 120;
+    public static final int kPivotCurrentLimit = 40;
 
     public static final int kLeftPivotCAN = 31;
     public static final boolean kLeftPivotInverted = true;
@@ -24,17 +24,25 @@ public class IntakeConstants {
     public static final double kRollerFeedforwardA = 0.00017563;
     public static final double kRollerFeedbackP = 0.00025;
 
-    public static final double kPivotSysIdQuasistaticRampRate = 1.0;
-    public static final double kPivotSysIdDynamicStepUp = 2.0;
-    public static final double kPivotSysIdDuration = 10.0;
+    public static final double kPivotSysIdQuasistaticRampRate = 0.1875;
+    public static final double kPivotSysIdDynamicStepUp = 0.5625;
+    public static final double kPivotSysIdDuration = 4.5;
 
-    public static final double kPivotFeedforwardS = 0.1;
-    public static final double kPivotFeedforwardV = 0.1;
-    public static final double kPivotFeedforwardA = 0.1;
-    public static final double kPivotFeedforwardG = 0.1;
+    public static final double kLeftPivotFeedforwardS = 0.067857;
+    public static final double kLeftPivotFeedforwardV = 0.026354;
+    public static final double kLeftPivotFeedforwardA = 0.046195;
+    public static final double kLeftPivotFeedforwardG = 0.0;
 
-    public static final double kPivotFeedbackP = 0.0;
-    public static final double kPivotFeedbackD = 0.0;
+    public static final double kRightPivotFeedforwardS = 0.06291;
+    public static final double kRightPivotFeedforwardV = 0.035861;
+    public static final double kRightPivotFeedforwardA = 0.037106;
+    public static final double kRightPivotFeedforwardG = 0.0;
+
+    public static final double kLeftPivotFeedbackP = 0.0;
+    public static final double kLeftPivotFeedbackD = 0.0;
+
+    public static final double kRightPivotFeedbackP = 0.0;
+    public static final double kRightPivotFeedbackD = 0.0;
 
     public static final double kPivotProfileCruiseVelocity = 0.0;
     public static final double kPivotProfileMaxAcceleration = 0.0;
