@@ -126,15 +126,27 @@ public class IntakeIOHardware implements IntakeIO {
     }
 
     @Override
-    public double getLeftPivotControllerSetpoint () {
+    public double getLeftPivotControllerPositionSetpoint () {
 
         return m_leftPivotController.getMAXMotionSetpointPosition();
     }
 
     @Override
-    public double getRightPivotControllerSetpoint () {
+    public double getLeftPivotControllerVelocitySetpoint () {
+
+        return m_leftPivotController.getMAXMotionSetpointVelocity();
+    }
+
+    @Override
+    public double getRightPivotControllerPositionSetpoint () {
 
         return m_leftPivotController.getMAXMotionSetpointPosition();
+    }
+
+    @Override
+    public double getRightPivotControllerVelocitySetpoint () {
+
+        return m_rightPivotController.getMAXMotionSetpointVelocity();
     }
     
     @Override
@@ -142,23 +154,21 @@ public class IntakeIOHardware implements IntakeIO {
             
         SparkFlexConfig config = new SparkFlexConfig();
     
-        config
-        .closedLoop
-        .p(IntakeConstants.kLeftPivotFeedbackP)
-        .d(IntakeConstants.kLeftPivotFeedbackD);
+        config.closedLoop
+            .p(kP)
+            .d(kD);
     
         m_leftPivotMotor.configure(config, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
     }
 
     @Override
-        public void updateRightPivotControllerFeedback(double kP, double kD) {
+    public void updateRightPivotControllerFeedback(double kP, double kD) {
 
         SparkFlexConfig config = new SparkFlexConfig();
         
-        config
-        .closedLoop
-        .p(IntakeConstants.kRightPivotFeedbackP)
-        .d(IntakeConstants.kRightPivotFeedbackD);
+        config.closedLoop
+            .p(kP)
+            .d(kD);
 
         m_rightPivotMotor.configure(config, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
     }
@@ -210,7 +220,7 @@ public class IntakeIOHardware implements IntakeIO {
     @Override
     public void setLeftPivotPosition (double position) {
 
-        m_leftPivotController.setSetpoint(position, ControlType.kMAXMotionPositionControl);
+        m_leftPivotController.setSetpoint(position, ControlType.kPosition);
     }
 
     @Override
@@ -228,7 +238,7 @@ public class IntakeIOHardware implements IntakeIO {
     @Override
     public void setRightPivotPosition (double position) {
 
-        m_rightPivotController.setSetpoint(position, ControlType.kMAXMotionPositionControl);
+        m_rightPivotController.setSetpoint(position, ControlType.kPosition);
     }
 
     @Override

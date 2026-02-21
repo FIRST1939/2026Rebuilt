@@ -26,8 +26,12 @@ import frc.robot.subsystems.feeder.*;
 import frc.robot.subsystems.shooter.*;
 
 import frc.robot.commands.spindexer.*;
+import frc.robot.commands.climber.SetClimberClimbingPosition;
+import frc.robot.commands.climber.SetClimberRaisingPosition;
 import frc.robot.commands.feeder.*;
-import frc.robot.commands.intake.PivotIntakePercantage;
+import frc.robot.commands.intake.PivotIntake;
+import frc.robot.commands.intake.PivotAndRunIntake;
+import frc.robot.commands.intake.PivotIntakePercentage;
 import frc.robot.commands.intake.RunIntakeRollerPercentage;
 import frc.robot.commands.shooter.*;
 
@@ -99,7 +103,20 @@ public class RobotContainer {
         configureClimberCharacterizationBindings();
     }
 
-    private void configureMatchBindings () {}
+    private void configureMatchBindings () {
+
+        Trigger matchMode = new Trigger(() -> m_opModeSelector.get() == OpModes.MATCH);
+
+        matchMode.and(m_driverController.y()).whileTrue(new RunFeederVelocity(m_feeder, Constants.kFeederVelocity)); //Run Feeder
+        //matchMode.and(m_driverController.b()).whileTrue(new PivotAndRunIntake(m_intake, Constants.kPivotOutSetpoint, () -> 0.0)); //Pivot Out and Run Intake
+        matchMode.and(m_driverController.b()).onTrue(new PivotIntake(m_intake, Constants.kPivotOutSetpoint));
+        matchMode.and(m_driverController.a()).onTrue(new PivotIntake(m_intake, Constants.kPivotInSetpoint)); //Pivot Intake In
+        matchMode.and(m_driverController.x()).whileTrue(new RunSpindexerVelocity(m_spindexer, Constants.kSpindexerVelocity)); //Run Spindexer
+
+        matchMode.and(m_driverController.leftBumper()).whileTrue(new RunFlywheelAndHood(m_shooter, () -> 0.0, () -> 0.0));
+        matchMode.and(m_driverController.rightBumper()).whileTrue(new SetClimberClimbingPosition(m_climber, Constants.kClimberClimbingSetpoint));
+        matchMode.and(m_driverController.leftTrigger()).whileTrue(new SetClimberRaisingPosition(m_climber, Constants.kClimberRaisingSetpoint));
+    }
 
     private void configurePercentBindings() {
 
@@ -111,8 +128,8 @@ public class RobotContainer {
         percentMode.and(m_driverController.b()).whileTrue(new RunHoodPercentage(m_shooter, -0.2));
         percentMode.and(m_driverController.leftTrigger()).whileTrue(new RunFlywheelPercentage(m_shooter, 0.55));
         percentMode.and(m_driverController.rightTrigger()).whileTrue(new RunIntakeRollerPercentage(m_intake, 0.225));
-        percentMode.and(m_driverController.leftBumper()).whileTrue(new PivotIntakePercantage(m_intake, -0.25));
-        percentMode.and(m_driverController.rightBumper()).whileTrue(new PivotIntakePercantage(m_intake, 0.25));
+        percentMode.and(m_driverController.leftBumper()).whileTrue(new PivotIntakePercentage(m_intake, -0.25));
+        percentMode.and(m_driverController.rightBumper()).whileTrue(new PivotIntakePercentage(m_intake, 0.25));
     }
 
     public void configureIntakeCharacterizationBindings () {
@@ -134,17 +151,6 @@ public class RobotContainer {
         intakeCharacterizationMode.and(m_driverController.a()).whileTrue(m_intake.rightPivotSysIdDynamicForward());
         intakeCharacterizationMode.and(m_driverController.x()).whileTrue(m_intake.rightPivotSysIdDynamicReverse());
 
-        intakeCharacterizationMode.and(m_driverController.leftStick()).onTrue(Commands.runOnce(() -> {
-
-            m_intake.updateRollerControllerFeedback(
-                m_updateFeedbackP.getAsDouble(),
-                m_updateFeedbackD.getAsDouble()
-            );
-
-            double setpoint = m_controllerSetpoint.getAsDouble();
-            m_controllerErrorSupplier = () -> setpoint - m_intake.getRollerVelocity();
-            m_intake.setRollerVelocity(setpoint);
-        }, m_intake));
 
         intakeCharacterizationMode.and(m_driverController.leftStick()).onFalse(Commands.runOnce(() -> {
 
@@ -170,8 +176,8 @@ public class RobotContainer {
             );
 
             double setpoint = m_controllerSetpoint.getAsDouble();
-            m_controllerErrorSupplier = () -> m_intake.getLeftPivotControllerSetpoint() - m_intake.getLeftPivotPosition();
-            m_contro\llerErrorSupplier2 = () -> m_intake.getRightPivotControllerSetpoint() - m_intake.getRightPivotPosition();
+            m_controllerErrorSupplier = () -> setpoint - m_intake.getLeftPivotPosition();
+            m_controllerErrorSupplier2 = () -> setpoint - m_intake.getRightPivotPosition();
             m_intake.setPivotPosition(setpoint);
         }, m_intake));
 

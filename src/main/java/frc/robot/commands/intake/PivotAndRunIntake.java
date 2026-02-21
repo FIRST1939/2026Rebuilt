@@ -11,10 +11,7 @@ public class PivotAndRunIntake extends Command {
     private final double m_pivotPosition;
     private final DoubleSupplier m_rollerVelocitySupplier;
 
-    public PivotAndRunIntake(
-            Intake intake,
-            double pivotPosition,
-            DoubleSupplier rollerVelocitySupplier) {
+    public PivotAndRunIntake(Intake intake, double pivotPosition, DoubleSupplier rollerVelocitySupplier) {
 
         m_intake = intake;
         m_pivotPosition = pivotPosition;

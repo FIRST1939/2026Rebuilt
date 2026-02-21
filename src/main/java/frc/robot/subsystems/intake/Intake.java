@@ -93,14 +93,24 @@ public class Intake extends SubsystemBase {
         m_io.updateRollerControllerFeedback(kP, kD);
     }
 
-    public double getLeftPivotControllerSetpoint () {
+    public double getLeftPivotControllerPositionSetpoint () {
 
-        return m_io.getLeftPivotControllerSetpoint();
+        return m_io.getLeftPivotControllerPositionSetpoint();
     }
 
-    public double getRightPivotControllerSetpoint () {
+    public double getLeftPivotControllerVelocitySetpoint () {
 
-        return m_io.getRightPivotControllerSetpoint();
+        return m_io.getLeftPivotControllerVelocitySetpoint();
+    }
+
+    public double getRightPivotControllerPositionSetpoint () {
+
+        return m_io.getRightPivotControllerPositionSetpoint();
+    }
+
+    public double getRightPivotControllerVelocitySetpoint () {
+
+        return m_io.getRightPivotControllerVelocitySetpoint();
     }
 
     public void updateLeftPivotControllerFeedback (double kP, double kD) {
@@ -110,7 +120,7 @@ public class Intake extends SubsystemBase {
 
     public void updateRightPivotControllerFeedback (double kP, double kD) {
 
-        m_io.updateLeftPivotControllerFeedback(kP, kD);
+        m_io.updateRightPivotControllerFeedback(kP, kD);
     }
 
     public void updatePivotControllerProfile (double maxVelocity, double maxAcceleration, double allowedError) {
@@ -130,12 +140,12 @@ public class Intake extends SubsystemBase {
 
     public double getLeftPivotPosition () {
 
-        return m_inputs.rightPivotPosition;
+        return m_inputs.leftPivotPosition;
     }
 
     public double getRightPivotPosition () {
 
-        return m_inputs.leftPivotPosition;
+        return m_inputs.rightPivotPosition;
     }
 
     public void setRollerPercentage (double percentage) {
