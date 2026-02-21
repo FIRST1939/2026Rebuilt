@@ -23,8 +23,9 @@ public class RunFeederPercentage extends Command {
     }
 
     @Override
-    public void end(boolean interrupted) {
-      
-        m_feeder.setFeederPercentage(0);
+    public void end (boolean interrupted) {
+       if (interrupted) {
+            m_feeder.setFeederPercentage(0.0);
+       }
     }
 }

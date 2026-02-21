@@ -22,8 +22,9 @@ public class RunHoodPercentage extends Command {
     }
 
     @Override
-    public void end (boolean interrupted) {
-
-        m_hood.setHoodPercentage(0.0);
+    public void end(boolean interrupted) {
+       if (interrupted) {
+            m_hood.setHoodPercentage(0.0);
+        }
     }
 }

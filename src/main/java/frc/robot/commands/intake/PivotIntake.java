@@ -32,4 +32,11 @@ public class PivotIntake extends Command {
     public boolean isFinished() {
         return m_intake.isPivotAtSetpoint();
     }
+
+    @Override
+    public void end (boolean interrupted) {
+       if (interrupted) {
+            m_intake.setPivotPercentage(0);
+       }
+    }
 }

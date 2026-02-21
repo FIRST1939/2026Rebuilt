@@ -22,8 +22,11 @@ public class RunFlywheelPercentage extends Command {
     }
 
     @Override
-    public void end (boolean interrupted) {
+    public void end(boolean interrupted) {
+        
 
-        m_shooter.setFlywheelPercentage(0.0);
+       if (interrupted) {
+            m_shooter.setHoodPercentage(0.0);
+        }
     }
 }

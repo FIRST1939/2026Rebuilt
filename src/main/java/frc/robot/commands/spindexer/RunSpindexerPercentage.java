@@ -22,9 +22,10 @@ public class RunSpindexerPercentage extends Command {
         m_spindexer.setSpindexerPercentage(m_percentage);
     }
 
-    @Override
+     @Override
     public void end(boolean interrupted) {
-      
-        m_spindexer.setSpindexerPercentage(0.0);
+       if (interrupted) {
+            m_spindexer.setSpindexerPercentage(0.0);
+        }
     }
 }

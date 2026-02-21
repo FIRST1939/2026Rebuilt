@@ -24,4 +24,11 @@ public class SetClimberRaisingPosition extends Command {
     public boolean isFinished() {
         return m_climber.isAtSetpoint();
     }
+
+    @Override
+    public void end (boolean interrupted) {
+       if (interrupted) {
+        m_climber.setClimberPercentage(0.0);
+        }
+    }
 }

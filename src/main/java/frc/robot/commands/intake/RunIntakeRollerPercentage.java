@@ -23,7 +23,8 @@ public class RunIntakeRollerPercentage extends Command {
 
     @Override
     public void end (boolean interrupted) {
-
-        m_intake.setRollerPercentage(0);
+       if (interrupted) { 
+            m_intake.setRollerPercentage(0);
+        }
     }
 }
