@@ -36,8 +36,8 @@ public class PivotAndRunIntake extends Command {
     @Override
     public void end (boolean interrupted) {
        if (interrupted) {
-        m_intake.setRollerPercentage(0.0);
-        m_intake.setPivotPercentage(0.0);
+            m_intake.setRollerPercentage(0.0);
+            m_intake.setPivotPercentage(0.0);
        }
     }
 }

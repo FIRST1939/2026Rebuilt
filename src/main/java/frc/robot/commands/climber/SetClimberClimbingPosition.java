@@ -28,7 +28,7 @@ public class SetClimberClimbingPosition extends Command {
     @Override
     public void end (boolean interrupted) {
        if (interrupted) {
-        m_climber.setClimberPercentage(0.0);
+            m_climber.setClimberPercentage(0.0);
         }
     }
 }

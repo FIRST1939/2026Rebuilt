@@ -42,4 +42,5 @@ public interface IntakeIO {
     public default void setRightPivotVoltage(double voltage) {}
     public default void setRightPivotPosition (double position) {}
     public default boolean leftPivotIsAtSetpoint() {return false;}
+    public default boolean rightPivotIsAtSetpoint() {return false;}
 }

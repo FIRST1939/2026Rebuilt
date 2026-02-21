@@ -37,8 +37,8 @@ public class RunFlywheelAndHood extends Command {
         
 
        if (interrupted) {
-        m_shooter.setHoodPercentage(0.0);
-        m_shooter.setFlywheelPercentage(0.0);
+            m_shooter.setHoodPercentage(0.0);
+            m_shooter.setFlywheelPercentage(0.0);
     }
     }
 
