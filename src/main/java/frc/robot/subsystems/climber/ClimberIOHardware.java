@@ -74,7 +74,6 @@ public class ClimberIOHardware implements ClimberIO {
 
     @Override
     public double getControllerSetpoint () {
-
         return m_controller.getMAXMotionSetpointPosition();
     }
 
@@ -142,5 +141,10 @@ public class ClimberIOHardware implements ClimberIO {
     public void setClimbingPosition (double position) {
 
         m_controller.setSetpoint(position, ControlType.kMAXMotionPositionControl, ClosedLoopSlot.kSlot1);
+    }
+
+    @Override
+    public boolean isAtSetpoint() {
+        return m_controller.isAtSetpoint();
     }
 }
