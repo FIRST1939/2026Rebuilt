@@ -22,6 +22,6 @@ public class SetClimberClimbingPosition extends Command {
 
     @Override
     public boolean isFinished() {
-        return m_climber.atSetpoint();
+        return m_climber.isAtSetpoint();
     }
 }

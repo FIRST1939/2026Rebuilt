@@ -24,7 +24,6 @@ public class RunSpindexerVelocity extends Command {
 
     @Override
     public void end(boolean interrupted) {
-
         m_spindexer.setSpindexerVelocity(0.0);
     }
 }

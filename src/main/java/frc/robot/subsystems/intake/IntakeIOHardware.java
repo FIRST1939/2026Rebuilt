@@ -212,4 +212,14 @@ public class IntakeIOHardware implements IntakeIO {
 
         m_rightPivotController.setSetpoint(position, ControlType.kMAXMotionPositionControl);
     }
+
+    @Override
+    public boolean leftPivotIsAtSetpoint() {
+        return m_leftPivotController.isAtSetpoint();
+    }
+
+    @Override
+    public boolean rightPivotIsAtSetpoint() {
+        return m_rightPivotController.isAtSetpoint();
+    }
 }

@@ -149,7 +149,7 @@ public class Climber extends SubsystemBase {
         return m_climbingSysIdRoutine.dynamic(SysIdRoutine.Direction.kReverse);
     }
 
-    public boolean atSetpoint() {
+    public boolean isAtSetpoint() {
         return m_io.isAtSetpoint();
     }
 }

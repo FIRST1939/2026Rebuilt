@@ -204,4 +204,8 @@ public class Intake extends SubsystemBase {
 
         return m_rightPivotSysIdRoutine.dynamic(SysIdRoutine.Direction.kReverse);
     }
+
+    public boolean isPivotAtSetpoint() {
+        return m_io.leftPivotIsAtSetpoint() && m_io.rightPivotIsAtSetpoint();
+    }
 }

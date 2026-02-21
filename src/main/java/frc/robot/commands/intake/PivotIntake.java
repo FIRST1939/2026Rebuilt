@@ -29,7 +29,7 @@ public class PivotIntake extends Command {
     }
 
     @Override
-    public void end(boolean interrupted) {
-        m_intake.setRollerVelocity(0.0);
+    public boolean isFinished() {
+        return m_intake.isPivotAtSetpoint();
     }
 }

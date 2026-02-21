@@ -41,4 +41,5 @@ public interface IntakeIO {
     public default void setRightPivotPercentage (double percent) {}
     public default void setRightPivotVoltage(double voltage) {}
     public default void setRightPivotPosition (double position) {}
+    public default boolean leftPivotIsAtSetpoint() {return false;}
 }
