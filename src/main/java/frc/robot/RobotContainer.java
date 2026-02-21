@@ -20,6 +20,8 @@ import frc.robot.Constants.OperatorConstants;
 
 import frc.robot.subsystems.intake.*;
 import frc.robot.subsystems.spindexer.*;
+import frc.robot.subsystems.climber.Climber;
+import frc.robot.subsystems.climber.ClimberIOHardware;
 import frc.robot.subsystems.feeder.*;
 import frc.robot.subsystems.shooter.*;
 
@@ -34,6 +36,7 @@ public class RobotContainer {
     private final Spindexer m_spindexer;
     private final Feeder m_feeder;
     private final Shooter m_shooter;
+    private final Climber m_climber;
 
     private enum OpModes {
         MATCH,
@@ -41,7 +44,8 @@ public class RobotContainer {
         INTAKE_CHARACTERIZATION,
         SPINDEXER_CHARACTERIZATION,
         FEEDER_CHARACTERIZATION,
-        SHOOTER_CHARACTERIZATION
+        SHOOTER_CHARACTERIZATION,
+        CLIMBER_CHARACTERIZATION
     }
 
     private final LoggedDashboardChooser<OpModes> m_opModeSelector = new LoggedDashboardChooser<>("Op Mode Selector");
@@ -64,12 +68,14 @@ public class RobotContainer {
             m_spindexer = new Spindexer(new SpindexerIOHardware());
             m_feeder = new Feeder(new FeederIOHardware());
             m_shooter = new Shooter(new ShooterIOHardware());
+            m_climber = new Climber(new ClimberIOHardware());
         } else {
 
             m_intake = new Intake(new IntakeIOSim());
             m_spindexer = new Spindexer(new SpindexerIOSim());
             m_feeder = new Feeder(new FeederIOSim());
             m_shooter = new Shooter(new ShooterIOHardware());
+            m_climber = new Climber(new ClimberIOHardware());
         }
         
         m_opModeSelector.addDefaultOption("Match", OpModes.MATCH);
@@ -78,6 +84,7 @@ public class RobotContainer {
         m_opModeSelector.addOption("Spindexer Characterization", OpModes.SPINDEXER_CHARACTERIZATION);
         m_opModeSelector.addOption("Feeder Characterization", OpModes.FEEDER_CHARACTERIZATION);
         m_opModeSelector.addOption("Shooter Characterization", OpModes.SHOOTER_CHARACTERIZATION);
+        m_opModeSelector.addOption("Climber Characterization", OpModes.CLIMBER_CHARACTERIZATION);
 
         configureMatchBindings();
         configurePercentBindings();
@@ -85,6 +92,7 @@ public class RobotContainer {
         configureSpindexerCharacterizationBindings();
         configureFeederCharacterizationBindings();
         configureShooterCharacterizationBindings();
+        configureClimberCharacterizationBindings();
     }
 
     private void configureMatchBindings () {}
@@ -180,7 +188,7 @@ public class RobotContainer {
         feederCharacterizationMode.and(m_driverController.leftTrigger()).whileTrue(m_feeder.sysIdDynamicForward());
         feederCharacterizationMode.and(m_driverController.rightTrigger()).whileTrue(m_feeder.sysIdDynamicReverse());
 
-        feederCharacterizationMode.and(m_driverController.leftStick()).onTrue(Commands.runOnce(() -> {
+        feederCharacterizationMode.and(m_driverController.povUp()).onTrue(Commands.runOnce(() -> {
 
             m_feeder.updateControllerFeedback(
                 m_updateFeedbackP.getAsDouble(),
@@ -192,7 +200,7 @@ public class RobotContainer {
             m_feeder.setFeederVelocity(setpoint);
         }, m_feeder));
 
-        feederCharacterizationMode.and(m_driverController.leftStick()).onFalse(Commands.runOnce(() -> {
+        feederCharacterizationMode.and(m_driverController.povUp()).onFalse(Commands.runOnce(() -> {
 
             m_feeder.setFeederPercentage(0);
         }, m_feeder));
@@ -217,7 +225,7 @@ public class RobotContainer {
             new RunFeederPercentage(m_feeder, 0.8)
         ));
 
-        shooterCharacterizationMode.and(m_driverController.leftStick()).onTrue(Commands.runOnce(() -> {
+        shooterCharacterizationMode.and(m_driverController.povLeft()).onTrue(Commands.runOnce(() -> {
 
             m_shooter.updateFlywheelControllerFeedback(
                 m_updateFeedbackP.getAsDouble(),
@@ -229,12 +237,12 @@ public class RobotContainer {
             m_shooter.setFlywheelVelocity(setpoint);
         }, m_shooter));
 
-        shooterCharacterizationMode.and(m_driverController.leftStick()).onFalse(Commands.runOnce(() -> {
+        shooterCharacterizationMode.and(m_driverController.povLeft()).onFalse(Commands.runOnce(() -> {
 
             m_shooter.setFlywheelPercentage(0);
         }, m_shooter));
 
-        shooterCharacterizationMode.and(m_driverController.rightStick()).onTrue(Commands.runOnce(() -> {
+        shooterCharacterizationMode.and(m_driverController.povRight()).onTrue(Commands.runOnce(() -> {
 
             m_shooter.updateHoodControllerFeedback(
                 m_updateFeedbackP.getAsDouble(),
@@ -246,10 +254,71 @@ public class RobotContainer {
             m_shooter.setHoodPosition(setpoint);
         }, m_intake));
 
-        shooterCharacterizationMode.and(m_driverController.rightStick()).onFalse(Commands.runOnce(() -> {
+        shooterCharacterizationMode.and(m_driverController.povRight()).onFalse(Commands.runOnce(() -> {
 
             m_shooter.setHoodPercentage(0);
         }, m_shooter));
+    }
+
+    private void configureClimberCharacterizationBindings () {
+
+        Trigger climberCharacterizationMode = new Trigger(() -> m_opModeSelector.get() == OpModes.CLIMBER_CHARACTERIZATION);
+
+        climberCharacterizationMode.and(m_driverController.leftBumper()).whileTrue(m_climber.raisingSysIdQuasistaticForward());
+        climberCharacterizationMode.and(m_driverController.rightBumper()).whileTrue(m_climber.raisingSysIdQuasistaticReverse());
+        climberCharacterizationMode.and(m_driverController.leftTrigger()).whileTrue(m_climber.raisingSysIdDynamicForward());
+        climberCharacterizationMode.and(m_driverController.rightTrigger()).whileTrue(m_climber.raisingSysIdDynamicReverse());
+
+        climberCharacterizationMode.and(m_driverController.y()).whileTrue(m_climber.climbingSysIdQuasistaticForward());
+        climberCharacterizationMode.and(m_driverController.b()).whileTrue(m_climber.climbingSysIdQuasistaticReverse());
+        climberCharacterizationMode.and(m_driverController.a()).whileTrue(m_climber.climbingSysIdDynamicForward());
+        climberCharacterizationMode.and(m_driverController.x()).whileTrue(m_climber.climbingSysIdDynamicReverse());
+
+        climberCharacterizationMode.and(m_driverController.povUp()).onTrue(Commands.runOnce(() -> {
+
+            m_climber.updateRaisingControllerFeedback(
+                m_updateFeedbackP.getAsDouble(),
+                m_updateFeedbackD.getAsDouble()
+            );
+
+            m_climber.updateControllerProfile(
+                m_updateProfileCruiseVelocity.getAsDouble(),
+                m_updateProfileMaxAcceleration.getAsDouble(),
+                m_updateProfileAllowedError.getAsDouble()
+            );
+
+            double setpoint = m_controllerSetpoint.getAsDouble();
+            m_controllerErrorSupplier = () -> m_climber.getControllerSetpoint() - m_climber.getClimberPosition();
+            m_climber.setRaisingPosition(setpoint);
+        }, m_climber));
+
+        climberCharacterizationMode.and(m_driverController.povUp()).onFalse(Commands.runOnce(() -> {
+
+            m_climber.setClimberPercentage(0);
+        }, m_climber));
+
+        climberCharacterizationMode.and(m_driverController.povDown()).onTrue(Commands.runOnce(() -> {
+
+            m_climber.updateClimbingControllerFeedback(
+                m_updateFeedbackP.getAsDouble(),
+                m_updateFeedbackD.getAsDouble()
+            );
+
+            m_climber.updateControllerProfile(
+                m_updateProfileCruiseVelocity.getAsDouble(),
+                m_updateProfileMaxAcceleration.getAsDouble(),
+                m_updateProfileAllowedError.getAsDouble()
+            );
+
+            double setpoint = m_controllerSetpoint.getAsDouble();
+            m_controllerErrorSupplier = () -> m_climber.getControllerSetpoint() - m_climber.getClimberPosition();
+            m_climber.setClimbingPosition(setpoint);
+        }, m_climber));
+
+        climberCharacterizationMode.and(m_driverController.povDown()).onFalse(Commands.runOnce(() -> {
+
+            m_climber.setClimberPercentage(0);
+        }, m_climber));
     }
 
     public void logControllerError () {

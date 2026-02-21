@@ -16,17 +16,37 @@ public class Climber extends SubsystemBase {
 
     private final ClimberIO m_io;
     private final ClimberIOInputsAutoLogged m_inputs = new ClimberIOInputsAutoLogged();
-    private final SysIdRoutine m_sysIdRoutine;
+    private final SysIdRoutine m_raisingSysIdRoutine;
+    private final SysIdRoutine m_climbingSysIdRoutine;
 
     public Climber (ClimberIO io) {
 
         m_io = io;
 
-        m_sysIdRoutine = new SysIdRoutine(
+        m_raisingSysIdRoutine = new SysIdRoutine(
             new SysIdRoutine.Config(
-                Volts.per(Units.Second).of(ClimberConstants.kSysIdRampUpTime), 
-                Volts.of(ClimberConstants.kSysIdVoltageIncrement), 
-                Seconds.of(ClimberConstants.kSysIdDuration)),
+                Volts.per(Units.Second).of(ClimberConstants.kRaisingSysIdQuasistaticRampRate), 
+                Volts.of(ClimberConstants.kRaisingSysIdDynamicStepUp), 
+                Seconds.of(ClimberConstants.kRaisingSysIdDuration)),
+
+            new SysIdRoutine.Mechanism(
+                voltage -> m_io.setClimberVoltage(voltage.magnitude()), 
+                log -> {
+                    log
+                        .motor("climberMotor")
+                        .voltage(Volts.of(m_inputs.climberVoltage))
+                        .angularPosition(Rotations.of(m_inputs.climberPosition))
+                        .angularVelocity(RotationsPerSecond.of(m_inputs.climberVelocity));
+                },
+                this, 
+                "Climber")
+        );
+
+        m_climbingSysIdRoutine = new SysIdRoutine(
+            new SysIdRoutine.Config(
+                Volts.per(Units.Second).of(ClimberConstants.kClimbingSysIdQuasistaticRampRate), 
+                Volts.of(ClimberConstants.kClimbingSysIdDynamicStepUp), 
+                Seconds.of(ClimberConstants.kClimbingSysIdDuration)),
 
             new SysIdRoutine.Mechanism(
                 voltage -> m_io.setClimberVoltage(voltage.magnitude()), 
@@ -49,6 +69,26 @@ public class Climber extends SubsystemBase {
         Logger.processInputs("Climber", m_inputs);
     }
 
+    public double getControllerSetpoint () {
+
+        return m_io.getControllerSetpoint();
+    }
+
+    public void updateRaisingControllerFeedback (double kP, double kD) {
+
+        m_io.updateRaisingControllerFeedback(kP, kD);
+    }
+
+    public void updateClimbingControllerFeedback (double kP, double kD) {
+
+        m_io.updateClimbingControllerFeedback(kP, kD);
+    }
+
+    public void updateControllerProfile (double cruiseVelocity, double maxAcceleration, double allowedError) {
+
+        m_io.updateControllerProfile(cruiseVelocity, maxAcceleration, allowedError);
+    }
+
     public double getClimberPosition () {
 
         return m_inputs.climberPosition;
@@ -58,29 +98,54 @@ public class Climber extends SubsystemBase {
         
         m_io.setClimberPercentage(percent);
     }
+
+    public void setRaisingPosition (double position) {
+
+        m_io.setRaisingPosition(position);
+    }
     
-    public void setClimberPosition (double position) {
+    public void setClimbingPosition (double position) {
 
-        m_io.setClimberPosition(position);
+        m_io.setClimbingPosition(position);
     }
 
-    public Command sysIdQuasistaticForward () {
+    public Command raisingSysIdQuasistaticForward () {
 
-        return m_sysIdRoutine.quasistatic(SysIdRoutine.Direction.kForward);
+        return m_raisingSysIdRoutine.quasistatic(SysIdRoutine.Direction.kForward);
     }
 
-    public Command sysIdQuasistaticReverse () {
+    public Command raisingSysIdQuasistaticReverse () {
 
-        return m_sysIdRoutine.quasistatic(SysIdRoutine.Direction.kReverse);
+        return m_raisingSysIdRoutine.quasistatic(SysIdRoutine.Direction.kReverse);
     }
 
-    public Command sysIdDynamicForward () {
+    public Command raisingSysIdDynamicForward () {
 
-        return m_sysIdRoutine.dynamic(SysIdRoutine.Direction.kForward);
+        return m_raisingSysIdRoutine.dynamic(SysIdRoutine.Direction.kForward);
     }
 
-    public Command sysIdDynamicReverse () {
+    public Command raisingSysIdDynamicReverse () {
 
-        return m_sysIdRoutine.dynamic(SysIdRoutine.Direction.kReverse);
+        return m_raisingSysIdRoutine.dynamic(SysIdRoutine.Direction.kReverse);
+    }
+
+    public Command climbingSysIdQuasistaticForward () {
+
+        return m_climbingSysIdRoutine.quasistatic(SysIdRoutine.Direction.kForward);
+    }
+
+    public Command climbingSysIdQuasistaticReverse () {
+
+        return m_climbingSysIdRoutine.quasistatic(SysIdRoutine.Direction.kReverse);
+    }
+
+    public Command climbingSysIdDynamicForward () {
+
+        return m_climbingSysIdRoutine.dynamic(SysIdRoutine.Direction.kForward);
+    }
+
+    public Command climbingSysIdDynamicReverse () {
+
+        return m_climbingSysIdRoutine.dynamic(SysIdRoutine.Direction.kReverse);
     }
 }
