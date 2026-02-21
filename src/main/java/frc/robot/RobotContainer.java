@@ -54,10 +54,13 @@ public class RobotContainer {
     private final LoggedNetworkNumber m_controllerSetpoint = new LoggedNetworkNumber("/Tuning/Controller Setpoint", 0);
     private final LoggedNetworkNumber m_updateFeedbackP = new LoggedNetworkNumber("/Tuning/Feedback P", 0);
     private final LoggedNetworkNumber m_updateFeedbackD = new LoggedNetworkNumber("/Tuning/Feedback D", 0);
+    private final LoggedNetworkNumber m_updateFeedbackP2 = new LoggedNetworkNumber("/Tuning/Feedback P2", 0);
+    private final LoggedNetworkNumber m_updateFeedbackD2 = new LoggedNetworkNumber("/Tuning/Feedback D2", 0);
     private final LoggedNetworkNumber m_updateProfileCruiseVelocity = new LoggedNetworkNumber("/Tuning/Profile Cruise Velocity", 0);
     private final LoggedNetworkNumber m_updateProfileMaxAcceleration = new LoggedNetworkNumber("/Tuning/Profile Max Acceleration", 0);
     private final LoggedNetworkNumber m_updateProfileAllowedError = new LoggedNetworkNumber("/Tuning/Profile Allowed Error", 0);
     private DoubleSupplier m_controllerErrorSupplier = () -> 0.0;
+    private DoubleSupplier m_controllerErrorSupplier2 = () -> 0.0;
 
     private final CommandXboxController m_driverController = new CommandXboxController(OperatorConstants.kDriverControllerPort);
 
@@ -150,9 +153,14 @@ public class RobotContainer {
 
         intakeCharacterizationMode.and(m_driverController.rightStick()).onTrue(Commands.runOnce(() -> {
 
-            m_intake.updatePivotControllerFeedback(
+            m_intake.updateLeftPivotControllerFeedback(
                 m_updateFeedbackP.getAsDouble(),
                 m_updateFeedbackD.getAsDouble()
+            );
+
+            m_intake.updateRightPivotControllerFeedback(
+                m_updateFeedbackP2.getAsDouble(),
+                m_updateFeedbackD2.getAsDouble()
             );
 
             m_intake.updatePivotControllerProfile(
@@ -162,7 +170,8 @@ public class RobotContainer {
             );
 
             double setpoint = m_controllerSetpoint.getAsDouble();
-            m_controllerErrorSupplier = () -> m_intake.getAveragePivotControllerSetpoint() - m_intake.getAveragePivotPosition();
+            m_controllerErrorSupplier = () -> m_intake.getLeftPivotControllerSetpoint() - m_intake.getLeftPivotPosition();
+            m_contro\llerErrorSupplier2 = () -> m_intake.getRightPivotControllerSetpoint() - m_intake.getRightPivotPosition();
             m_intake.setPivotPosition(setpoint);
         }, m_intake));
 
@@ -327,6 +336,7 @@ public class RobotContainer {
     public void logControllerError () {
 
         Logger.recordOutput("Controller Error", m_controllerErrorSupplier.getAsDouble());
+        Logger.recordOutput("Controller Error 2", m_controllerErrorSupplier2.getAsDouble());
     }
 
     public Command getAutonomousCommand() {

@@ -64,8 +64,7 @@ public class IntakeIOHardware implements IntakeIO {
 
         leftPivotConfig
             .apply(globalPivotConfig)
-            .inverted(IntakeConstants.kLeftPivotInverted)
-            .idleMode(IdleMode.kCoast);
+            .inverted(IntakeConstants.kLeftPivotInverted);
 
         leftPivotConfig.closedLoop
         .p(IntakeConstants.kLeftPivotFeedbackP)
@@ -74,15 +73,13 @@ public class IntakeIOHardware implements IntakeIO {
                 .kS(IntakeConstants.kLeftPivotFeedforwardS)
                 .kV(IntakeConstants.kLeftPivotFeedforwardV)
                 .kA(IntakeConstants.kLeftPivotFeedforwardA);
-        
         m_leftPivotMotor.configure(leftPivotConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
         SparkFlexConfig rightPivotConfig = new SparkFlexConfig();
 
         rightPivotConfig
             .apply(globalPivotConfig)
-            .inverted(IntakeConstants.kRightPivotInverted)
-            .idleMode(IdleMode.kBrake);
+            .inverted(IntakeConstants.kRightPivotInverted);
 
         rightPivotConfig.closedLoop
         .p(IntakeConstants.kRightPivotFeedbackP)
@@ -90,8 +87,7 @@ public class IntakeIOHardware implements IntakeIO {
         .feedForward
                 .kS(IntakeConstants.kRightPivotFeedforwardS)
                 .kV(IntakeConstants.kRightPivotFeedforwardV)
-                .kA(IntakeConstants.kRightPivotFeedforwardA);
-        
+                .kA(IntakeConstants.kRightPivotFeedforwardA);        
         m_rightPivotMotor.configure(rightPivotConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     }
 
@@ -140,17 +136,30 @@ public class IntakeIOHardware implements IntakeIO {
 
         return m_leftPivotController.getMAXMotionSetpointPosition();
     }
+    
+    @Override
+        public void updateLeftPivotControllerFeedback(double kP, double kD) {
+            
+        SparkFlexConfig config = new SparkFlexConfig();
+    
+        config
+        .closedLoop
+        .p(IntakeConstants.kLeftPivotFeedbackP)
+        .d(IntakeConstants.kLeftPivotFeedbackD);
+    
+        m_leftPivotMotor.configure(config, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
+    }
 
     @Override
-    public void updatePivotControllerFeedback (double kP, double kD) {
+        public void updateRightPivotControllerFeedback(double kP, double kD) {
 
         SparkFlexConfig config = new SparkFlexConfig();
+        
+        config
+        .closedLoop
+        .p(IntakeConstants.kRightPivotFeedbackP)
+        .d(IntakeConstants.kRightPivotFeedbackD);
 
-        config.closedLoop
-            .p(kP)
-            .d(kD);
-
-        m_leftPivotMotor.configure(config, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
         m_rightPivotMotor.configure(config, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
     }
 
