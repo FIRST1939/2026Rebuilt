@@ -17,7 +17,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
-
+import frc.robot.bindings.QuickShotBindings;
 import frc.robot.subsystems.intake.*;
 import frc.robot.subsystems.spindexer.*;
 import frc.robot.subsystems.climber.Climber;
@@ -46,6 +46,7 @@ public class RobotContainer {
     private enum OpModes {
         MATCH,
         PERCENT,
+        QUICKSHOT,
         INTAKE_CHARACTERIZATION,
         SPINDEXER_CHARACTERIZATION,
         FEEDER_CHARACTERIZATION,
@@ -88,11 +89,16 @@ public class RobotContainer {
         
         m_opModeSelector.addDefaultOption("Match", OpModes.MATCH);
         m_opModeSelector.addOption("Percent", OpModes.PERCENT);
+        m_opModeSelector.addOption("QuickShot", OpModes.QUICKSHOT);
         m_opModeSelector.addOption("Intake Characterization", OpModes.INTAKE_CHARACTERIZATION);
         m_opModeSelector.addOption("Spindexer Characterization", OpModes.SPINDEXER_CHARACTERIZATION);
         m_opModeSelector.addOption("Feeder Characterization", OpModes.FEEDER_CHARACTERIZATION);
         m_opModeSelector.addOption("Shooter Characterization", OpModes.SHOOTER_CHARACTERIZATION);
         m_opModeSelector.addOption("Climber Characterization", OpModes.CLIMBER_CHARACTERIZATION);
+
+        Trigger quickShotMode = new Trigger(() -> m_opModeSelector.get() == OpModes.QUICKSHOT);
+        QuickShotBindings.configure(quickShotMode, m_driverController, m_intake, m_spindexer, m_feeder, m_shooter);
+
 
         configureMatchBindings();
         configurePercentBindings();

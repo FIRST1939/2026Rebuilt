@@ -18,6 +18,9 @@ public class Shooter extends SubsystemBase {
     private final ShooterIOInputsAutoLogged m_inputs = new ShooterIOInputsAutoLogged();
     private final SysIdRoutine m_flywheelSysIdRoutine;
     private final SysIdRoutine m_hoodSysIdRoutine;
+//Keep track of targets for isAtGoal.
+    private double m_flywheelTargetVelocity = 0.0;
+    private double m_hoodTargetPosition = 0.0;
 
     public Shooter (ShooterIO io) {
 
@@ -99,9 +102,20 @@ public class Shooter extends SubsystemBase {
         m_io.setFlywheelPercentage(percent);
     }
 
-    public void setFlywheelVelocity (double percent) {
+    public void setFlywheelVelocity (double velocity) {
 
-        m_io.setFlywheelVelocity(percent);
+        m_flywheelTargetVelocity = velocity;
+        m_io.setFlywheelVelocity(velocity);
+    }
+
+    /**
+     * Returns true when the flywheel velocity is within the specified tolerance
+     * of the target velocity set by {@link #setFlywheelVelocity(double)}.
+     */
+    public boolean isFlywheelAtGoal (double toleranceRPM) {
+
+        return m_flywheelTargetVelocity != 0.0
+            && Math.abs(getFlywheelVelocity() - m_flywheelTargetVelocity) < toleranceRPM;
     }
 
 
@@ -110,9 +124,28 @@ public class Shooter extends SubsystemBase {
         m_io.setHoodPercentage(percent);
     }
 
-    public void setHoodPosition (double percent) {
+    public void setHoodPosition (double position) {
 
-        m_io.setHoodPosition(percent);
+        m_hoodTargetPosition = position;
+        m_io.setHoodPosition(position);
+    }
+
+    /**
+     * Returns true when the hood position is within the specified tolerance
+     * of the target position set by {@link #setHoodPosition(double)}.
+     */
+    public boolean isHoodAtGoal (double toleranceRotations) {
+
+        return Math.abs(getHoodPosition() - m_hoodTargetPosition) < toleranceRotations;
+    }
+
+    /**
+     * Returns true when both the flywheel and hood are at their respective goals.
+     */
+    public boolean isAtGoal () {
+
+        return isFlywheelAtGoal(ShooterConstants.kFlywheelToleranceRPM)
+            && isHoodAtGoal(ShooterConstants.kHoodToleranceRotations);
     }
 
     public Command flywheelSysIdQuasistaticForward () {

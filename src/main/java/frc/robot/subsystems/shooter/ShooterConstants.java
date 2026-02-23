@@ -33,4 +33,10 @@ public class ShooterConstants {
 
     public static final double kHoodFeedbackP = 250.0;
     public static final double kHoodFeedbackD = 0.0;
+
+    // RPM tolerance for the flywheel to be considered "at goal". 
+    public static final double kFlywheelToleranceRPM = 100.0;
+
+    // Position tolerance (in rotations) for the hood to be considered "at goal".
+    public static final double kHoodToleranceRotations = 1.0 / 360.0; // 1 degree
 }
