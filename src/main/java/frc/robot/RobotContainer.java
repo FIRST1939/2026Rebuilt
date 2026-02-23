@@ -22,6 +22,7 @@ import frc.robot.subsystems.intake.*;
 import frc.robot.subsystems.spindexer.*;
 import frc.robot.subsystems.climber.Climber;
 import frc.robot.subsystems.climber.ClimberIOHardware;
+import frc.robot.subsystems.climber.ClimberIOSim;
 import frc.robot.subsystems.feeder.*;
 import frc.robot.subsystems.shooter.*;
 
@@ -81,8 +82,8 @@ public class RobotContainer {
             m_intake = new Intake(new IntakeIOSim());
             m_spindexer = new Spindexer(new SpindexerIOSim());
             m_feeder = new Feeder(new FeederIOSim());
-            m_shooter = new Shooter(new ShooterIOHardware());
-            m_climber = new Climber(new ClimberIOHardware());
+            m_shooter = new Shooter(new ShooterIOSim());
+            m_climber = new Climber(new ClimberIOSim());
         }
         
         m_opModeSelector.addDefaultOption("Match", OpModes.MATCH);
