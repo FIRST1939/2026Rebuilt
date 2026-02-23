@@ -148,6 +148,10 @@ public class Intake extends SubsystemBase {
         return m_inputs.rightPivotPosition;
     }
 
+    public double getPivotPosition () {
+        return ((m_inputs.rightPivotPosition + m_inputs.leftPivotPosition) / 2);
+    }
+
     public void setRollerPercentage (double percentage) {
 
         this.m_io.setRollerPercentage(percentage);
