@@ -30,7 +30,6 @@ import frc.robot.commands.climber.SetClimberClimbingPosition;
 import frc.robot.commands.climber.SetClimberRaisingPosition;
 import frc.robot.commands.feeder.*;
 import frc.robot.commands.intake.PivotIntake;
-import frc.robot.commands.intake.PivotAndRunIntake;
 import frc.robot.commands.intake.PivotIntakePercentage;
 import frc.robot.commands.intake.RunIntakeRollerPercentage;
 import frc.robot.commands.shooter.*;
