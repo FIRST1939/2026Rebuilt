@@ -54,6 +54,11 @@ public class RobotContainer {
         CLIMBER_CHARACTERIZATION
     }
 
+    private final LoggedDashboardChooser<ShooterSolutionFinder> m_solutionFinderSelector =
+            new LoggedDashboardChooser<>("Solution Finder Selector");
+
+    private ShooterSolutionFinder m_solutionFinder;
+
     private final LoggedDashboardChooser<OpModes> m_opModeSelector = new LoggedDashboardChooser<>("Op Mode Selector");
 
     private final LoggedNetworkNumber m_controllerSetpoint = new LoggedNetworkNumber("/Tuning/Controller Setpoint", 0);
@@ -96,8 +101,12 @@ public class RobotContainer {
         m_opModeSelector.addOption("Shooter Characterization", OpModes.SHOOTER_CHARACTERIZATION);
         m_opModeSelector.addOption("Climber Characterization", OpModes.CLIMBER_CHARACTERIZATION);
 
+        m_solutionFinderSelector.addDefaultOption("Fixed", new FixedShooterSolutionFinder());
+        m_solutionFinderSelector.addOption("Interpolating", new InterpolatingShooterSolutionFinder());
+        m_solutionFinder = m_solutionFinderSelector.get();
+
         Trigger quickShotMode = new Trigger(() -> m_opModeSelector.get() == OpModes.QUICKSHOT);
-        QuickShotBindings.configure(quickShotMode, m_driverController, m_intake, m_spindexer, m_feeder, m_shooter);
+        QuickShotBindings.configure(quickShotMode, m_driverController, m_intake, m_spindexer, m_feeder, m_shooter, () -> m_solutionFinder);
 
 
         configureMatchBindings();
@@ -365,5 +374,9 @@ public class RobotContainer {
                 m_feeder.getFeederCurrent()
             )
         );
+    }
+      public void updateShooterSolution() {
+        m_solutionFinder = m_solutionFinderSelector.get();
+        m_solutionFinder.updateSimSolution();
     }
 }

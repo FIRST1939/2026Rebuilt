@@ -1,5 +1,7 @@
 package frc.robot.bindings;
 
+import java.util.function.Supplier;
+
 import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
 
 import edu.wpi.first.math.MathUtil;
@@ -11,6 +13,7 @@ import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.spindexer.Spindexer;
 import frc.robot.subsystems.feeder.Feeder;
 import frc.robot.subsystems.shooter.Shooter;
+import frc.robot.subsystems.shooter.ShooterSolutionFinder;
 
 import frc.robot.commands.shooter.FollowShooterSetpoints;
 import frc.robot.commands.shooter.ShootSequence;
@@ -42,7 +45,8 @@ public class QuickShotBindings {
             Intake intake,
             Spindexer spindexer,
             Feeder feeder,
-            Shooter shooter) {
+            Shooter shooter,
+            Supplier<ShooterSolutionFinder> solutionFinderSupplier) {
 
         quickShotMode.and(controller.y()).toggleOnTrue(new FollowShooterSetpoints(shooter, m_flywheelRPM::getAsDouble, m_hoodPosition::getAsDouble)
         .finallyDo(() -> {
@@ -50,6 +54,18 @@ public class QuickShotBindings {
             shooter.setFlywheelPercentage(0);
         })
         );
+
+         quickShotMode.and(controller.x()).toggleOnTrue(new FollowShooterSetpoints(shooter,
+                 () -> solutionFinderSupplier.get().getLatestSolution().flywheelRPM,
+                 () -> solutionFinderSupplier.get().getLatestSolution().hoodPositionRotations)
+        .finallyDo(() -> {
+            shooter.setHoodPosition(0);
+            shooter.setFlywheelPercentage(0);
+        })
+        );
+
+ 
+
 
         // Right bumper: increase RPM by 50
         quickShotMode.and(controller.rightBumper()).onTrue(

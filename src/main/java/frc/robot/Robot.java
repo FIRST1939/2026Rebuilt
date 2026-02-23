@@ -44,6 +44,7 @@ public class Robot extends LoggedRobot {
 
         CommandScheduler.getInstance().run();
 
+        m_robotContainer.updateShooterSolution();
         m_robotContainer.logControllerError();
 
         if (isSimulation()) {
