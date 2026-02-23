@@ -1,7 +1,6 @@
 package frc.robot.subsystems.shooter;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.interpolation.InterpolatingTreeMap;
 import edu.wpi.first.math.interpolation.Interpolator;
@@ -38,14 +37,6 @@ public class InterpolatingShooterSolutionFinder implements ShooterSolutionFinder
                                 + (endValue.timeOfFlight - startValue.timeOfFlight) * t);
     }
 
-    private final LoggedNetworkNumber m_robotPosX =
-            new LoggedNetworkNumber("/ShooterSolution/Robot Pos X", 0.0);
-    private final LoggedNetworkNumber m_robotPosY =
-            new LoggedNetworkNumber("/ShooterSolution/Robot Pos Y", 0.0);
-    private final LoggedNetworkNumber m_robotVelX =
-            new LoggedNetworkNumber("/ShooterSolution/Robot Vel X", 0.0);
-    private final LoggedNetworkNumber m_robotVelY =
-            new LoggedNetworkNumber("/ShooterSolution/Robot Vel Y", 0.0);
     private final LoggedNetworkNumber m_goalPosX =
             new LoggedNetworkNumber("/ShooterSolution/Goal Pos X", 8.23);
     private final LoggedNetworkNumber m_goalPosY =
@@ -73,23 +64,6 @@ public class InterpolatingShooterSolutionFinder implements ShooterSolutionFinder
     @Override
     public Solution update(Pose2d robotPose, ChassisSpeeds robotSpeeds) {
 
-        Translation2d goalPosition = new Translation2d(
-                m_goalPosX.getAsDouble(), m_goalPosY.getAsDouble());
-        double latency = m_latencyCompensation.getAsDouble();
-
-        m_latestSolution = calculate(robotPose, robotSpeeds,
-                                     goalPosition, latency);
-        return m_latestSolution;
-    }
-
-    @Override
-    public Solution updateSimSolution() {
-
-        Pose2d robotPose = new Pose2d(
-                m_robotPosX.getAsDouble(), m_robotPosY.getAsDouble(),
-                new Rotation2d());
-        ChassisSpeeds robotSpeeds = new ChassisSpeeds(
-                m_robotVelX.getAsDouble(), m_robotVelY.getAsDouble(), 0.0);
         Translation2d goalPosition = new Translation2d(
                 m_goalPosX.getAsDouble(), m_goalPosY.getAsDouble());
         double latency = m_latencyCompensation.getAsDouble();

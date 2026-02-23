@@ -16,11 +16,6 @@ public class FixedShooterSolutionFinder implements ShooterSolutionFinder {
     }
 
     @Override
-    public Solution updateSimSolution() {
-        return m_latestSolution;
-    }
-
-    @Override
     public Solution getLatestSolution() {
         return m_latestSolution;
     }
