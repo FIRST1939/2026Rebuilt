@@ -33,6 +33,7 @@ import frc.robot.commands.feeder.*;
 import frc.robot.commands.intake.PivotIntake;
 import frc.robot.commands.intake.PivotIntakePercentage;
 import frc.robot.commands.intake.RunIntakeRollerPercentage;
+import frc.robot.commands.intake.RunRoller;
 import frc.robot.commands.shooter.*;
 
 public class RobotContainer {
@@ -128,7 +129,7 @@ public class RobotContainer {
         matchMode.and(m_driverController.b()).onTrue(new PivotIntake(m_intake, Constants.kPivotOutSetpoint));
         matchMode.and(m_driverController.a()).onTrue(new PivotIntake(m_intake, Constants.kPivotInSetpoint)); //Pivot Intake In
         matchMode.and(m_driverController.x()).whileTrue(new RunSpindexerVelocity(m_spindexer, Constants.kSpindexerVelocity)); //Run Spindexer
-
+        matchMode.and(m_driverController.rightBumper()).whileTrue(new RunRoller(m_intake, Constants.kRollerVelocity));
         matchMode.and(m_driverController.leftBumper()).whileTrue(new RunFlywheelAndHood(m_shooter, () -> 0.0, () -> 0.0));
         matchMode.and(m_driverController.rightBumper()).whileTrue(new SetClimberClimbingPosition(m_climber, Constants.kClimberClimbingSetpoint));
         matchMode.and(m_driverController.leftTrigger()).whileTrue(new SetClimberRaisingPosition(m_climber, Constants.kClimberRaisingSetpoint));

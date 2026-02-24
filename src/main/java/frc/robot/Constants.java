@@ -20,11 +20,12 @@ public final class Constants {
     public static final double kSpindexerVelocity = 1500.0;
     public static final double kClimberClimbingSetpoint = 0.0;
     public static final double kClimberRaisingSetpoint = 0.0;
-
+    public static final double kRollerVelocity = 1500.0;
 
     public static class OperatorConstants {
       
         public static final int kDriverControllerPort = 0;
        
     }
+
 }
