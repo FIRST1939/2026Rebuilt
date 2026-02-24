@@ -24,21 +24,21 @@ import frc.robot.subsystems.spindexer.*;
 import frc.robot.subsystems.climber.Climber;
 import frc.robot.subsystems.climber.ClimberIOHardware;
 import frc.robot.subsystems.climber.ClimberIOSim;
+import frc.robot.subsystems.drive.*;
 import frc.robot.subsystems.feeder.*;
 import frc.robot.subsystems.shooter.*;
 
-import frc.robot.commands.spindexer.*;
-import frc.robot.commands.climber.SetClimberClimbingPosition;
-import frc.robot.commands.climber.SetClimberRaisingPosition;
+import frc.robot.generated.TunerConstants;
+import frc.robot.commands.climber.*;
+import frc.robot.commands.DriveCommands;
 import frc.robot.commands.feeder.*;
-import frc.robot.commands.intake.PivotIntake;
-import frc.robot.commands.intake.PivotIntakePercentage;
-import frc.robot.commands.intake.RunIntakeRollerPercentage;
-import frc.robot.commands.intake.RunRoller;
+import frc.robot.commands.intake.*;
 import frc.robot.commands.shooter.*;
+import frc.robot.commands.spindexer.*;
 
 public class RobotContainer {
 
+    private final Drive m_drive;
     private final Intake m_intake;
     private final Spindexer m_spindexer;
     private final Feeder m_feeder;
@@ -76,10 +76,19 @@ public class RobotContainer {
     private DoubleSupplier m_controllerErrorSupplier2 = () -> 0.0;
 
     private final CommandXboxController m_driverController = new CommandXboxController(OperatorConstants.kDriverControllerPort);
+    private final CommandXboxController m_operatorController = new CommandXboxController(OperatorConstants.kOperatorControllerPort);
 
     public RobotContainer(boolean isReal) {
 
         if (isReal) {
+
+            m_drive = new Drive(
+                new GyroIOPigeon2(), 
+                new ModuleIOTalonFX(TunerConstants.FrontLeft),
+                new ModuleIOTalonFX(TunerConstants.FrontRight), 
+                new ModuleIOTalonFX(TunerConstants.BackLeft), 
+                new ModuleIOTalonFX(TunerConstants.BackRight)
+            );
 
             m_intake = new Intake(new IntakeIOHardware());
             m_spindexer = new Spindexer(new SpindexerIOHardware());
@@ -87,6 +96,14 @@ public class RobotContainer {
             m_shooter = new Shooter(new ShooterIOHardware());
             m_climber = new Climber(new ClimberIOHardware());
         } else {
+
+            m_drive = new Drive(
+                new GyroIO() {}, 
+                new ModuleIOSim(TunerConstants.FrontLeft), 
+                new ModuleIOSim(TunerConstants.FrontRight),
+                new ModuleIOSim(TunerConstants.BackLeft),
+                new ModuleIOSim(TunerConstants.BackRight)
+            );
 
             m_intake = new Intake(new IntakeIOSim());
             m_spindexer = new Spindexer(new SpindexerIOSim());
@@ -111,10 +128,10 @@ public class RobotContainer {
         m_solutionFinder = m_solutionFinderSelector.get();
 
         Trigger quickShotMode = new Trigger(() -> m_opModeSelector.get() == OpModes.QUICKSHOT);
-        QuickShotBindings.configure(quickShotMode, m_driverController, m_intake, m_spindexer, m_feeder, m_shooter, () -> m_solutionFinder);
+        QuickShotBindings.configure(quickShotMode, m_operatorController, m_intake, m_spindexer, m_feeder, m_shooter, () -> m_solutionFinder);
 
         Trigger intakeConfigMode = new Trigger(() -> m_opModeSelector.get() == OpModes.QUICK_INTAKE_CONFIG);
-        QuickIntakeConfigBindings.configure(intakeConfigMode, m_driverController, m_intake);
+        QuickIntakeConfigBindings.configure(intakeConfigMode, m_operatorController, m_intake);
 
         configureMatchBindings();
         configurePercentBindings();
@@ -129,7 +146,18 @@ public class RobotContainer {
 
         Trigger matchMode = new Trigger(() -> m_opModeSelector.get() == OpModes.MATCH);
 
-        matchMode.and(m_driverController.y()).whileTrue(new RunFeederVelocity(m_feeder, Constants.kFeederVelocity)); //Run Feeder
+        matchMode.whileTrue(
+            DriveCommands.joystickDrive(
+                m_drive,
+                () -> -m_driverController.getLeftY(),
+                () -> -m_driverController.getLeftX(),
+                () -> -m_driverController.getRightX()
+            )
+        );
+
+        matchMode.and(m_driverController.x().onTrue(Commands.runOnce(m_drive::stopWithX, m_drive)));
+
+        matchMode.and(m_operatorController.y()).whileTrue(new RunFeederVelocity(m_feeder, Constants.kFeederVelocity)); //Run Feeder
         //matchMode.and(m_driverController.b()).whileTrue(new PivotAndRunIntake(m_intake, Constants.kPivotOutSetpoint, () -> 0.0)); //Pivot Out and Run Intake
         matchMode.and(m_driverController.b()).whileTrue(new PivotIntake(m_intake, Constants.kPivotOutSetpoint));
         matchMode.and(m_driverController.a()).whileTrue(new PivotIntake(m_intake, Constants.kPivotInSetpoint)); //Pivot Intake In
@@ -145,42 +173,42 @@ public class RobotContainer {
 
         Trigger percentMode = new Trigger(() -> m_opModeSelector.get() == OpModes.PERCENT);
 
-        percentMode.and(m_driverController.a()).whileTrue(new RunSpindexerPercentage(m_spindexer, 0.8));
-        percentMode.and(m_driverController.x()).whileTrue(new RunFeederPercentage(m_feeder, 0.8));
-        percentMode.and(m_driverController.y()).whileTrue(new RunFlywheelPercentage(m_shooter, 0.3));
-        percentMode.and(m_driverController.b()).whileTrue(new RunHoodPercentage(m_shooter, -0.2));
-        percentMode.and(m_driverController.leftTrigger()).whileTrue(new RunFlywheelPercentage(m_shooter, 0.55));
-        percentMode.and(m_driverController.rightTrigger()).whileTrue(new RunIntakeRollerPercentage(m_intake, 0.225));
-        percentMode.and(m_driverController.leftBumper()).whileTrue(new PivotIntakePercentage(m_intake, -0.25));
-        percentMode.and(m_driverController.rightBumper()).whileTrue(new PivotIntakePercentage(m_intake, 0.25));
+        percentMode.and(m_operatorController.a()).whileTrue(new RunSpindexerPercentage(m_spindexer, 0.8));
+        percentMode.and(m_operatorController.x()).whileTrue(new RunFeederPercentage(m_feeder, 0.8));
+        percentMode.and(m_operatorController.y()).whileTrue(new RunFlywheelPercentage(m_shooter, 0.3));
+        percentMode.and(m_operatorController.b()).whileTrue(new RunHoodPercentage(m_shooter, -0.2));
+        percentMode.and(m_operatorController.leftTrigger()).whileTrue(new RunFlywheelPercentage(m_shooter, 0.55));
+        percentMode.and(m_operatorController.rightTrigger()).whileTrue(new RunIntakeRollerPercentage(m_intake, 0.225));
+        percentMode.and(m_operatorController.leftBumper()).whileTrue(new PivotIntakePercentage(m_intake, -0.25));
+        percentMode.and(m_operatorController.rightBumper()).whileTrue(new PivotIntakePercentage(m_intake, 0.25));
     }
 
     public void configureIntakeCharacterizationBindings () {
 
         Trigger intakeCharacterizationMode = new Trigger(() -> m_opModeSelector.get() == OpModes.INTAKE_CHARACTERIZATION);
 
-        intakeCharacterizationMode.and(m_driverController.leftBumper()).whileTrue(m_intake.rollerSysIdQuasistaticForward());
-        intakeCharacterizationMode.and(m_driverController.rightBumper()).whileTrue(m_intake.rollerSysIdQuasistaticReverse());
-        intakeCharacterizationMode.and(m_driverController.leftTrigger()).whileTrue(m_intake.rollerSysIdDynamicForward());
-        intakeCharacterizationMode.and(m_driverController.rightTrigger()).whileTrue(m_intake.rollerSysIdDynamicReverse());
+        intakeCharacterizationMode.and(m_operatorController.leftBumper()).whileTrue(m_intake.rollerSysIdQuasistaticForward());
+        intakeCharacterizationMode.and(m_operatorController.rightBumper()).whileTrue(m_intake.rollerSysIdQuasistaticReverse());
+        intakeCharacterizationMode.and(m_operatorController.leftTrigger()).whileTrue(m_intake.rollerSysIdDynamicForward());
+        intakeCharacterizationMode.and(m_operatorController.rightTrigger()).whileTrue(m_intake.rollerSysIdDynamicReverse());
 
-        intakeCharacterizationMode.and(m_driverController.povUp()).whileTrue(m_intake.leftPivotSysIdQuasistaticForward());
-        intakeCharacterizationMode.and(m_driverController.povRight()).whileTrue(m_intake.leftPivotSysIdQuasistaticReverse());
-        intakeCharacterizationMode.and(m_driverController.povDown()).whileTrue(m_intake.leftPivotSysIdDynamicForward());
-        intakeCharacterizationMode.and(m_driverController.povLeft()).whileTrue(m_intake.leftPivotSysIdDynamicReverse());
+        intakeCharacterizationMode.and(m_operatorController.povUp()).whileTrue(m_intake.leftPivotSysIdQuasistaticForward());
+        intakeCharacterizationMode.and(m_operatorController.povRight()).whileTrue(m_intake.leftPivotSysIdQuasistaticReverse());
+        intakeCharacterizationMode.and(m_operatorController.povDown()).whileTrue(m_intake.leftPivotSysIdDynamicForward());
+        intakeCharacterizationMode.and(m_operatorController.povLeft()).whileTrue(m_intake.leftPivotSysIdDynamicReverse());
 
-        intakeCharacterizationMode.and(m_driverController.y()).whileTrue(m_intake.rightPivotSysIdQuasistaticForward());
-        intakeCharacterizationMode.and(m_driverController.b()).whileTrue(m_intake.rightPivotSysIdQuasistaticReverse());
-        intakeCharacterizationMode.and(m_driverController.a()).whileTrue(m_intake.rightPivotSysIdDynamicForward());
-        intakeCharacterizationMode.and(m_driverController.x()).whileTrue(m_intake.rightPivotSysIdDynamicReverse());
+        intakeCharacterizationMode.and(m_operatorController.y()).whileTrue(m_intake.rightPivotSysIdQuasistaticForward());
+        intakeCharacterizationMode.and(m_operatorController.b()).whileTrue(m_intake.rightPivotSysIdQuasistaticReverse());
+        intakeCharacterizationMode.and(m_operatorController.a()).whileTrue(m_intake.rightPivotSysIdDynamicForward());
+        intakeCharacterizationMode.and(m_operatorController.x()).whileTrue(m_intake.rightPivotSysIdDynamicReverse());
 
 
-        intakeCharacterizationMode.and(m_driverController.leftStick()).onFalse(Commands.runOnce(() -> {
+        intakeCharacterizationMode.and(m_operatorController.leftStick()).onFalse(Commands.runOnce(() -> {
 
             m_intake.setRollerPercentage(0);
         }, m_intake));
 
-        intakeCharacterizationMode.and(m_driverController.rightStick()).onTrue(Commands.runOnce(() -> {
+        intakeCharacterizationMode.and(m_operatorController.rightStick()).onTrue(Commands.runOnce(() -> {
 
             m_intake.updateLeftPivotControllerFeedback(
                 m_updateFeedbackP.getAsDouble(),
@@ -204,7 +232,7 @@ public class RobotContainer {
             m_intake.setPivotPosition(setpoint);
         }, m_intake));
 
-        intakeCharacterizationMode.and(m_driverController.rightStick()).onFalse(Commands.runOnce(() -> {
+        intakeCharacterizationMode.and(m_operatorController.rightStick()).onFalse(Commands.runOnce(() -> {
 
             m_intake.setPivotPercentage(0);
         }, m_intake));
@@ -214,22 +242,22 @@ public class RobotContainer {
 
         Trigger spindexerCharacterizationMode = new Trigger(() -> m_opModeSelector.get() == OpModes.SPINDEXER_CHARACTERIZATION);
 
-        spindexerCharacterizationMode.and(m_driverController.leftBumper()).whileTrue(m_spindexer.sysIdQuasistaticForward());
-        spindexerCharacterizationMode.and(m_driverController.rightBumper()).whileTrue(m_spindexer.sysIdQuasistaticReverse());
-        spindexerCharacterizationMode.and(m_driverController.leftTrigger()).whileTrue(m_spindexer.sysIdDynamicForward());
-        spindexerCharacterizationMode.and(m_driverController.rightTrigger()).whileTrue(m_spindexer.sysIdDynamicReverse());
+        spindexerCharacterizationMode.and(m_operatorController.leftBumper()).whileTrue(m_spindexer.sysIdQuasistaticForward());
+        spindexerCharacterizationMode.and(m_operatorController.rightBumper()).whileTrue(m_spindexer.sysIdQuasistaticReverse());
+        spindexerCharacterizationMode.and(m_operatorController.leftTrigger()).whileTrue(m_spindexer.sysIdDynamicForward());
+        spindexerCharacterizationMode.and(m_operatorController.rightTrigger()).whileTrue(m_spindexer.sysIdDynamicReverse());
     }
 
     public void configureFeederCharacterizationBindings () {
 
         Trigger feederCharacterizationMode = new Trigger(() -> m_opModeSelector.get() == OpModes.FEEDER_CHARACTERIZATION);
 
-        feederCharacterizationMode.and(m_driverController.leftBumper()).whileTrue(m_feeder.sysIdQuasistaticForward());
-        feederCharacterizationMode.and(m_driverController.rightBumper()).whileTrue(m_feeder.sysIdQuasistaticReverse());
-        feederCharacterizationMode.and(m_driverController.leftTrigger()).whileTrue(m_feeder.sysIdDynamicForward());
-        feederCharacterizationMode.and(m_driverController.rightTrigger()).whileTrue(m_feeder.sysIdDynamicReverse());
+        feederCharacterizationMode.and(m_operatorController.leftBumper()).whileTrue(m_feeder.sysIdQuasistaticForward());
+        feederCharacterizationMode.and(m_operatorController.rightBumper()).whileTrue(m_feeder.sysIdQuasistaticReverse());
+        feederCharacterizationMode.and(m_operatorController.leftTrigger()).whileTrue(m_feeder.sysIdDynamicForward());
+        feederCharacterizationMode.and(m_operatorController.rightTrigger()).whileTrue(m_feeder.sysIdDynamicReverse());
 
-        feederCharacterizationMode.and(m_driverController.povUp()).onTrue(Commands.runOnce(() -> {
+        feederCharacterizationMode.and(m_operatorController.povUp()).onTrue(Commands.runOnce(() -> {
 
             m_feeder.updateControllerFeedback(
                 m_updateFeedbackP.getAsDouble(),
@@ -241,7 +269,7 @@ public class RobotContainer {
             m_feeder.setFeederVelocity(setpoint);
         }, m_feeder));
 
-        feederCharacterizationMode.and(m_driverController.povUp()).onFalse(Commands.runOnce(() -> {
+        feederCharacterizationMode.and(m_operatorController.povUp()).onFalse(Commands.runOnce(() -> {
 
             m_feeder.setFeederPercentage(0);
         }, m_feeder));
@@ -251,22 +279,22 @@ public class RobotContainer {
 
         Trigger shooterCharacterizationMode = new Trigger(() -> m_opModeSelector.get() == OpModes.SHOOTER_CHARACTERIZATION);
 
-        shooterCharacterizationMode.and(m_driverController.leftBumper()).whileTrue(m_shooter.flywheelSysIdQuasistaticForward());
-        shooterCharacterizationMode.and(m_driverController.rightBumper()).whileTrue(m_shooter.flywheelSysIdQuasistaticReverse());
-        shooterCharacterizationMode.and(m_driverController.leftTrigger()).whileTrue(m_shooter.flywheelSysIdDynamicForward());
-        shooterCharacterizationMode.and(m_driverController.rightTrigger()).whileTrue(m_shooter.flywheelSysIdDynamicReverse());
+        shooterCharacterizationMode.and(m_operatorController.leftBumper()).whileTrue(m_shooter.flywheelSysIdQuasistaticForward());
+        shooterCharacterizationMode.and(m_operatorController.rightBumper()).whileTrue(m_shooter.flywheelSysIdQuasistaticReverse());
+        shooterCharacterizationMode.and(m_operatorController.leftTrigger()).whileTrue(m_shooter.flywheelSysIdDynamicForward());
+        shooterCharacterizationMode.and(m_operatorController.rightTrigger()).whileTrue(m_shooter.flywheelSysIdDynamicReverse());
 
-        shooterCharacterizationMode.and(m_driverController.y()).whileTrue(m_shooter.hoodSysIdQuasistaticForward());
-        shooterCharacterizationMode.and(m_driverController.b()).whileTrue(m_shooter.hoodSysIdQuasistaticReverse());
-        shooterCharacterizationMode.and(m_driverController.a()).whileTrue(m_shooter.hoodSysIdDynamicForward());
-        shooterCharacterizationMode.and(m_driverController.x()).whileTrue(m_shooter.hoodSysIdDynamicReverse());
+        shooterCharacterizationMode.and(m_operatorController.y()).whileTrue(m_shooter.hoodSysIdQuasistaticForward());
+        shooterCharacterizationMode.and(m_operatorController.b()).whileTrue(m_shooter.hoodSysIdQuasistaticReverse());
+        shooterCharacterizationMode.and(m_operatorController.a()).whileTrue(m_shooter.hoodSysIdDynamicForward());
+        shooterCharacterizationMode.and(m_operatorController.x()).whileTrue(m_shooter.hoodSysIdDynamicReverse());
 
-        shooterCharacterizationMode.and(m_driverController.povRight()).whileTrue(Commands.parallel(
+        shooterCharacterizationMode.and(m_operatorController.povRight()).whileTrue(Commands.parallel(
             new RunSpindexerPercentage(m_spindexer, 0.8),
             new RunFeederPercentage(m_feeder, 0.8)
         ));
 
-        shooterCharacterizationMode.and(m_driverController.povLeft()).onTrue(Commands.runOnce(() -> {
+        shooterCharacterizationMode.and(m_operatorController.povLeft()).onTrue(Commands.runOnce(() -> {
 
             m_shooter.updateFlywheelControllerFeedback(
                 m_updateFeedbackP.getAsDouble(),
@@ -278,12 +306,12 @@ public class RobotContainer {
             m_shooter.setFlywheelVelocity(setpoint);
         }, m_shooter));
 
-        shooterCharacterizationMode.and(m_driverController.povLeft()).onFalse(Commands.runOnce(() -> {
+        shooterCharacterizationMode.and(m_operatorController.povLeft()).onFalse(Commands.runOnce(() -> {
 
             m_shooter.setFlywheelPercentage(0);
         }, m_shooter));
 
-        shooterCharacterizationMode.and(m_driverController.povRight()).onTrue(Commands.runOnce(() -> {
+        shooterCharacterizationMode.and(m_operatorController.povRight()).onTrue(Commands.runOnce(() -> {
 
             m_shooter.updateHoodControllerFeedback(
                 m_updateFeedbackP.getAsDouble(),
@@ -295,7 +323,7 @@ public class RobotContainer {
             m_shooter.setHoodPosition(setpoint);
         }, m_intake));
 
-        shooterCharacterizationMode.and(m_driverController.povRight()).onFalse(Commands.runOnce(() -> {
+        shooterCharacterizationMode.and(m_operatorController.povRight()).onFalse(Commands.runOnce(() -> {
 
             m_shooter.setHoodPercentage(0);
         }, m_shooter));
@@ -305,17 +333,17 @@ public class RobotContainer {
 
         Trigger climberCharacterizationMode = new Trigger(() -> m_opModeSelector.get() == OpModes.CLIMBER_CHARACTERIZATION);
 
-        climberCharacterizationMode.and(m_driverController.leftBumper()).whileTrue(m_climber.raisingSysIdQuasistaticForward());
-        climberCharacterizationMode.and(m_driverController.rightBumper()).whileTrue(m_climber.raisingSysIdQuasistaticReverse());
-        climberCharacterizationMode.and(m_driverController.leftTrigger()).whileTrue(m_climber.raisingSysIdDynamicForward());
-        climberCharacterizationMode.and(m_driverController.rightTrigger()).whileTrue(m_climber.raisingSysIdDynamicReverse());
+        climberCharacterizationMode.and(m_operatorController.leftBumper()).whileTrue(m_climber.raisingSysIdQuasistaticForward());
+        climberCharacterizationMode.and(m_operatorController.rightBumper()).whileTrue(m_climber.raisingSysIdQuasistaticReverse());
+        climberCharacterizationMode.and(m_operatorController.leftTrigger()).whileTrue(m_climber.raisingSysIdDynamicForward());
+        climberCharacterizationMode.and(m_operatorController.rightTrigger()).whileTrue(m_climber.raisingSysIdDynamicReverse());
 
-        climberCharacterizationMode.and(m_driverController.y()).whileTrue(m_climber.climbingSysIdQuasistaticForward());
-        climberCharacterizationMode.and(m_driverController.b()).whileTrue(m_climber.climbingSysIdQuasistaticReverse());
-        climberCharacterizationMode.and(m_driverController.a()).whileTrue(m_climber.climbingSysIdDynamicForward());
-        climberCharacterizationMode.and(m_driverController.x()).whileTrue(m_climber.climbingSysIdDynamicReverse());
+        climberCharacterizationMode.and(m_operatorController.y()).whileTrue(m_climber.climbingSysIdQuasistaticForward());
+        climberCharacterizationMode.and(m_operatorController.b()).whileTrue(m_climber.climbingSysIdQuasistaticReverse());
+        climberCharacterizationMode.and(m_operatorController.a()).whileTrue(m_climber.climbingSysIdDynamicForward());
+        climberCharacterizationMode.and(m_operatorController.x()).whileTrue(m_climber.climbingSysIdDynamicReverse());
 
-        climberCharacterizationMode.and(m_driverController.povUp()).onTrue(Commands.runOnce(() -> {
+        climberCharacterizationMode.and(m_operatorController.povUp()).onTrue(Commands.runOnce(() -> {
 
             m_climber.updateRaisingControllerFeedback(
                 m_updateFeedbackP.getAsDouble(),
@@ -333,12 +361,12 @@ public class RobotContainer {
             m_climber.setRaisingPosition(setpoint);
         }, m_climber));
 
-        climberCharacterizationMode.and(m_driverController.povUp()).onFalse(Commands.runOnce(() -> {
+        climberCharacterizationMode.and(m_operatorController.povUp()).onFalse(Commands.runOnce(() -> {
 
             m_climber.setClimberPercentage(0);
         }, m_climber));
 
-        climberCharacterizationMode.and(m_driverController.povDown()).onTrue(Commands.runOnce(() -> {
+        climberCharacterizationMode.and(m_operatorController.povDown()).onTrue(Commands.runOnce(() -> {
 
             m_climber.updateClimbingControllerFeedback(
                 m_updateFeedbackP.getAsDouble(),
@@ -356,7 +384,7 @@ public class RobotContainer {
             m_climber.setClimbingPosition(setpoint);
         }, m_climber));
 
-        climberCharacterizationMode.and(m_driverController.povDown()).onFalse(Commands.runOnce(() -> {
+        climberCharacterizationMode.and(m_operatorController.povDown()).onFalse(Commands.runOnce(() -> {
 
             m_climber.setClimberPercentage(0);
         }, m_climber));
