@@ -1,39 +1,60 @@
 package frc.robot.commands.intake;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.intake.Intake;
 
 public class AgitateIntake extends Command {
 
     private final Intake m_intake;
-    private final double m_amplitude;
-    private final double m_period;   
-    private double m_elapsedTime = 0.0;
-    private double m_idlePosition;
+    private final double m_offset;
+    private final double m_interval;
 
-    public AgitateIntake(Intake intake, double amplitude, double periodSeconds) {
+    private final Timer m_timer = new Timer();
+    private double m_centerPosition;
+    private boolean m_forward = true;
+
+    public AgitateIntake(Intake intake, double offset, double intervalSeconds) {
         m_intake = intake;
-        m_amplitude = amplitude;
-        m_period = periodSeconds;
+        m_offset = offset;
+        m_interval = intervalSeconds;
         addRequirements(intake);
     }
 
     @Override
     public void initialize() {
-        m_idlePosition = m_intake.getPivotPosition();
-        m_elapsedTime = 0.0;
+        m_centerPosition = m_intake.getPivotPosition();
+        m_timer.restart();
+        m_forward = true;
     }
 
     @Override
     public void execute() {
-        m_elapsedTime += 0.02; 
-        double pivotPosition = m_idlePosition + m_amplitude * Math.sin(2 * Math.PI * m_elapsedTime / m_period);
-        m_intake.setPivotPosition(pivotPosition);
+
+        if (m_timer.hasElapsed(m_interval)) {
+            m_timer.restart();
+
+            if (m_forward) {
+                m_forward = false;
+            } else {
+                m_forward = true;
+            }
+        }
+
+        double target = 0.0;
+
+        if (m_forward) {
+            target = m_centerPosition + m_offset;
+        } else {
+            target = m_centerPosition - m_offset;
+        }
+
+        m_intake.setPivotPosition(target);
     }
 
     @Override
     public void end(boolean interrupted) {
-        m_intake.setPivotPosition(m_idlePosition);
+        m_intake.setPivotPosition(m_centerPosition);
     }
 
     @Override
