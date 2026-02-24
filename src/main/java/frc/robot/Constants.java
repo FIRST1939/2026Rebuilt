@@ -14,8 +14,18 @@ package frc.robot;
  */
 public final class Constants {
 
+    public static final double kFeederVelocity = 1500.0;
+    public static final double kPivotOutSetpoint = 0.225;
+    public static final double kPivotInSetpoint = 0.05;
+    public static final double kSpindexerVelocity = 1500.0;
+    public static final double kClimberClimbingSetpoint = 0.0;
+    public static final double kClimberRaisingSetpoint = 0.0;
+    public static final double kRollerVelocity = 1500.0;
+
     public static class OperatorConstants {
       
         public static final int kDriverControllerPort = 0;
+       
     }
+
 }

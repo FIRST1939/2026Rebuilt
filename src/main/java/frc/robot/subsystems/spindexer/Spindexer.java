@@ -16,27 +16,27 @@ public class Spindexer extends SubsystemBase {
 
     private final SpindexerIO m_io;
     private final SpindexerIOInputsAutoLogged m_inputs = new SpindexerIOInputsAutoLogged();
-    private final SysIdRoutine sysIdRoutine;
+    private final SysIdRoutine m_sysIdRoutine;
 
     public Spindexer (SpindexerIO io) {
 
         m_io = io;
 
-        this.sysIdRoutine = new SysIdRoutine(
+        m_sysIdRoutine = new SysIdRoutine(
 
             new SysIdRoutine.Config(
-                Volts.per(Units.Second).of(SpindexerConstants.kSysIdRampUpTime), 
-                Volts.of(SpindexerConstants.kSysIdVoltageIncrement), 
+                Volts.per(Units.Second).of(SpindexerConstants.kSysIdQuasistaticRampRate), 
+                Volts.of(SpindexerConstants.kSysIdDynamicStepUp), 
                 Seconds.of(SpindexerConstants.kSysIdDuration)),
 
             new SysIdRoutine.Mechanism(
-                voltage -> io.setSpindexerVoltage(voltage.magnitude()), 
+                voltage -> m_io.setSpindexerVoltage(voltage.magnitude()), 
                 log -> {
                     log
                         .motor("spindexerMotor")
-                        .voltage(Volts.of(this.m_inputs.spindexerVoltage))
-                        .angularPosition(Rotations.of(this.m_inputs.spindexerPosition))
-                        .angularVelocity(RotationsPerSecond.of(this.m_inputs.spindexerVelocity));
+                        .voltage(Volts.of(m_inputs.spindexerVoltage))
+                        .angularPosition(Rotations.of(m_inputs.spindexerPosition))
+                        .angularVelocity(RotationsPerSecond.of(m_inputs.spindexerVelocity));
                 },
                 this, 
                 "Spindexer")
@@ -57,34 +57,32 @@ public class Spindexer extends SubsystemBase {
     }
 
     public void setSpindexerPercentage (double percentage) {
-        this.m_io.setSpindexerPercentage(percentage);
+
+        m_io.setSpindexerPercentage(percentage);
     }
 
     public void setSpindexerVelocity (double velocity) {
-        this.m_io.setSpindexerVelocity(velocity);
-    }
-    
-    public double getSpindexerVelocity () {
-        return this.m_inputs.spindexerVelocity;
+
+        m_io.setSpindexerVelocity(velocity);
     }
 
-    public void setSpindexerVoltage(double magnitude) {
-        this.m_io.setSpindexerVoltage(magnitude);
+    public Command sysIdQuasistaticForward () {
+
+        return m_sysIdRoutine.quasistatic(SysIdRoutine.Direction.kForward);
     }
 
-    public Command SpindexerSysIdQuasistaticForward() {
-        return sysIdRoutine.quasistatic(SysIdRoutine.Direction.kForward);
+    public Command sysIdQuasistaticReverse () {
+
+        return m_sysIdRoutine.quasistatic(SysIdRoutine.Direction.kReverse);
     }
 
-    public Command SpindexerSysIdQuasistaticReverse() {
-        return sysIdRoutine.quasistatic(SysIdRoutine.Direction.kReverse);
+    public Command sysIdDynamicForward () {
+
+        return m_sysIdRoutine.dynamic(SysIdRoutine.Direction.kForward);
     }
 
-    public Command SpindexerSysIdDynamicForward() {
-        return sysIdRoutine.dynamic(SysIdRoutine.Direction.kForward);
-    }
+    public Command sysIdDynamicReverse () {
 
-    public Command SpindexerSysIdDynamicReverse() {
-        return sysIdRoutine.dynamic(SysIdRoutine.Direction.kReverse);
+        return m_sysIdRoutine.dynamic(SysIdRoutine.Direction.kReverse);
     }
 }

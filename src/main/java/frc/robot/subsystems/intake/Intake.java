@@ -15,127 +15,226 @@ public class Intake extends SubsystemBase {
 
     private final IntakeIO m_io;
     private final IntakeIOInputsAutoLogged m_inputs = new IntakeIOInputsAutoLogged();
-    private final SysIdRoutine rollerSysIdRoutine;
-    private final SysIdRoutine pivotSysIdRoutine;
+    private final SysIdRoutine m_rollerSysIdRoutine;
+    private final SysIdRoutine m_leftPivotSysIdRoutine;
+    private final SysIdRoutine m_rightPivotSysIdRoutine;
 
-    
     public Intake (IntakeIO io) {
+
         m_io = io;
-        this.rollerSysIdRoutine = new SysIdRoutine(
+
+        m_rollerSysIdRoutine = new SysIdRoutine(
             new SysIdRoutine.Config(
-                Volts.per(Units.Second).of(IntakeConstants.kRollerSysIdRampUpTime), 
-                Volts.of(IntakeConstants.kRollerSysIdVoltageIncrement), 
+                Volts.per(Units.Second).of(IntakeConstants.kRollerSysIdQuasistaticRampRate), 
+                Volts.of(IntakeConstants.kRollerSysIdDynamicStepUp), 
                 Seconds.of(IntakeConstants.kRollerSysIdDuration)),
 
             new SysIdRoutine.Mechanism(
-                voltage -> io.setRollerVoltage(voltage.magnitude()), 
+                voltage -> m_io.setRollerVoltage(voltage.magnitude()), 
                 log -> {
                     log
                         .motor("intakeRoller")
-                        .voltage(Volts.of(this.m_inputs.rollerVoltage))
-                        .angularPosition(Rotations.of(this.m_inputs.rollerPosition))
-                        .angularVelocity(RotationsPerSecond.of(this.m_inputs.rollerVelocity));
+                        .voltage(Volts.of(m_inputs.rollerVoltage))
+                        .angularPosition(Rotations.of(m_inputs.rollerPosition))
+                        .angularVelocity(RotationsPerSecond.of(m_inputs.rollerVelocity));
                 },
                 this, 
                 "Roller")
         );
 
-        this.pivotSysIdRoutine = new SysIdRoutine(
+        m_leftPivotSysIdRoutine = new SysIdRoutine(
             new SysIdRoutine.Config(
-                Volts.per(Units.Second).of(IntakeConstants.kPivotSysIdRampUpTime), 
-                Volts.of(IntakeConstants.kPivotSysIdVoltageIncrement), 
+                Volts.per(Units.Second).of(IntakeConstants.kPivotSysIdQuasistaticRampRate), 
+                Volts.of(IntakeConstants.kPivotSysIdDynamicStepUp), 
                 Seconds.of(IntakeConstants.kPivotSysIdDuration)),
 
             new SysIdRoutine.Mechanism(
-                voltage -> io.setPivotVoltage(voltage.magnitude()), 
+                voltage -> m_io.setLeftPivotVoltage(voltage.magnitude()), 
                 log -> {
                     log
-                        .motor("intakePivot")
-                        .voltage(Volts.of(this.m_inputs.pivotLeaderVoltage))
-                        .angularPosition(Rotations.of(getPivotPosition()))
-                        .angularVelocity(RotationsPerSecond.of(this.m_inputs.pivotLeaderVelocity));
+                        .motor("leftIntakePivot")
+                        .voltage(Volts.of(m_inputs.leftPivotVoltage))
+                        .angularPosition(Rotations.of(m_inputs.leftPivotPosition))
+                        .angularVelocity(RotationsPerSecond.of(m_inputs.leftPivotVelocity));
                 },
                 this, 
-                "Pivot")
+                "Intake")
+        );
+
+        m_rightPivotSysIdRoutine = new SysIdRoutine(
+            new SysIdRoutine.Config(
+                Volts.per(Units.Second).of(IntakeConstants.kPivotSysIdQuasistaticRampRate), 
+                Volts.of(IntakeConstants.kPivotSysIdDynamicStepUp), 
+                Seconds.of(IntakeConstants.kPivotSysIdDuration)),
+
+            new SysIdRoutine.Mechanism(
+                voltage -> m_io.setRightPivotVoltage(voltage.magnitude()), 
+                log -> {
+                    log
+                        .motor("rightIntakePivot")
+                        .voltage(Volts.of(m_inputs.rightPivotVoltage))
+                        .angularPosition(Rotations.of(m_inputs.rightPivotPosition))
+                        .angularVelocity(RotationsPerSecond.of(m_inputs.rightPivotVelocity));
+                },
+                this, 
+                "Intake")
         );
     }
 
-     @Override
+    @Override
     public void periodic() {
 
         m_io.updateInputs(m_inputs);
         Logger.processInputs("Intake", m_inputs);
-
     }
 
-    public double getRollerCurrent() {
+    public void updateRollerControllerFeedback (double kP, double kD) {
+
+        m_io.updateRollerControllerFeedback(kP, kD);
+    }
+
+    public double getLeftPivotControllerPositionSetpoint () {
+
+        return m_io.getLeftPivotControllerPositionSetpoint();
+    }
+
+    public double getLeftPivotControllerVelocitySetpoint () {
+
+        return m_io.getLeftPivotControllerVelocitySetpoint();
+    }
+
+    public double getRightPivotControllerPositionSetpoint () {
+
+        return m_io.getRightPivotControllerPositionSetpoint();
+    }
+
+    public double getRightPivotControllerVelocitySetpoint () {
+
+        return m_io.getRightPivotControllerVelocitySetpoint();
+    }
+
+    public void updateLeftPivotControllerFeedback (double kP, double kD) {
+
+        m_io.updateLeftPivotControllerFeedback(kP, kD);
+    }
+
+    public void updateRightPivotControllerFeedback (double kP, double kD) {
+
+        m_io.updateRightPivotControllerFeedback(kP, kD);
+    }
+
+    public void updatePivotControllerProfile (double maxVelocity, double maxAcceleration, double allowedError) {
+
+        m_io.updatePivotControllerProfile(maxVelocity, maxAcceleration, allowedError);
+    }
+
+    public double getRollerVelocity () {
+
+        return m_inputs.rollerVelocity;
+    }
+
+    public double getRollerCurrent () {
 
         return m_inputs.rollerCurrent;
     }
 
+    public double getLeftPivotPosition () {
+
+        return m_inputs.leftPivotPosition;
+    }
+
+    public double getRightPivotPosition () {
+
+        return m_inputs.rightPivotPosition;
+    }
+
+    public double getPivotPosition () {
+        return ((m_inputs.rightPivotPosition + m_inputs.leftPivotPosition) / 2);
+    }
+
     public void setRollerPercentage (double percentage) {
+
         this.m_io.setRollerPercentage(percentage);
     }
 
     public void setRollerVelocity (double velocity) {
+
         this.m_io.setRollerVelocity(velocity);
-    }
-    
-    public double getRollerVelocity () {
-        return this.m_inputs.rollerVelocity;
     }
 
     public void setPivotPercentage (double percentage) {
-        this.m_io.setPivotPercentage(percentage);
+
+        m_io.setLeftPivotPercentage(percentage);
+        m_io.setRightPivotPercentage(percentage);
     }
 
     public void setPivotPosition (double position) {
-        this.m_io.setPivotPosition(position);
+
+        m_io.setLeftPivotPosition(position);
+        m_io.setRightPivotPosition(position);
     }
     
-    public double getPivotPosition () {
-        return ((this.m_inputs.pivotLeaderPosition + this.m_inputs.pivotFollowerPosition) / 2);
+    public Command rollerSysIdQuasistaticForward() {
+
+        return m_rollerSysIdRoutine.quasistatic(SysIdRoutine.Direction.kForward);
     }
 
-    public void setRollerVoltage(double magnitude) {
-        this.m_io.setRollerVoltage(magnitude);
+    public Command rollerSysIdQuasistaticReverse() {
+
+        return m_rollerSysIdRoutine.quasistatic(SysIdRoutine.Direction.kReverse);
     }
 
-    public void setPivotVoltage(double magnitude) {
-        this.m_io.setPivotVoltage(magnitude);
-    }
-    
-    public Command RollerSysIdQuasistaticForward() {
-        return rollerSysIdRoutine.quasistatic(SysIdRoutine.Direction.kForward);
+    public Command rollerSysIdDynamicForward() {
+
+        return m_rollerSysIdRoutine.dynamic(SysIdRoutine.Direction.kForward);
     }
 
-    public Command RollerSysIdQuasistaticReverse() {
-        return rollerSysIdRoutine.quasistatic(SysIdRoutine.Direction.kReverse);
+    public Command rollerSysIdDynamicReverse() {
+
+        return m_rollerSysIdRoutine.dynamic(SysIdRoutine.Direction.kReverse);
     }
 
-    public Command RollerSysIdDynamicForward() {
-        return rollerSysIdRoutine.dynamic(SysIdRoutine.Direction.kForward);
+    public Command leftPivotSysIdQuasistaticForward() {
+
+        return m_leftPivotSysIdRoutine.quasistatic(SysIdRoutine.Direction.kForward);
     }
 
-    public Command RollerSysIdDynamicReverse() {
-        return rollerSysIdRoutine.dynamic(SysIdRoutine.Direction.kReverse);
+    public Command leftPivotSysIdQuasistaticReverse() {
+
+        return m_leftPivotSysIdRoutine.quasistatic(SysIdRoutine.Direction.kReverse);
     }
 
-    public Command PivotSysIdQuasistaticForward() {
-        return pivotSysIdRoutine.quasistatic(SysIdRoutine.Direction.kForward);
+    public Command leftPivotSysIdDynamicForward() {
+
+        return m_leftPivotSysIdRoutine.dynamic(SysIdRoutine.Direction.kForward);
     }
 
-    public Command PivotSysIdQuasistaticReverse() {
-        return pivotSysIdRoutine.quasistatic(SysIdRoutine.Direction.kReverse);
+    public Command leftPivotSysIdDynamicReverse() {
+
+        return m_leftPivotSysIdRoutine.dynamic(SysIdRoutine.Direction.kReverse);
     }
 
-    public Command PivotSysIdDynamicForward() {
-        return pivotSysIdRoutine.dynamic(SysIdRoutine.Direction.kForward);
+    public Command rightPivotSysIdQuasistaticForward() {
+
+        return m_rightPivotSysIdRoutine.quasistatic(SysIdRoutine.Direction.kForward);
     }
 
-    public Command PivotSysIdDynamicReverse() {
-        return pivotSysIdRoutine.dynamic(SysIdRoutine.Direction.kReverse);
+    public Command rightPivotSysIdQuasistaticReverse() {
+
+        return m_rightPivotSysIdRoutine.quasistatic(SysIdRoutine.Direction.kReverse);
     }
 
+    public Command rightPivotSysIdDynamicForward() {
+
+        return m_rightPivotSysIdRoutine.dynamic(SysIdRoutine.Direction.kForward);
+    }
+
+    public Command rightPivotSysIdDynamicReverse() {
+
+        return m_rightPivotSysIdRoutine.dynamic(SysIdRoutine.Direction.kReverse);
+    }
+
+    public boolean isPivotAtSetpoint() {
+        return m_io.leftPivotIsAtSetpoint() && m_io.rightPivotIsAtSetpoint();
+    }
 }
-

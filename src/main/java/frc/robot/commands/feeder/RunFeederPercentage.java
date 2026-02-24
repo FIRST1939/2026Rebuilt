@@ -3,12 +3,12 @@ package frc.robot.commands.feeder;
 import frc.robot.subsystems.feeder.*;
 import edu.wpi.first.wpilibj2.command.Command;
 
-public class RunFeeder extends Command {
+public class RunFeederPercentage extends Command {
 
     private final Feeder m_feeder;
     private final double m_percentage;
 
-    public RunFeeder(Feeder feeder, double percentage) {
+    public RunFeederPercentage(Feeder feeder, double percentage) {
 
         m_feeder = feeder;
         m_percentage = percentage;
@@ -23,14 +23,9 @@ public class RunFeeder extends Command {
     }
 
     @Override
-    public void end(boolean interrupted) {
-      
-        m_feeder.setFeederPercentage(0);
-    }
-
-    @Override
-    public boolean isFinished() {
-      
-        return false;
+    public void end (boolean interrupted) {
+       if (interrupted) {
+            m_feeder.setFeederPercentage(0.0);
+       }
     }
 }

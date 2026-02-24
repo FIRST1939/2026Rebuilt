@@ -8,7 +8,6 @@ import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkFlexConfig;
-import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.SparkClosedLoopController;
 
 public class SpindexerIOHardware implements SpindexerIO {
@@ -24,23 +23,20 @@ public class SpindexerIOHardware implements SpindexerIO {
         config
             .idleMode(IdleMode.kCoast)
             .inverted(SpindexerConstants.kInverted)
-            .smartCurrentLimit(SpindexerConstants.kCurrentLimit);
+            .voltageCompensation(12.0);
 
         config.encoder
             .velocityConversionFactor(SpindexerConstants.kSpindexerGearing)
             .positionConversionFactor(SpindexerConstants.kSpindexerGearing);
 
-        /*
         config.closedLoop
             .pid(0, 0, 0)
             .feedForward
-                .kS(SpindexerConstants.kSpindexerFeedforwardS, ClosedLoopSlot.kSlot0)
-                .kV(SpindexerConstants.kSpindexerFeedforwardV, ClosedLoopSlot.kSlot0)
-                .kA(SpindexerConstants.kSpindexerFeedforwardA, ClosedLoopSlot.kSlot0);
-        */
+                .kS(SpindexerConstants.kSpindexerFeedforwardS)
+                .kV(SpindexerConstants.kSpindexerFeedforwardV)
+                .kA(SpindexerConstants.kSpindexerFeedforwardA);
 
         m_motor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-
     }
 
     @Override
@@ -67,6 +63,6 @@ public class SpindexerIOHardware implements SpindexerIO {
     @Override
     public void setSpindexerVelocity (double velocity) {
         
-        m_spindexerController.setSetpoint(velocity, ControlType.kVelocity, ClosedLoopSlot.kSlot0);
+        m_spindexerController.setSetpoint(velocity, ControlType.kVelocity);
     }
 }

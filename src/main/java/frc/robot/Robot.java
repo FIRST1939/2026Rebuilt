@@ -4,17 +4,38 @@
 
 package frc.robot;
 
-import edu.wpi.first.wpilibj.TimedRobot;
+import org.littletonrobotics.junction.LoggedRobot;
+import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.networktables.NT4Publisher;
+import org.littletonrobotics.junction.wpilog.WPILOGWriter;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
-public class Robot extends TimedRobot {
+public class Robot extends LoggedRobot {
 
     private final RobotContainer m_robotContainer;
     private Command m_autonomousCommand;
 
     public Robot() {
 
+        Logger.recordMetadata("ProjectName", "2026Rebuilt");
+
+        if (isReal()) {
+
+            Logger.addDataReceiver(new WPILOGWriter());
+            Logger.addDataReceiver(new NT4Publisher());
+        } else {
+
+            // TODO Replay
+            setUseTiming(false);
+            Logger.addDataReceiver(new NT4Publisher());
+            //Logger.setReplaySource(new WPILOGReader(logPath));
+            //Logger.addDataReceiver(new WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_sim")));
+        }
+
+        Logger.start();
+        
         m_robotContainer = new RobotContainer(isReal());
     }
 
@@ -22,6 +43,9 @@ public class Robot extends TimedRobot {
     public void robotPeriodic() {
 
         CommandScheduler.getInstance().run();
+
+        m_robotContainer.updateShooterSolution();
+        m_robotContainer.logControllerError();
 
         if (isSimulation()) {
 

@@ -16,44 +16,49 @@ public class Shooter extends SubsystemBase {
 
     private final ShooterIO m_io;
     private final ShooterIOInputsAutoLogged m_inputs = new ShooterIOInputsAutoLogged();
-    private final SysIdRoutine flywheelSysIdRoutine;
-    private final SysIdRoutine hoodSysIdRoutine;
+    private final SysIdRoutine m_flywheelSysIdRoutine;
+    private final SysIdRoutine m_hoodSysIdRoutine;
+//Keep track of targets for isAtGoal.
+    private double m_flywheelTargetVelocity = 0.0;
+    private double m_hoodTargetPosition = 0.0;
 
     public Shooter (ShooterIO io) {
+
         m_io = io;
-        this.flywheelSysIdRoutine = new SysIdRoutine(
+
+        m_flywheelSysIdRoutine = new SysIdRoutine(
             new SysIdRoutine.Config(
-                Volts.per(Units.Second).of(ShooterConstants.kFlywheelSysIdRampUpTime), 
-                Volts.of(ShooterConstants.kFlywheelSysIdVoltageIncrement), 
+                Volts.per(Units.Second).of(ShooterConstants.kFlywheelSysIdQuasistaticRampRate), 
+                Volts.of(ShooterConstants.kFlywheelSysIdDynamicStepUp), 
                 Seconds.of(ShooterConstants.kFlywheelSysIdDuration)),
 
             new SysIdRoutine.Mechanism(
-                voltage -> io.setFlywheelVoltage(voltage.magnitude()), 
+                voltage -> m_io.setFlywheelVoltage(voltage.magnitude()), 
                 log -> {
                     log
                         .motor("flywheelMotor")
-                        .voltage(Volts.of(this.m_inputs.flywheelLeaderVoltage))
+                        .voltage(Volts.of(m_inputs.flywheelLeaderVoltage))
                         .angularPosition(Rotations.of(getFlywheelPosition()))
-                        .angularVelocity(RotationsPerSecond.of(this.m_inputs.flywheelLeaderVelocity));
+                        .angularVelocity(RotationsPerSecond.of(getFlywheelVelocity()));
                 },
                 this, 
                 "Flywheel")
         );
 
-        this.hoodSysIdRoutine = new SysIdRoutine(
+        m_hoodSysIdRoutine = new SysIdRoutine(
             new SysIdRoutine.Config(
-                Volts.per(Units.Second).of(ShooterConstants.kHoodSysIdRampUpTime), 
-                Volts.of(ShooterConstants.kHoodSysIdVoltageIncrement), 
+                Volts.per(Units.Second).of(ShooterConstants.kHoodSysIdQuasistaticRampRate), 
+                Volts.of(ShooterConstants.kHoodSysIdDynamicStepUp), 
                 Seconds.of(ShooterConstants.kHoodSysIdDuration)),
 
             new SysIdRoutine.Mechanism(
-                voltage -> io.setHoodVoltage(voltage.magnitude()), 
+                voltage -> m_io.setHoodVoltage(voltage.magnitude()), 
                 log -> {
                     log
                         .motor("hoodMotor")
-                        .voltage(Volts.of(this.m_inputs.hoodVoltage))
-                        .angularPosition(Rotations.of(getHoodPosition()))
-                        .angularVelocity(RotationsPerSecond.of(this.m_inputs.hoodVelocity));
+                        .voltage(Volts.of(m_inputs.hoodVoltage))
+                        .angularPosition(Rotations.of(m_inputs.hoodPosition))
+                        .angularVelocity(RotationsPerSecond.of(m_inputs.hoodVelocity));
                 },
                 this, 
                 "Hood")
@@ -62,76 +67,124 @@ public class Shooter extends SubsystemBase {
 
     @Override    
     public void periodic () {
+
         m_io.updateInputs(m_inputs);
         Logger.processInputs("Shooter", m_inputs);
     }
 
-    public void setFlywheelPercentage (double percent) {
-        m_io.setFlywheelPercentage(percent);
+    public void updateFlywheelControllerFeedback (double kP, double kD) {
+
+        m_io.updateFlywheelControllerFeedback(kP, kD);
     }
 
-    public void setFlywheelVelocity (double percent) {
-        m_io.setFlywheelVelocity(percent);
+    public void updateHoodControllerFeedback (double kP, double kD) {
+
+        m_io.updateHoodControllerFeedback(kP, kD);
+    }
+
+    public double getFlywheelPosition () {
+
+        return (m_inputs.flywheelLeaderPosition + m_inputs.flywheelFollowerPosition) / 2.0;
     }
 
     public double getFlywheelVelocity () {
-        return this.m_inputs.flywheelLeaderVelocity;
+        
+        return (m_inputs.flywheelLeaderVelocity + m_inputs.flywheelFollowerVelocity) / 2.0;
+    }
+
+    public double getHoodPosition () {
+
+        return m_inputs.hoodPosition;
+    }
+
+    public void setFlywheelPercentage (double percent) {
+
+        m_io.setFlywheelPercentage(percent);
+    }
+
+    public void setFlywheelVelocity (double velocity) {
+
+        m_flywheelTargetVelocity = velocity;
+        m_io.setFlywheelVelocity(velocity);
+    }
+
+    /**
+     * Returns true when the flywheel velocity is within the specified tolerance
+     * of the target velocity set by {@link #setFlywheelVelocity(double)}.
+     */
+    public boolean isFlywheelAtGoal (double toleranceRPM) {
+
+        return m_flywheelTargetVelocity != 0.0
+            && Math.abs(getFlywheelVelocity() - m_flywheelTargetVelocity) < toleranceRPM;
     }
 
 
     public void setHoodPercentage (double percent) {
+
         m_io.setHoodPercentage(percent);
     }
 
-    public void setHoodPosition (double percent) {
-        m_io.setHoodPosition(percent);
+    public void setHoodPosition (double position) {
+
+        m_hoodTargetPosition = position;
+        m_io.setHoodPosition(position);
     }
 
-    public double getHoodPosition () {
-        return this.m_inputs.hoodPosition;   
+    /**
+     * Returns true when the hood position is within the specified tolerance
+     * of the target position set by {@link #setHoodPosition(double)}.
+     */
+    public boolean isHoodAtGoal (double toleranceRotations) {
+
+        return Math.abs(getHoodPosition() - m_hoodTargetPosition) < toleranceRotations;
     }
 
-    public double getFlywheelPosition () {
-        return ((this.m_inputs.flywheelLeaderPosition + this.m_inputs.flywheelFollowerPosition) / 2);
+    /**
+     * Returns true when both the flywheel and hood are at their respective goals.
+     */
+    public boolean isAtGoal () {
+
+        return isFlywheelAtGoal(ShooterConstants.kFlywheelToleranceRPM)
+            && isHoodAtGoal(ShooterConstants.kHoodToleranceRotations);
     }
 
-    public void setFlywheelVoltage(double magnitude) {
-        this.m_io.setFlywheelPercentage(magnitude);
+    public Command flywheelSysIdQuasistaticForward () {
+
+        return m_flywheelSysIdRoutine.quasistatic(SysIdRoutine.Direction.kForward);
     }
 
-    public void setHoodVoltage(double magnitude) {
-        this.m_io.setHoodVoltage(magnitude);
+    public Command flywheelSysIdQuasistaticReverse () {
+
+        return m_flywheelSysIdRoutine.quasistatic(SysIdRoutine.Direction.kReverse);
     }
 
-    public Command FlywheelSysIdQuasistaticForward() {
-        return flywheelSysIdRoutine.quasistatic(SysIdRoutine.Direction.kForward);
+    public Command flywheelSysIdDynamicForward () {
+
+        return m_flywheelSysIdRoutine.dynamic(SysIdRoutine.Direction.kForward);
     }
 
-    public Command FlywheelSysIdQuasistaticReverse() {
-        return flywheelSysIdRoutine.quasistatic(SysIdRoutine.Direction.kReverse);
-    }
+    public Command flywheelSysIdDynamicReverse () {
 
-    public Command FlywheelSysIdDynamicForward() {
-        return flywheelSysIdRoutine.dynamic(SysIdRoutine.Direction.kForward);
-    }
-
-    public Command FlywheelSysIdDynamicReverse() {
-        return flywheelSysIdRoutine.dynamic(SysIdRoutine.Direction.kReverse);
+        return m_flywheelSysIdRoutine.dynamic(SysIdRoutine.Direction.kReverse);
     }
     
-    public Command HoodSysIdQuasistaticForward() {
-        return hoodSysIdRoutine.quasistatic(SysIdRoutine.Direction.kForward);
+    public Command hoodSysIdQuasistaticForward() {
+
+        return m_hoodSysIdRoutine.quasistatic(SysIdRoutine.Direction.kForward);
     }
 
-    public Command HoodSysIdQuasistaticReverse() {
-        return hoodSysIdRoutine.quasistatic(SysIdRoutine.Direction.kReverse);
+    public Command hoodSysIdQuasistaticReverse() {
+
+        return m_hoodSysIdRoutine.quasistatic(SysIdRoutine.Direction.kReverse);
     }
 
-    public Command HoodSysIdDynamicForward() {
-        return hoodSysIdRoutine.dynamic(SysIdRoutine.Direction.kForward);
+    public Command hoodSysIdDynamicForward() {
+
+        return m_hoodSysIdRoutine.dynamic(SysIdRoutine.Direction.kForward);
     }
 
-    public Command HoodSysIdDynamicReverse() {
-        return hoodSysIdRoutine.dynamic(SysIdRoutine.Direction.kReverse);
+    public Command hoodSysIdDynamicReverse() {
+
+        return m_hoodSysIdRoutine.dynamic(SysIdRoutine.Direction.kReverse);
     }
 }
