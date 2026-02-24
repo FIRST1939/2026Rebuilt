@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.bindings.QuickShotBindings;
+import frc.robot.bindings.QuickIntakeConfigBindings;
 import frc.robot.subsystems.intake.*;
 import frc.robot.subsystems.spindexer.*;
 import frc.robot.subsystems.climber.Climber;
@@ -48,6 +49,7 @@ public class RobotContainer {
         MATCH,
         PERCENT,
         QUICKSHOT,
+        QUICK_INTAKE_CONFIG,
         INTAKE_CHARACTERIZATION,
         SPINDEXER_CHARACTERIZATION,
         FEEDER_CHARACTERIZATION,
@@ -96,6 +98,7 @@ public class RobotContainer {
         m_opModeSelector.addDefaultOption("Match", OpModes.MATCH);
         m_opModeSelector.addOption("Percent", OpModes.PERCENT);
         m_opModeSelector.addOption("QuickShot", OpModes.QUICKSHOT);
+        m_opModeSelector.addOption("Quick Intake Config", OpModes.QUICK_INTAKE_CONFIG);
         m_opModeSelector.addOption("Intake Characterization", OpModes.INTAKE_CHARACTERIZATION);
         m_opModeSelector.addOption("Spindexer Characterization", OpModes.SPINDEXER_CHARACTERIZATION);
         m_opModeSelector.addOption("Feeder Characterization", OpModes.FEEDER_CHARACTERIZATION);
@@ -110,6 +113,8 @@ public class RobotContainer {
         Trigger quickShotMode = new Trigger(() -> m_opModeSelector.get() == OpModes.QUICKSHOT);
         QuickShotBindings.configure(quickShotMode, m_driverController, m_intake, m_spindexer, m_feeder, m_shooter, () -> m_solutionFinder);
 
+        Trigger intakeConfigMode = new Trigger(() -> m_opModeSelector.get() == OpModes.QUICK_INTAKE_CONFIG);
+        QuickIntakeConfigBindings.configure(intakeConfigMode, m_driverController, m_intake);
 
         configureMatchBindings();
         configurePercentBindings();
@@ -129,7 +134,7 @@ public class RobotContainer {
         matchMode.and(m_driverController.b()).onTrue(new PivotIntake(m_intake, Constants.kPivotOutSetpoint));
         matchMode.and(m_driverController.a()).onTrue(new PivotIntake(m_intake, Constants.kPivotInSetpoint)); //Pivot Intake In
         matchMode.and(m_driverController.x()).whileTrue(new RunSpindexerVelocity(m_spindexer, Constants.kSpindexerVelocity)); //Run Spindexer
-        matchMode.and(m_driverController.rightBumper()).whileTrue(new RunRoller(m_intake, Constants.kRollerVelocity));
+        matchMode.and(m_driverController.rightBumper()).whileTrue(new RunRoller(m_intake, () -> Constants.kRollerVelocity));
         matchMode.and(m_driverController.leftBumper()).whileTrue(new RunFlywheelAndHood(m_shooter, () -> 0.0, () -> 0.0));
         matchMode.and(m_driverController.rightBumper()).whileTrue(new SetClimberClimbingPosition(m_climber, Constants.kClimberClimbingSetpoint));
         matchMode.and(m_driverController.leftTrigger()).whileTrue(new SetClimberRaisingPosition(m_climber, Constants.kClimberRaisingSetpoint));
