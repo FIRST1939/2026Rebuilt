@@ -1,5 +1,7 @@
 package frc.robot.subsystems.shooter;
 
+import edu.wpi.first.math.geometry.Translation2d;
+
 public class ShooterConstants {
         public static final double kFlywheelGearReduction = (1);
 
@@ -26,4 +28,22 @@ public class ShooterConstants {
     public static final int kHoodSysIdDuration = 10;
     
     public static final int kHoodCurrentLimit = 120;
+
+    // --- Regression / Field Geometry Constants ---
+
+    /** Field-relative position of the scoring target (meters). Placeholder — replace before competition. */
+    public static final Translation2d kTargetPosition = new Translation2d(0.0, 0.0);
+
+    /** Height of the scoring target above the floor (meters). Placeholder. */
+    public static final double kTargetHeightMeters = 2.0;
+
+    /** Height of the shooter exit point above the floor (meters). Placeholder. */
+    public static final double kShooterHeightMeters = 0.5;
+
+    /**
+     * Default desired entry angle of the ball at the target, in degrees.
+     * Negative = downward trajectory at the target (standard convention).
+     * Convert to radians when constructing EntryAngleShooterModel.
+     */
+    public static final double kDefaultEntryAngleDegrees = -45.0;
 }
