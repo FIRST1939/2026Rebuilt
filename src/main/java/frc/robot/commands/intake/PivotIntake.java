@@ -35,8 +35,6 @@ public class PivotIntake extends Command {
 
     @Override
     public void end (boolean interrupted) {
-       if (interrupted) {
-            m_intake.setPivotPercentage(0);
-       }
+      
     }
 }

@@ -90,7 +90,7 @@ public class QuickShotBindings {
         );
 
         
-        quickShotMode.and(controller.b()).whileTrue(new RunRoller(intake,() -> 1000));
+        quickShotMode.and(controller.b()).whileTrue(new RunRoller(intake,() -> 1500));
 
           quickShotMode.and(controller.a()).whileTrue(
             ShootSequence.create(
