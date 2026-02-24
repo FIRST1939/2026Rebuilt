@@ -49,7 +49,7 @@ public class InterpolatingShooterSolutionFinder implements ShooterSolutionFinder
                                       ShooterParams.kInterpolator);
 
     static {
-        SHOOTER_MAP.put(1.5, new ShooterParams(2800.0, 0.05,  0.42));
+        SHOOTER_MAP.put(1.5, new ShooterParams(500.0, 0.12,  0.42));
         SHOOTER_MAP.put(2.0, new ShooterParams(3100.0, 0.09,  0.51));
         SHOOTER_MAP.put(2.5, new ShooterParams(3400.0, 0.10,  0.58));
         SHOOTER_MAP.put(3.0, new ShooterParams(3650.0, 0.11,  0.65));
@@ -95,7 +95,7 @@ public class InterpolatingShooterSolutionFinder implements ShooterSolutionFinder
 
         if (rawDistance < 1e-3) {
             Solution zero = new Solution(0, 0);
-            logSolution(zero, futurePosition, new Translation2d());
+            logSolution(zero, futurePosition, new Translation2d(), 0.0);
             return zero;
         }
 
@@ -117,14 +117,14 @@ public class InterpolatingShooterSolutionFinder implements ShooterSolutionFinder
                 compensatedParams.rpm,
                 compensatedParams.hoodPositionRotations);
 
-        logSolution(solution, futurePosition, compensatedShotVector);
+        logSolution(solution, futurePosition, compensatedShotVector, idealHorizontalSpeed);
         return solution;
     }
 
     // ---- Logging -------------------------------------------------------- //
 
     private void logSolution(Solution s, Translation2d futurePos,
-                             Translation2d shotVec) {
+                             Translation2d shotVec, double idealHorizontalSpeed) {
 
         Logger.recordOutput("ShooterSolution/FlywheelRPM", s.flywheelRPM);
         Logger.recordOutput("ShooterSolution/HoodPositionRot", s.hoodPositionRotations);
@@ -133,5 +133,6 @@ public class InterpolatingShooterSolutionFinder implements ShooterSolutionFinder
                 new double[] { futurePos.getX(), futurePos.getY() });
         Logger.recordOutput("ShooterSolution/ShotVector",
                 new double[] { shotVec.getX(), shotVec.getY() });
+        Logger.recordOutput("ShooterSolution/IdealHorizontalSpeed", idealHorizontalSpeed);
     }
 }
