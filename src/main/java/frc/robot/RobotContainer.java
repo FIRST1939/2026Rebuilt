@@ -131,10 +131,11 @@ public class RobotContainer {
 
         matchMode.and(m_driverController.y()).whileTrue(new RunFeederVelocity(m_feeder, Constants.kFeederVelocity)); //Run Feeder
         //matchMode.and(m_driverController.b()).whileTrue(new PivotAndRunIntake(m_intake, Constants.kPivotOutSetpoint, () -> 0.0)); //Pivot Out and Run Intake
-        matchMode.and(m_driverController.b()).onTrue(new PivotIntake(m_intake, Constants.kPivotOutSetpoint));
-        matchMode.and(m_driverController.a()).onTrue(new PivotIntake(m_intake, Constants.kPivotInSetpoint)); //Pivot Intake In
+        matchMode.and(m_driverController.b()).whileTrue(new PivotIntake(m_intake, Constants.kPivotOutSetpoint));
+        matchMode.and(m_driverController.a()).whileTrue(new PivotIntake(m_intake, Constants.kPivotInSetpoint)); //Pivot Intake In
         matchMode.and(m_driverController.x()).whileTrue(new RunSpindexerVelocity(m_spindexer, Constants.kSpindexerVelocity)); //Run Spindexer
-        matchMode.and(m_driverController.rightBumper()).whileTrue(new RunRoller(m_intake, () -> Constants.kRollerVelocity));
+        //matchMode.and(m_driverController.rightBumper()).whileTrue(new RunRoller(m_intake, () -> Constants.kRollerVelocity));
+        matchMode.and(m_driverController.rightBumper()).whileTrue(new RunIntakeRollerPercentage(m_intake, Constants.kRollerPercentage));
         matchMode.and(m_driverController.leftBumper()).whileTrue(new RunFlywheelAndHood(m_shooter, () -> 0.0, () -> 0.0));
         matchMode.and(m_driverController.rightBumper()).whileTrue(new SetClimberClimbingPosition(m_climber, Constants.kClimberClimbingSetpoint));
         matchMode.and(m_driverController.leftTrigger()).whileTrue(new SetClimberRaisingPosition(m_climber, Constants.kClimberRaisingSetpoint));
