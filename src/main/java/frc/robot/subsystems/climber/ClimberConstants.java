@@ -5,7 +5,7 @@ public class ClimberConstants {
     public static final int kClimberCAN = 38;
     public static final double kClimberGearing = (1.0 / 9.0);
     public static final int kCurrentLimit = 120;
-    public static final boolean kInverted = false;
+    public static final boolean kInverted = true;
 
     public static final double kRaisingSysIdQuasistaticRampRate = 1.0;
     public static final double kRaisingSysIdDynamicStepUp = 2.0;
