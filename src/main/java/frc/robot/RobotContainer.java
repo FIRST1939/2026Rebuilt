@@ -166,7 +166,7 @@ public class RobotContainer {
         matchMode.and(m_driverController.x().onTrue(Commands.runOnce(m_drive::stopWithX, m_drive)));
 
         matchMode.and(m_operatorController.y()).whileTrue(new RunFeederVelocity(m_feeder, Constants.kFeederVelocity)); //Run Feeder
-        //matchMode.and(m_driverController.b()).whileTrue(new PivotAndRunIntake(m_intake, Constants.kPivotOutSetpoint, () -> 0.0)); //Pivot Out and Run Intake
+        matchMode.and(m_driverController.b()).whileTrue(new RunPivotAndRoller(m_intake, Constants.kPivotOutSetpoint, () -> (Constants.kBaseRollerVelocity + Constants.kConversionFactor * m_drive.getSpeed())));
         matchMode.and(m_driverController.b()).whileTrue(new PivotIntake(m_intake, Constants.kPivotOutSetpoint));
         matchMode.and(m_driverController.a()).whileTrue(new PivotIntake(m_intake, Constants.kPivotInSetpoint)); //Pivot Intake In
         matchMode.and(m_driverController.x()).whileTrue(new RunSpindexerVelocity(m_spindexer, Constants.kSpindexerVelocity)); //Run Spindexer

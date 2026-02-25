@@ -33,6 +33,9 @@ public final class Constants {
     public static final double kClimberReleasingPercentage = 0.2;
     public static final double kClimberRaisingPercentage = 0.2;
     public static final double kRollerPercentage = 0.5;
+    public static final double kConversionFactor =  1 / (2 * Math.PI * 3);
+    public static final double kBaseRollerVelocity = 1500.0;
+
 
     public static class OperatorConstants {
       
