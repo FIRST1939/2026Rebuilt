@@ -125,6 +125,7 @@ public class RobotContainer {
         m_solutionFinderSelector.addDefaultOption("Fixed", new FixedShooterSolutionFinder());
         m_solutionFinderSelector.addOption("Interpolating", new InterpolatingShooterSolutionFinder());
         m_solutionFinderSelector.addOption("QuickShot", new QuickShotShooterSolutionFinder());
+        m_solutionFinderSelector.addOption("Entry Angle", new EntryAngleShooterSolutionFinder());
         m_solutionFinder = m_solutionFinderSelector.get();
 
         Trigger quickShotMode = new Trigger(() -> m_opModeSelector.get() == OpModes.QUICKSHOT);
