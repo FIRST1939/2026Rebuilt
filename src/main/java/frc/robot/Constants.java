@@ -29,8 +29,9 @@ public final class Constants {
     public static final double kPivotOutSetpoint = 0.256;
     public static final double kPivotInSetpoint = 0.05;
     public static final double kSpindexerVelocity = 1500.0;
-    public static final double kClimberClimbingSetpoint = 0.0;
-    public static final double kClimberRaisingSetpoint = 0.0;
+    public static final double kClimberClimbingPercentage = -0.2;
+    public static final double kClimberReleasingPercentage = 0.2;
+    public static final double kClimberRaisingPercentage = 0.2;
     public static final double kRollerPercentage = 0.5;
 
     public static class OperatorConstants {

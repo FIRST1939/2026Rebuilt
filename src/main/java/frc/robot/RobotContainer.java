@@ -31,8 +31,14 @@ import frc.robot.subsystems.shooter.*;
 import frc.robot.generated.TunerConstants;
 import frc.robot.commands.climber.*;
 import frc.robot.commands.DriveCommands;
+import frc.robot.commands.spindexer.*;
+import frc.robot.commands.climber.SetClimberPercentage;
 import frc.robot.commands.feeder.*;
-import frc.robot.commands.intake.*;
+import frc.robot.commands.intake.PivotIntake;
+import frc.robot.commands.intake.PivotIntakePercentage;
+import frc.robot.commands.intake.RunIntakeRollerPercentage;
+import frc.robot.commands.intake.RunPivotAndRoller;
+import frc.robot.commands.intake.RunRoller;
 import frc.robot.commands.shooter.*;
 import frc.robot.commands.spindexer.*;
 
@@ -80,6 +86,8 @@ public class RobotContainer {
 
     public RobotContainer(boolean isReal) {
 
+      
+        
         if (isReal) {
 
             m_drive = new Drive(
@@ -165,8 +173,9 @@ public class RobotContainer {
         //matchMode.and(m_driverController.rightBumper()).whileTrue(new RunRoller(m_intake, () -> Constants.kRollerVelocity));
         matchMode.and(m_driverController.rightBumper()).whileTrue(new RunIntakeRollerPercentage(m_intake, Constants.kRollerPercentage));
         matchMode.and(m_driverController.leftBumper()).whileTrue(new RunFlywheelAndHood(m_shooter, () -> 0.0, () -> 0.0));
-        matchMode.and(m_driverController.rightBumper()).whileTrue(new SetClimberClimbingPosition(m_climber, Constants.kClimberClimbingSetpoint));
-        matchMode.and(m_driverController.leftTrigger()).whileTrue(new SetClimberRaisingPosition(m_climber, Constants.kClimberRaisingSetpoint));
+        matchMode.and(m_driverController.rightBumper()).whileTrue(new SetClimberPercentage(m_climber, Constants.kClimberClimbingPercentage));
+        matchMode.and(m_driverController.rightBumper()).whileTrue(new SetClimberPercentage(m_climber, Constants.kClimberRaisingPercentage));
+        matchMode.and(m_driverController.rightBumper()).whileTrue(new SetClimberPercentage(m_climber, Constants.kClimberReleasingPercentage));
     }
 
     private void configurePercentBindings() {
@@ -414,5 +423,9 @@ public class RobotContainer {
       public void updateShooterSolution() {
         m_solutionFinder = m_solutionFinderSelector.get();
         m_solutionFinder.updateSimSolution();
+
+        
     }
+
+        
 }

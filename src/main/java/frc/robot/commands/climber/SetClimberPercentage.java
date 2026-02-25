@@ -1,29 +1,27 @@
 package frc.robot.commands.climber;
 
+import static edu.wpi.first.units.Units.Percent;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.climber.Climber;
 
-public class SetClimberClimbingPosition extends Command {
+public class SetClimberPercentage extends Command {
 
     private final Climber m_climber;
-    private final double m_position;
+    private final double m_percentage;
 
-    public SetClimberClimbingPosition(Climber climber, double position) {
+    public SetClimberPercentage(Climber climber, double percentage) {
         m_climber = climber;
-        m_position = position;
+        m_percentage = percentage;
 
         addRequirements(climber);
     }
 
     @Override
     public void initialize() {
-        m_climber.setClimbingPosition(m_position);
+        m_climber.setClimberPercentage(m_percentage);
     }
 
-    @Override
-    public boolean isFinished() {
-        return m_climber.isAtSetpoint();
-    }
 
     @Override
     public void end (boolean interrupted) {
