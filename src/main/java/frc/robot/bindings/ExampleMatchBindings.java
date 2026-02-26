@@ -38,6 +38,7 @@ public class ExampleMatchBindings {
     private static final double STATIC_SHOT_RPM = 3500;
     private static final double STATIC_SHOT_HOOD = 0.05;
     private static final double CLIMBER_DEADBAND = 0.1;
+    private static final double kPivotIdleSetpoint = 0.8; // example setpoint for pivoting intake out
 
     private static enum SolutionType { FIXED, IDLE, INTERPOLATING, QUICKSHOT }
     private static SolutionType m_activeSolutionType = SolutionType.FIXED;
@@ -84,9 +85,8 @@ public class ExampleMatchBindings {
         //Test: Press right bumper to pivot intake in and run rollers, release to stop rollers and leave intake in position.  
         //Press button again to start back up. 
 
-        //TODO we should make a middle setpoint. 
         exampleMatchMode.and(controller.rightBumper()).toggleOnTrue(
-            new PivotIntake(intakePivot, Constants.kPivotInSetpoint)
+            new PivotIntake(intakePivot, kPivotIdleSetpoint)
         );
         
         exampleMatchMode.and(controller.rightBumper()).whileTrue(
