@@ -177,7 +177,8 @@ public class RobotContainer {
         matchMode.and(m_operatorController.leftTrigger()).whileTrue((
                 new RunSpindexerVelocity(m_spindexer, Constants.kSpindexerVelocity))
                 .alongWith(new RunFeederVelocity(m_feeder, Constants.kFeederVelocity))
-                .alongWith(new AgitateIntake(m_intake, Constants.kAgitateIntakeOffset, Constants.kAgitateIntakeInterval)));
+                .alongWith(new AgitateIntake(m_intake, Constants.kAgitateIntakeOffset, Constants.kAgitateIntakeInterval))
+                .alongWith(new RunIntakeRollerPercentage(m_intake, Constants.kRollerPercentage)));
 
         //matchMode.and(m_operatorController.x()).whileTrue(new RunSpindexerVelocity(m_spindexer, Constants.kSpindexerVelocity)); //Run Spindexer
         //matchMode.and(m_driverController.rightBumper()).whileTrue(new RunRoller(m_intake, () -> Constants.kRollerVelocity));
