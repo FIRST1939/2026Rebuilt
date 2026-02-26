@@ -1,6 +1,5 @@
 package frc.robot.bindings;
 
-import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
 
 import edu.wpi.first.math.MathUtil;
@@ -14,11 +13,7 @@ import frc.robot.subsystems.intake.IntakeRollers;
 import frc.robot.subsystems.spindexer.Spindexer;
 import frc.robot.subsystems.feeder.Feeder;
 import frc.robot.subsystems.shooter.Shooter;
-import frc.robot.subsystems.shooter.ShooterSolutionFinder;
-import frc.robot.subsystems.shooter.FixedShooterSolutionFinder;
-import frc.robot.subsystems.shooter.IdleShooterSolutionFinder;
-import frc.robot.subsystems.shooter.InterpolatingShooterSolutionFinder;
-import frc.robot.subsystems.shooter.QuickShotShooterSolutionFinder;
+
 
 import frc.robot.commands.shooter.FollowShooterSetpoints;
 import frc.robot.commands.shooter.RunFlywheelAndHood;
