@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.bindings.ExampleMatchBindings;
 import frc.robot.bindings.QuickShotBindings;
 import frc.robot.bindings.QuickIntakeConfigBindings;
 import frc.robot.subsystems.intake.*;
@@ -51,6 +52,7 @@ public class RobotContainer {
         PERCENT,
         QUICKSHOT,
         QUICK_INTAKE_CONFIG,
+        EXAMPLE_MATCH,
         INTAKE_CHARACTERIZATION,
         SPINDEXER_CHARACTERIZATION,
         FEEDER_CHARACTERIZATION,
@@ -119,6 +121,7 @@ public class RobotContainer {
         m_opModeSelector.addOption("Percent", OpModes.PERCENT);
         m_opModeSelector.addOption("QuickShot", OpModes.QUICKSHOT);
         m_opModeSelector.addOption("Quick Intake Config", OpModes.QUICK_INTAKE_CONFIG);
+        m_opModeSelector.addOption("Example Match", OpModes.EXAMPLE_MATCH);
         m_opModeSelector.addOption("Intake Characterization", OpModes.INTAKE_CHARACTERIZATION);
         m_opModeSelector.addOption("Spindexer Characterization", OpModes.SPINDEXER_CHARACTERIZATION);
         m_opModeSelector.addOption("Feeder Characterization", OpModes.FEEDER_CHARACTERIZATION);
@@ -135,6 +138,9 @@ public class RobotContainer {
 
         Trigger intakeConfigMode = new Trigger(() -> m_opModeSelector.get() == OpModes.QUICK_INTAKE_CONFIG);
         QuickIntakeConfigBindings.configure(intakeConfigMode, m_operatorController, m_intakePivot, m_intakeRollers);
+
+        Trigger exampleMatchMode = new Trigger(() -> m_opModeSelector.get() == OpModes.EXAMPLE_MATCH);
+        ExampleMatchBindings.configure(exampleMatchMode, m_driverController, m_intakePivot, m_intakeRollers, m_shooter, m_feeder, m_spindexer, m_climber);
 
         configureMatchBindings();
         configurePercentBindings();

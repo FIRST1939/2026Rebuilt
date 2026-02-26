@@ -48,13 +48,6 @@ public class QuickShotBindings {
             Shooter shooter,
             Supplier<ShooterSolutionFinder> solutionFinderSupplier) {
 
-        quickShotMode.and(controller.y()).toggleOnTrue(new FollowShooterSetpoints(shooter, m_flywheelRPM::getAsDouble, m_hoodPosition::getAsDouble)
-        .finallyDo(() -> {
-            shooter.setHoodPosition(0);
-            shooter.setFlywheelPercentage(0);
-        })
-        );
-
          quickShotMode.and(controller.x()).toggleOnTrue(new FollowShooterSetpoints(shooter,
                  () -> solutionFinderSupplier.get().getLatestSolution().flywheelRPM,
                  () -> solutionFinderSupplier.get().getLatestSolution().hoodPositionRotations)
