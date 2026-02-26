@@ -134,7 +134,7 @@ public class RobotContainer {
         m_solutionFinder = m_solutionFinderSelector.get();
 
         Trigger quickShotMode = new Trigger(() -> m_opModeSelector.get() == OpModes.QUICKSHOT);
-        QuickShotBindings.configure(quickShotMode, m_operatorController, m_intakeRollers, m_spindexer, m_feeder, m_shooter, () -> m_solutionFinder);
+        QuickShotBindings.configure(quickShotMode, m_operatorController, m_intakePivot, m_intakeRollers, m_spindexer, m_feeder, m_shooter);
 
         Trigger intakeConfigMode = new Trigger(() -> m_opModeSelector.get() == OpModes.QUICK_INTAKE_CONFIG);
         QuickIntakeConfigBindings.configure(intakeConfigMode, m_operatorController, m_intakePivot, m_intakeRollers);

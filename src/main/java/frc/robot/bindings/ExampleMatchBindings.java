@@ -23,9 +23,12 @@ import frc.robot.commands.intake.PivotIntake;
 import frc.robot.commands.intake.RunRoller;
 import frc.robot.commands.shooter.FollowShooterSetpoints;
 import frc.robot.commands.shooter.RunFlywheelAndHood;
+import frc.robot.commands.shooter.RunFlywheelPercentage;
 import frc.robot.commands.shooter.ShootSequence;
 import frc.robot.commands.feeder.RunFeederVelocity;
+import frc.robot.commands.feeder.RunFeederPercentage;
 import frc.robot.commands.spindexer.RunSpindexerVelocity;
+import frc.robot.commands.spindexer.RunSpindexerPercentage;
 
 public class ExampleMatchBindings {
 
@@ -39,6 +42,7 @@ public class ExampleMatchBindings {
     private static final double STATIC_SHOT_HOOD = 0.05;
     private static final double CLIMBER_DEADBAND = 0.1;
     private static final double kPivotIdleSetpoint = 0.8; // example setpoint for pivoting intake out
+    private static final double kFlywheelIdleRPM = 1500; // example RPM for shooter idle state
 
     private static enum SolutionType { FIXED, IDLE, INTERPOLATING, QUICKSHOT }
     private static SolutionType m_activeSolutionType = SolutionType.FIXED;
@@ -103,7 +107,7 @@ public class ExampleMatchBindings {
                 ShootSequence.create(shooter, feeder, spindexer, FEEDER_RPM, FEEDER_THRESHOLD, SPINDEXER_RPM)
             ).finallyDo(() -> {
                 shooter.setHoodPosition(0);
-                shooter.setFlywheelPercentage(0);
+                shooter.setFlywheelVelocity(kFlywheelIdleRPM);
             })
         );
 
@@ -159,6 +163,15 @@ public class ExampleMatchBindings {
             )
         );
 
+        // A button: static shot — spin up flywheel + hood, run feeder and spindexer, all while held
+        //Test: Hold A to fire.
+        exampleMatchMode.and(controller.a()).whileTrue(
+            Commands.parallel(
+                new RunFeederVelocity(feeder, FEEDER_RPM),
+                new RunSpindexerVelocity(spindexer, SPINDEXER_RPM)
+            )
+        );
+
         // Right stick Y-axis: move the climber up and down with percentage output
         //Test: Push right stick up/down to move the climber. Releasing centers the stick and stops the climber.
         exampleMatchMode.whileTrue(
@@ -172,6 +185,16 @@ public class ExampleMatchBindings {
         //Test: Press back button to pivot intake in to kPivotInSetpoint.
         exampleMatchMode.and(controller.back()).onTrue(
             new PivotIntake(intakePivot, Constants.kPivotInSetpoint)
+        );
+
+        // Start button: reverse shooter, feeder, and spindexer at 20 to clear jams
+        //Test: Hold start button to run everything backwards. Release to stop.
+        exampleMatchMode.and(controller.start()).whileTrue(
+            Commands.parallel(
+                new RunFlywheelPercentage(shooter, -0.2),
+                new RunFeederPercentage(feeder, -0.2),
+                new RunSpindexerPercentage(spindexer, -0.2)
+            )
         );
 
         
