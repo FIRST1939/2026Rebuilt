@@ -26,7 +26,7 @@ public final class Constants {
     }
 
     public static final double kFeederVelocity = 1500.0;
-    public static final double kPivotOutSetpoint = 0.245;
+    public static final double kPivotOutSetpoint = 0.265;
     public static final double kPivotInSetpoint = 0.05;
     public static final double kSpindexerVelocity = 1500.0;
     public static final double kClimberClimbingPercentage = -0.6;
@@ -35,6 +35,8 @@ public final class Constants {
     public static final double kRollerPercentage = 0.475;
     public static final double kConversionFactor =  1 / (2 * Math.PI * 3);
     public static final double kBaseRollerVelocity = 1500.0;
+    public static final double kAgitateIntakeInterval = 0.5;
+    public static final double kAgitateIntakeOffset = 0.05;
 
 
     public static class OperatorConstants {
