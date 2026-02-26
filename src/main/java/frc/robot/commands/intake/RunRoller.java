@@ -3,19 +3,19 @@ package frc.robot.commands.intake;
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.intake.Intake;
+import frc.robot.subsystems.intake.IntakeRollers;
 
 public class RunRoller extends Command {
 
-    private final Intake m_intake;
+    private final IntakeRollers m_intakeRollers;
     private final DoubleSupplier m_rollerVelocitySupplier;
 
-    public RunRoller(Intake intake, DoubleSupplier rollerVelocitySupplier) {
+    public RunRoller(IntakeRollers intakeRollers, DoubleSupplier rollerVelocitySupplier) {
 
-        m_intake = intake;
+        m_intakeRollers = intakeRollers;
         m_rollerVelocitySupplier = rollerVelocitySupplier;
 
-        addRequirements(intake);
+        addRequirements(intakeRollers);
     }
 
     @Override
@@ -25,13 +25,13 @@ public class RunRoller extends Command {
 
     @Override
     public void execute() {
-        m_intake.setRollerVelocity(m_rollerVelocitySupplier.getAsDouble());
+        m_intakeRollers.setRollerVelocity(m_rollerVelocitySupplier.getAsDouble());
     }
 
     @Override
     public void end (boolean interrupted) {
        if (interrupted) {
-            m_intake.setRollerPercentage(0.0);
+            m_intakeRollers.setRollerPercentage(0.0);
        }
     }
 }

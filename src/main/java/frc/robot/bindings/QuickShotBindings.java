@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
-import frc.robot.subsystems.intake.Intake;
+import frc.robot.subsystems.intake.IntakeRollers;
 import frc.robot.subsystems.spindexer.Spindexer;
 import frc.robot.subsystems.feeder.Feeder;
 import frc.robot.subsystems.shooter.Shooter;
@@ -42,7 +42,7 @@ public class QuickShotBindings {
     public static void configure(
             Trigger quickShotMode,
             CommandXboxController controller,
-            Intake intake,
+            IntakeRollers intakeRollers,
             Spindexer spindexer,
             Feeder feeder,
             Shooter shooter,
@@ -90,7 +90,7 @@ public class QuickShotBindings {
         );
 
         
-        quickShotMode.and(controller.b()).whileTrue(new RunRoller(intake,() -> 1500));
+        quickShotMode.and(controller.b()).whileTrue(new RunRoller(intakeRollers,() -> 1500));
 
           quickShotMode.and(controller.a()).whileTrue(
             ShootSequence.create(

@@ -1,27 +1,27 @@
 package frc.robot.commands.intake;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.intake.Intake;
+import frc.robot.subsystems.intake.IntakePivot;
 
 public class PivotIntake extends Command {
 
-    private final Intake m_intake;
+    private final IntakePivot m_intakePivot;
     private final double m_pivotPosition;
 
     public PivotIntake(
-            Intake intake,
+            IntakePivot intakePivot,
             double pivotPosition
             ) {
 
-        m_intake = intake;
+        m_intakePivot = intakePivot;
         m_pivotPosition = pivotPosition;
        
 
-        addRequirements(intake);
+        addRequirements(intakePivot);
     }
 
     @Override
     public void initialize() {
-        m_intake.setPivotPosition(m_pivotPosition);
+        m_intakePivot.setPivotPosition(m_pivotPosition);
     }
 
     @Override
@@ -30,7 +30,7 @@ public class PivotIntake extends Command {
 
     @Override
     public boolean isFinished() {
-        return m_intake.isPivotAtSetpoint();
+        return m_intakePivot.isPivotAtSetpoint();
     }
 
     @Override
