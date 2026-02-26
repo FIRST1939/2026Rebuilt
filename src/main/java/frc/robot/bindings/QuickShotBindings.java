@@ -20,8 +20,11 @@ import frc.robot.commands.shooter.RunFlywheelAndHood;
 import frc.robot.commands.shooter.ShootSequence;
 import frc.robot.commands.spindexer.RunSpindexerVelocity;
 import frc.robot.commands.feeder.RunFeederVelocity;
+import java.util.function.Supplier;
+
 import frc.robot.commands.intake.PivotIntake;
 import frc.robot.commands.intake.RunRoller;
+import frc.robot.subsystems.shooter.ShooterSolutionFinder;
 
 public class QuickShotBindings {
 
@@ -53,7 +56,8 @@ public class QuickShotBindings {
             IntakeRollers intakeRollers,
             Spindexer spindexer,
             Feeder feeder,
-            Shooter shooter) {
+            Shooter shooter,
+            Supplier<ShooterSolutionFinder> solutionFinderSupplier) {
 
          quickShotMode.and(controller.leftBumper()).toggleOnTrue(new FollowShooterSetpoints(shooter,
                  m_flywheelRPM::getAsDouble,
@@ -131,6 +135,17 @@ public class QuickShotBindings {
                 new RunFeederVelocity(feeder, FEEDER_RPM),
                 new RunSpindexerVelocity(spindexer, SPINDEXER_RPM)
             )
+        );
+
+        // Start button: follow interpolating shooter solution for tuning
+        quickShotMode.and(controller.start()).toggleOnTrue(
+            new FollowShooterSetpoints(shooter,
+                () -> solutionFinderSupplier.get().getLatestSolution().flywheelRPM,
+                () -> solutionFinderSupplier.get().getLatestSolution().hoodPositionRotations)
+            .finallyDo(() -> {
+                shooter.setHoodPosition(0);
+                shooter.setFlywheelPercentage(0);
+            })
         );
     
 
