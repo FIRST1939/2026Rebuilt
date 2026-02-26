@@ -2,11 +2,11 @@ package frc.robot.commands.intake;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.intake.Intake;
+import frc.robot.subsystems.intake.IntakePivot;
 
 public class AgitateIntake extends Command {
 
-    private final Intake m_intake;
+    private final IntakePivot m_intakePivot;
     private final double m_offset;
     private final double m_interval;
 
@@ -14,16 +14,16 @@ public class AgitateIntake extends Command {
     private double m_centerPosition;
     private boolean m_forward = true;
 
-    public AgitateIntake(Intake intake, double offset, double intervalSeconds) {
-        m_intake = intake;
+    public AgitateIntake(IntakePivot intakePivot, double offset, double intervalSeconds) {
+        m_intakePivot = intakePivot;
         m_offset = offset;
         m_interval = intervalSeconds;
-        addRequirements(intake);
+        addRequirements(intakePivot);
     }
 
     @Override
     public void initialize() {
-        m_centerPosition = m_intake.getPivotPosition();
+        m_centerPosition = m_intakePivot.getPivotPosition();
         m_timer.restart();
         m_forward = true;
     }
@@ -49,12 +49,12 @@ public class AgitateIntake extends Command {
             target = m_centerPosition - m_offset;
         }
 
-        m_intake.setPivotPosition(target);
+        m_intakePivot.setPivotPosition(target);
     }
 
     @Override
     public void end(boolean interrupted) {
-        m_intake.setPivotPosition(m_centerPosition);
+        m_intakePivot.setPivotPosition(m_centerPosition);
     }
 
     @Override

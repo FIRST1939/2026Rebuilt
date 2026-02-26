@@ -1,24 +1,24 @@
 package frc.robot.commands.intake;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.intake.Intake;
+import frc.robot.subsystems.intake.IntakePivot;
 
 public class PivotIntakePercentage extends Command {
     
-    private final Intake m_intake;
+    private final IntakePivot m_intakePivot;
     private final double m_percentage;
 
-    public PivotIntakePercentage (Intake intake, double percentage) {
+    public PivotIntakePercentage (IntakePivot intakePivot, double percentage) {
 
-        m_intake = intake;
+        m_intakePivot = intakePivot;
         m_percentage = percentage;
 
-        addRequirements(intake);
+        addRequirements(intakePivot);
     }
 
     @Override
     public void initialize () {
 
-        m_intake.setPivotPercentage(m_percentage);
+        m_intakePivot.setPivotPercentage(m_percentage);
     }
 
     @Override
@@ -26,7 +26,7 @@ public class PivotIntakePercentage extends Command {
         
 
        if (interrupted) {
-            m_intake.setPivotPercentage(0.0);
+            m_intakePivot.setPivotPercentage(0.0);
         }
     }
 }
