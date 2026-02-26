@@ -27,6 +27,7 @@ import frc.robot.subsystems.climber.ClimberIOSim;
 import frc.robot.subsystems.drive.*;
 import frc.robot.subsystems.feeder.*;
 import frc.robot.subsystems.shooter.*;
+import frc.robot.subsystems.vision.*;
 
 import frc.robot.generated.TunerConstants;
 import frc.robot.commands.climber.*;
@@ -87,8 +88,6 @@ public class RobotContainer {
 
     public RobotContainer(boolean isReal) {
 
-      
-        
         if (isReal) {
 
             m_drive = new Drive(
@@ -97,6 +96,12 @@ public class RobotContainer {
                 new ModuleIOTalonFX(TunerConstants.FrontRight), 
                 new ModuleIOTalonFX(TunerConstants.BackLeft), 
                 new ModuleIOTalonFX(TunerConstants.BackRight)
+            );
+
+            new Vision(
+                m_drive::addVisionMeasurement,
+                new VisionIOLimelight(VisionConstants.camera0Name, m_drive::getRotation),
+                new VisionIOLimelight(VisionConstants.camera1Name, m_drive::getRotation)
             );
 
             m_intake = new Intake(new IntakeIOHardware());
@@ -112,6 +117,12 @@ public class RobotContainer {
                 new ModuleIOSim(TunerConstants.FrontRight),
                 new ModuleIOSim(TunerConstants.BackLeft),
                 new ModuleIOSim(TunerConstants.BackRight)
+            );
+
+            new Vision(
+                m_drive::addVisionMeasurement,
+                new VisionIOPhotonVisionSim(VisionConstants.camera0Name, VisionConstants.robotToCamera0, m_drive::getPose),
+                new VisionIOPhotonVisionSim(VisionConstants.camera1Name, VisionConstants.robotToCamera1, m_drive::getPose)
             );
 
             m_intake = new Intake(new IntakeIOSim());
