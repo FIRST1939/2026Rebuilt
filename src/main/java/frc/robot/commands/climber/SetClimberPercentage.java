@@ -1,7 +1,4 @@
 package frc.robot.commands.climber;
-
-import static edu.wpi.first.units.Units.Percent;
-
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.climber.Climber;
 

@@ -168,14 +168,21 @@ public class RobotContainer {
         matchMode.and(m_driverController.b()).whileTrue(new SetClimberPercentage(m_climber, Constants.kClimberRaisingPercentage));
         matchMode.and(m_driverController.a()).whileTrue(new SetClimberPercentage(m_climber, Constants.kClimberReleasingPercentage));
 
-        matchMode.and(m_operatorController.y()).whileTrue(new RunFeederVelocity(m_feeder, Constants.kFeederVelocity)); //Run Feeder
-       // matchMode.and(m_operatorController.b()).whileTrue(new RunPivotAndRoller(m_intake, Constants.kPivotOutSetpoint, () -> (Constants.kBaseRollerVelocity + Constants.kConversionFactor * m_drive.getSpeed())));
+       
         matchMode.and(m_operatorController.b()).whileTrue(new PivotIntake(m_intake, Constants.kPivotOutSetpoint)); //Pivot Intake Out
         matchMode.and(m_operatorController.a()).whileTrue(new PivotIntake(m_intake, Constants.kPivotInSetpoint)); //Pivot Intake In
-        matchMode.and(m_operatorController.x()).whileTrue(new RunSpindexerVelocity(m_spindexer, Constants.kSpindexerVelocity)); //Run Spindexer
+        matchMode.and(m_operatorController.x()).whileTrue(new RunIntakeRollerPercentage(m_intake, Constants.kRollerPercentage));
+        matchMode.and(m_operatorController.rightTrigger()).whileTrue(
+            new RunFlywheelAndHood(m_shooter, () -> 2000.0, () -> 0.1)
+                .alongWith(new RunSpindexerVelocity(m_spindexer, Constants.kSpindexerVelocity))
+                .alongWith(new RunFeederVelocity(m_feeder, Constants.kFeederVelocity))
+            );
+
+        //matchMode.and(m_operatorController.x()).whileTrue(new RunSpindexerVelocity(m_spindexer, Constants.kSpindexerVelocity)); //Run Spindexer
         //matchMode.and(m_driverController.rightBumper()).whileTrue(new RunRoller(m_intake, () -> Constants.kRollerVelocity));
-        matchMode.and(m_operatorController.rightBumper()).whileTrue(new RunIntakeRollerPercentage(m_intake, Constants.kRollerPercentage));
-        matchMode.and(m_operatorController.leftBumper()).whileTrue(new RunFlywheelAndHood(m_shooter, () -> 2000.0, () -> 0.1));
+        //matchMode.and(m_operatorController.y()).whileTrue(new RunFeederVelocity(m_feeder, Constants.kFeederVelocity)); //Run Feeder
+       
+        
     
     }
 
