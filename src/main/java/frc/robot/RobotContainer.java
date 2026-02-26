@@ -34,6 +34,7 @@ import frc.robot.commands.DriveCommands;
 import frc.robot.commands.spindexer.*;
 import frc.robot.commands.climber.SetClimberPercentage;
 import frc.robot.commands.feeder.*;
+import frc.robot.commands.intake.AgitateIntake;
 import frc.robot.commands.intake.PivotIntake;
 import frc.robot.commands.intake.PivotIntakePercentage;
 import frc.robot.commands.intake.RunIntakeRollerPercentage;
@@ -180,6 +181,8 @@ public class RobotContainer {
         //matchMode.and(m_operatorController.x()).whileTrue(new RunSpindexerVelocity(m_spindexer, Constants.kSpindexerVelocity)); //Run Spindexer
         //matchMode.and(m_driverController.rightBumper()).whileTrue(new RunRoller(m_intake, () -> Constants.kRollerVelocity));
         //matchMode.and(m_operatorController.y()).whileTrue(new RunFeederVelocity(m_feeder, Constants.kFeederVelocity)); //Run Feeder
+
+        matchMode.and(m_operatorController.y()).whileTrue(new AgitateIntake(m_intake, 0.05, 0.5));
        
     
     
