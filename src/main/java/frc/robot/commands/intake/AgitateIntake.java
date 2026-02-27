@@ -35,11 +35,7 @@ public class AgitateIntake extends Command {
         if (m_timer.hasElapsed(m_interval)) {
             m_timer.restart();
 
-            if (m_forward) {
-                m_forward = false;
-            } else {
-                m_forward = true;
-            }
+            m_forward = !m_forward;
         }
 
         double target = 0.0;
