@@ -32,11 +32,13 @@ public final class Constants {
     public static final double kClimberClimbingPercentage = -0.6;
     public static final double kClimberReleasingPercentage = 0.2;
     public static final double kClimberRaisingPercentage = 0.2;
-    public static final double kRollerPercentage = 0.475;
-    public static final double kConversionFactor =  1 / (2 * Math.PI * 3);
-    public static final double kBaseRollerVelocity = 1500.0;
+    public static final double kRollerPercentage = 1.0;
+    public static final double kConversionFactor = (1.0 / 0.0254) * (1.0 / (3.0 * Math.PI)) * (60.0 / 1.0);
+    public static final double kBaseRollerVelocity = 1350.0; //1350
     public static final double kAgitateIntakeInterval = 0.5;
     public static final double kAgitateIntakeOffset = 0.05;
+    public static final double kRollerVelocity = 3000.0;
+    public static final double kPivotIdleSetpoint = 0.100;
 
 
     public static class OperatorConstants {

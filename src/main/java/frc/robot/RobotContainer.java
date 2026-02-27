@@ -181,27 +181,26 @@ public class RobotContainer {
         matchMode.and(m_driverController.a()).whileTrue(new SetClimberPercentage(m_climber, Constants.kClimberReleasingPercentage));
 
        
-        matchMode.and(m_operatorController.b()).whileTrue(new PivotIntake(m_intake, Constants.kPivotOutSetpoint)); //Pivot Intake Out
+        //matchMode.and(m_operatorController.b()).whileTrue(new PivotIntake(m_intake, Constants.kPivotOutSetpoint)); //Pivot Intake Out
         matchMode.and(m_operatorController.a()).whileTrue(new PivotIntake(m_intake, Constants.kPivotInSetpoint)); //Pivot Intake In
         matchMode.and(m_operatorController.x()).whileTrue(new RunIntakeRollerPercentage(m_intake, Constants.kRollerPercentage));
         matchMode.and(m_operatorController.rightTrigger()).whileTrue(new RunFlywheelAndHood(m_shooter, () -> 2000.0, () -> 0.05));
         matchMode.and(m_operatorController.leftTrigger()).whileTrue((
                 new RunSpindexerVelocity(m_spindexer, Constants.kSpindexerVelocity))
                 .alongWith(new RunFeederVelocity(m_feeder, Constants.kFeederVelocity))
-                .alongWith(new AgitateIntake(m_intake, Constants.kAgitateIntakeOffset, Constants.kAgitateIntakeInterval))
-                .alongWith(new RunIntakeRollerPercentage(m_intake, Constants.kRollerPercentage)));
-        matchMode.and(m_driverController.b()).whileTrue(
+                .alongWith(new AgitateIntake(m_intake, Constants.kAgitateIntakeInterval, Constants.kRollerVelocity)));
+
+        matchMode.and(m_operatorController.b()).whileTrue(
             new RunPivotAndRoller(m_intake, 
             Constants.kPivotOutSetpoint, 
-            () -> 
-            (Constants.kBaseRollerVelocity + Constants.kConversionFactor * m_drive.getSpeed())));
+            () ->  (Constants.kBaseRollerVelocity + Constants.kConversionFactor * m_drive.getSpeed())));
  
 
 
         //matchMode.and(m_operatorController.x()).whileTrue(new RunSpindexerVelocity(m_spindexer, Constants.kSpindexerVelocity)); //Run Spindexer
         //matchMode.and(m_driverController.rightBumper()).whileTrue(new RunRoller(m_intake, () -> Constants.kRollerVelocity));
         //matchMode.and(m_operatorController.y()).whileTrue(new RunFeederVelocity(m_feeder, Constants.kFeederVelocity)); //Run Feeder
-       
+       // hi lol
     
     
     }
@@ -277,6 +276,7 @@ public class RobotContainer {
 
     public void configureSpindexerCharacterizationBindings () {
 
+        // was here 
         Trigger spindexerCharacterizationMode = new Trigger(() -> m_opModeSelector.get() == OpModes.SPINDEXER_CHARACTERIZATION);
 
         spindexerCharacterizationMode.and(m_operatorController.leftBumper()).whileTrue(m_spindexer.sysIdQuasistaticForward());
