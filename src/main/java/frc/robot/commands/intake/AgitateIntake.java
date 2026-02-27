@@ -26,7 +26,7 @@ public class AgitateIntake extends Command {
     public void initialize() {
         m_centerPosition = m_intake.getPivotPosition();
         m_timer.restart();
-        m_forward = false;
+        m_forward = true;
     }
 
     @Override
