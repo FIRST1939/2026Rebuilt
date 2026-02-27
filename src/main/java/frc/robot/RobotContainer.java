@@ -177,27 +177,51 @@ public class RobotContainer {
         matchMode.and(m_driverController.b()).whileTrue(new SetClimberPercentage(m_climber, Constants.kClimberRaisingPercentage));
         matchMode.and(m_driverController.a()).whileTrue(new SetClimberPercentage(m_climber, Constants.kClimberReleasingPercentage));
 
-       
-        //matchMode.and(m_operatorController.b()).whileTrue(new PivotIntake(m_intake, Constants.kPivotOutSetpoint)); //Pivot Intake Out
-        matchMode.and(m_operatorController.a()).whileTrue(new RunPivot(m_intake, Constants.kPivotInSetpoint)); //Pivot Intake In
         matchMode.and(m_operatorController.x()).whileTrue(new RunRollerPercentage(m_intake, Constants.kRollerPercentage));
-        matchMode.and(m_operatorController.rightTrigger()).whileTrue(new RunFlywheelAndHood(m_shooter, () -> 2000.0, () -> 0.05));
+
+        matchMode.and(m_operatorController.rightTrigger()).whileTrue(
+            new RunFlywheelAndHood(m_shooter, 
+            () -> 2000.0,
+            () -> 0.05));
+        //Follow Shot Regression Command
+
+        matchMode.and(m_operatorController.povRight()).whileTrue(
+            new RunFlywheelAndHood(m_shooter, 
+            () -> Constants.kOutpostHoodSetpoint,
+            () -> Constants.kOutpostFlywheelVelocity));
+        //Static Shot Outpost Command
+
+        matchMode.and(m_operatorController.povUp()).whileTrue(
+            new RunFlywheelAndHood(m_shooter, 
+            () -> Constants.kHubFlywheelVelocity,
+            () -> Constants.kHubHoodSetpoint));
+        //Static Shot Hub Command
+
+        matchMode.and(m_operatorController.povDown()).whileTrue(
+            new RunFlywheelAndHood(m_shooter, 
+            () -> Constants.kTowerFlywheelVelocity,
+            () -> Constants.kTowerHoodSetpoint));
+        //Static Shot Tower Command
+
+
         matchMode.and(m_operatorController.leftTrigger()).whileTrue((
                 new RunSpindexerVelocity(m_spindexer, Constants.kSpindexerVelocity))
                 .alongWith(new RunFeederVelocity(m_feeder, Constants.kFeederVelocity))
-                .alongWith(new AgitateIntake(m_intake, Constants.kAgitateIntakeInterval, Constants.kRollerVelocity)));
+                .alongWith(new AgitateIntake(m_intake, Constants.kAgitateIntakeInterval, Constants.kRollerAgitateVelocity)));
+        //Feed Into Shooter Command
 
         matchMode.and(m_operatorController.b()).whileTrue(
             new RunPivotAndRoller(m_intake, 
             Constants.kPivotOutSetpoint, 
-            () ->  (Constants.kBaseRollerVelocity + Constants.kConversionFactor * m_drive.getSpeed())));
+            () ->  (Constants.kBaseRollerIntakeVelocity + Constants.kConversionFactor * m_drive.getSpeed())));
+
+        matchMode.and(m_operatorController.a()).whileTrue(new RunPivot(m_intake, Constants.kPivotInSetpoint)); //Pivot Intake In
+        //Deploy/Intake Command
  
-
-
         //matchMode.and(m_operatorController.x()).whileTrue(new RunSpindexerVelocity(m_spindexer, Constants.kSpindexerVelocity)); //Run Spindexer
         //matchMode.and(m_driverController.rightBumper()).whileTrue(new RunRoller(m_intake, () -> Constants.kRollerVelocity));
         //matchMode.and(m_operatorController.y()).whileTrue(new RunFeederVelocity(m_feeder, Constants.kFeederVelocity)); //Run Feeder
-       // hi lol
+        //matchMode.and(m_operatorController.b()).whileTrue(new PivotIntake(m_intake, Constants.kPivotOutSetpoint)); //Pivot Intake Out
     
     
     }
