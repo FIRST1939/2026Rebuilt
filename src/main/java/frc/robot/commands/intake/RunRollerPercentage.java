@@ -2,12 +2,12 @@ package frc.robot.commands.intake;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.intake.Intake;
 
-public class RunIntakeRollerPercentage extends Command {
+public class RunRollerPercentage extends Command {
     
     private final Intake m_intake;
     private final double m_percentage;
 
-    public RunIntakeRollerPercentage (Intake intake, double percentage) {
+    public RunRollerPercentage (Intake intake, double percentage) {
 
         m_intake = intake;
         m_percentage = percentage;

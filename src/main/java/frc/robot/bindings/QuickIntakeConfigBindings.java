@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 import frc.robot.subsystems.intake.Intake;
-import frc.robot.commands.intake.PivotIntake;
+import frc.robot.commands.intake.RunPivot;
 import frc.robot.commands.intake.RunRoller;
 
 public class QuickIntakeConfigBindings {
@@ -49,7 +49,7 @@ public class QuickIntakeConfigBindings {
 
         intakeConfigMode.and(controller.b()).toggleOnTrue(
             Commands.runOnce(() -> { m_activeSetpoint = ActiveSetpoint.DEPLOYED; logSetpoints(); })
-                .andThen(new PivotIntake(intake, m_deployedSetpoint.getAsDouble()) {
+                .andThen(new RunPivot(intake, m_deployedSetpoint.getAsDouble()) {
                     @Override
                     public void initialize() {
                         intake.setPivotPosition(m_deployedSetpoint.getAsDouble());
@@ -60,7 +60,7 @@ public class QuickIntakeConfigBindings {
         
         intakeConfigMode.and(controller.a()).toggleOnTrue(
             Commands.runOnce(() -> { m_activeSetpoint = ActiveSetpoint.IDLE; logSetpoints(); })
-                .andThen(new PivotIntake(intake, m_idleSetpoint.getAsDouble()) {
+                .andThen(new RunPivot(intake, m_idleSetpoint.getAsDouble()) {
                     @Override
                     public void initialize() {
                         intake.setPivotPosition(m_idleSetpoint.getAsDouble());
@@ -71,7 +71,7 @@ public class QuickIntakeConfigBindings {
         
         intakeConfigMode.and(controller.x()).toggleOnTrue(
             Commands.runOnce(() -> { m_activeSetpoint = ActiveSetpoint.STORED; logSetpoints(); })
-                .andThen(new PivotIntake(intake, m_storedSetpoint.getAsDouble()) {
+                .andThen(new RunPivot(intake, m_storedSetpoint.getAsDouble()) {
                     @Override
                     public void initialize() {
                         intake.setPivotPosition(m_storedSetpoint.getAsDouble());

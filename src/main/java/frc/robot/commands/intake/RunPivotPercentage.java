@@ -2,12 +2,12 @@ package frc.robot.commands.intake;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.intake.Intake;
 
-public class PivotIntakePercentage extends Command {
+public class RunPivotPercentage extends Command {
     
     private final Intake m_intake;
     private final double m_percentage;
 
-    public PivotIntakePercentage (Intake intake, double percentage) {
+    public RunPivotPercentage (Intake intake, double percentage) {
 
         m_intake = intake;
         m_percentage = percentage;

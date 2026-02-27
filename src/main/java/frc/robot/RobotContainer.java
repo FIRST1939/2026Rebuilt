@@ -30,19 +30,16 @@ import frc.robot.subsystems.shooter.*;
 import frc.robot.subsystems.vision.*;
 
 import frc.robot.generated.TunerConstants;
-import frc.robot.commands.climber.*;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.spindexer.*;
 import frc.robot.commands.climber.SetClimberPercentage;
 import frc.robot.commands.feeder.*;
 import frc.robot.commands.intake.AgitateIntake;
-import frc.robot.commands.intake.PivotIntake;
-import frc.robot.commands.intake.PivotIntakePercentage;
-import frc.robot.commands.intake.RunIntakeRollerPercentage;
+import frc.robot.commands.intake.RunPivot;
+import frc.robot.commands.intake.RunPivotPercentage;
+import frc.robot.commands.intake.RunRollerPercentage;
 import frc.robot.commands.intake.RunPivotAndRoller;
-import frc.robot.commands.intake.RunRoller;
 import frc.robot.commands.shooter.*;
-import frc.robot.commands.spindexer.*;
 
 public class RobotContainer {
 
@@ -182,8 +179,8 @@ public class RobotContainer {
 
        
         //matchMode.and(m_operatorController.b()).whileTrue(new PivotIntake(m_intake, Constants.kPivotOutSetpoint)); //Pivot Intake Out
-        matchMode.and(m_operatorController.a()).whileTrue(new PivotIntake(m_intake, Constants.kPivotInSetpoint)); //Pivot Intake In
-        matchMode.and(m_operatorController.x()).whileTrue(new RunIntakeRollerPercentage(m_intake, Constants.kRollerPercentage));
+        matchMode.and(m_operatorController.a()).whileTrue(new RunPivot(m_intake, Constants.kPivotInSetpoint)); //Pivot Intake In
+        matchMode.and(m_operatorController.x()).whileTrue(new RunRollerPercentage(m_intake, Constants.kRollerPercentage));
         matchMode.and(m_operatorController.rightTrigger()).whileTrue(new RunFlywheelAndHood(m_shooter, () -> 2000.0, () -> 0.05));
         matchMode.and(m_operatorController.leftTrigger()).whileTrue((
                 new RunSpindexerVelocity(m_spindexer, Constants.kSpindexerVelocity))
@@ -214,9 +211,9 @@ public class RobotContainer {
         percentMode.and(m_operatorController.y()).whileTrue(new RunFlywheelPercentage(m_shooter, 0.3));
         percentMode.and(m_operatorController.b()).whileTrue(new RunHoodPercentage(m_shooter, -0.2));
         percentMode.and(m_operatorController.leftTrigger()).whileTrue(new RunFlywheelPercentage(m_shooter, 0.55));
-        percentMode.and(m_operatorController.rightTrigger()).whileTrue(new RunIntakeRollerPercentage(m_intake, 0.225));
-        percentMode.and(m_operatorController.leftBumper()).whileTrue(new PivotIntakePercentage(m_intake, -0.25));
-        percentMode.and(m_operatorController.rightBumper()).whileTrue(new PivotIntakePercentage(m_intake, 0.25));
+        percentMode.and(m_operatorController.rightTrigger()).whileTrue(new RunRollerPercentage(m_intake, 0.225));
+        percentMode.and(m_operatorController.leftBumper()).whileTrue(new RunPivotPercentage(m_intake, -0.25));
+        percentMode.and(m_operatorController.rightBumper()).whileTrue(new RunPivotPercentage(m_intake, 0.25));
     }
 
     public void configureIntakeCharacterizationBindings () {

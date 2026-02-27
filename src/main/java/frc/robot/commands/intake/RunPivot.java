@@ -2,12 +2,12 @@ package frc.robot.commands.intake;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.intake.Intake;
 
-public class PivotIntake extends Command {
+public class RunPivot extends Command {
 
     private final Intake m_intake;
     private final double m_pivotPosition;
 
-    public PivotIntake(
+    public RunPivot(
             Intake intake,
             double pivotPosition
             ) {
