@@ -10,6 +10,9 @@ import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
 
+
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.simulation.BatterySim;
 import edu.wpi.first.wpilibj.simulation.RoboRioSim;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -477,11 +480,19 @@ public class RobotContainer {
             )
         );
     }
-      public void updateShooterSolution() {
+public void updateShooterSolution() {
         m_solutionFinder = m_solutionFinderSelector.get();
-        m_solutionFinder.updateSimSolution();
 
-        
+        Pose2d pose = m_drive.getPose();
+        ChassisSpeeds speeds = m_drive.getChassisSpeeds();
+
+        m_solutionFinder.update(pose, speeds);
+
+        Logger.recordOutput("ShooterSolution/RobotPose", pose);
+        Logger.recordOutput("ShooterSolution/RobotPoseX", pose.getX());
+        Logger.recordOutput("ShooterSolution/RobotPoseY", pose.getY());
+        Logger.recordOutput("ShooterSolution/ChassisSpeedX", speeds.vxMetersPerSecond);
+        Logger.recordOutput("ShooterSolution/ChassisSpeedY", speeds.vyMetersPerSecond);
     }
 
         

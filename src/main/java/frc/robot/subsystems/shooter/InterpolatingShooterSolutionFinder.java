@@ -50,14 +50,10 @@ public class InterpolatingShooterSolutionFinder implements ShooterSolutionFinder
                                       ShooterParams.kInterpolator);
 
     static {
-        SHOOTER_MAP.put(1.5, new ShooterParams(500.0, 0.12,  0.42));
-        SHOOTER_MAP.put(2.0, new ShooterParams(3100.0, 0.09,  0.51));
-        SHOOTER_MAP.put(2.5, new ShooterParams(3400.0, 0.10,  0.58));
-        SHOOTER_MAP.put(3.0, new ShooterParams(3650.0, 0.11,  0.65));
-        SHOOTER_MAP.put(3.5, new ShooterParams(3900.0, 0.12,  0.71));
-        SHOOTER_MAP.put(4.0, new ShooterParams(4100.0, 0.13,  0.78));
-        SHOOTER_MAP.put(4.5, new ShooterParams(4350.0, 0.14,  0.84));
-        SHOOTER_MAP.put(5.0, new ShooterParams(4550.0, 0.15,  0.91));
+        SHOOTER_MAP.put(0.5, new ShooterParams(2000.0, 0.12,  0.42));
+        SHOOTER_MAP.put(20.0, new ShooterParams(3100.0, 0.09,  0.51));
+        SHOOTER_MAP.put(50.0, new ShooterParams(5400.0, 0.18,  0.75));
+
     }
 
     private Solution m_latestSolution = new Solution(0, 0);
