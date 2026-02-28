@@ -1,6 +1,7 @@
 package frc.robot.subsystems.shooter;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.interpolation.InterpolatingTreeMap;
 import edu.wpi.first.math.interpolation.Interpolator;
@@ -113,9 +114,13 @@ public class InterpolatingShooterSolutionFinder implements ShooterSolutionFinder
 
         ShooterParams compensatedParams = SHOOTER_MAP.get(virtualDistance);
 
+        // The compensated shot vector direction is where the robot needs to face
+        Rotation2d aimHeading = compensatedShotVector.getAngle();
+
         Solution solution = new Solution(
                 compensatedParams.rpm,
-                compensatedParams.hoodPositionRotations);
+                compensatedParams.hoodPositionRotations,
+                aimHeading);
 
         logSolution(solution, futurePosition, compensatedShotVector, idealHorizontalSpeed);
         return solution;
@@ -128,6 +133,7 @@ public class InterpolatingShooterSolutionFinder implements ShooterSolutionFinder
 
         Logger.recordOutput("ShooterSolution/FlywheelRPM", s.flywheelRPM);
         Logger.recordOutput("ShooterSolution/HoodPositionRot", s.hoodPositionRotations);
+        Logger.recordOutput("ShooterSolution/AimHeadingDeg", s.robotHeading.getDegrees());
         Logger.recordOutput("ShooterSolution/CompensatedSpeedMps", shotVec.getNorm());
         Logger.recordOutput("ShooterSolution/FuturePosition",
                 new double[] { futurePos.getX(), futurePos.getY() });
