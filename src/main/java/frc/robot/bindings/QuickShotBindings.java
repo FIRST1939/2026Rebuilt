@@ -136,7 +136,32 @@ public class QuickShotBindings {
                 shooter.setFlywheelPercentage(0);
             })
         );
-    
+  //update Drive.java  
+//  /** Returns the measured chassis speeds of the robot. */
+//  @AutoLogOutput(key = "SwerveChassisSpeeds/Measured")
+//  public ChassisSpeeds getChassisSpeeds() {
+//    return kinematics.toChassisSpeeds(getModuleStates());
+//  }
+
+//Udpate Robot.container
+//
+//import edu.wpi.first.math.geometry.Pose2d;
+//import edu.wpi.first.math.kinematics.ChassisSpeeds;
+//   public void updateShooterSolution() {
+//         m_solutionFinder = m_solutionFinderSelector.get();
+
+//         Pose2d pose = m_drive.getPose();
+//         ChassisSpeeds speeds = m_drive.getChassisSpeeds();
+
+//         m_solutionFinder.update(pose, speeds);
+
+//         Logger.recordOutput("ShooterSolution/RobotPose", pose);
+//         Logger.recordOutput("ShooterSolution/RobotPoseX", pose.getX());
+//         Logger.recordOutput("ShooterSolution/RobotPoseY", pose.getY());
+//         Logger.recordOutput("ShooterSolution/ChassisSpeedX", speeds.vxMetersPerSecond);
+//         Logger.recordOutput("ShooterSolution/ChassisSpeedY", speeds.vyMetersPerSecond);
+//     }
+
 
     }
 }
