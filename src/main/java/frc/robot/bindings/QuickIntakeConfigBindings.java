@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.commands.intake.RunPivot;
+import frc.robot.commands.intake.RunPivotAndRoller;
 import frc.robot.commands.intake.RunRoller;
 
 public class QuickIntakeConfigBindings {
@@ -47,9 +48,10 @@ public class QuickIntakeConfigBindings {
             CommandXboxController controller,
             Intake intake) {
 
-        intakeConfigMode.and(controller.b()).toggleOnTrue(
+        // Right trigger: pivot intake to deployed setpoint and run roller while held
+        intakeConfigMode.and(controller.rightTrigger()).whileTrue(
             Commands.runOnce(() -> { m_activeSetpoint = ActiveSetpoint.DEPLOYED; logSetpoints(); })
-                .andThen(new RunPivot(intake, m_deployedSetpoint.getAsDouble()) {
+                .andThen(new RunPivotAndRoller(intake, m_deployedSetpoint.getAsDouble(), m_rollerSpeed::getAsDouble) {
                     @Override
                     public void initialize() {
                         intake.setPivotPosition(m_deployedSetpoint.getAsDouble());
@@ -57,10 +59,10 @@ public class QuickIntakeConfigBindings {
                 })
         );
 
-        
-        intakeConfigMode.and(controller.a()).toggleOnTrue(
+        // Right bumper: pivot intake to idle setpoint and run roller inward while held
+        intakeConfigMode.and(controller.rightBumper()).whileTrue(
             Commands.runOnce(() -> { m_activeSetpoint = ActiveSetpoint.IDLE; logSetpoints(); })
-                .andThen(new RunPivot(intake, m_idleSetpoint.getAsDouble()) {
+                .andThen(new RunPivotAndRoller(intake, m_idleSetpoint.getAsDouble(), () -> -m_rollerSpeed.getAsDouble()) {
                     @Override
                     public void initialize() {
                         intake.setPivotPosition(m_idleSetpoint.getAsDouble());
@@ -68,8 +70,8 @@ public class QuickIntakeConfigBindings {
                 })
         );
 
-        
-        intakeConfigMode.and(controller.x()).toggleOnTrue(
+        // Back button: pivot intake to stored setpoint
+        intakeConfigMode.and(controller.back()).onTrue(
             Commands.runOnce(() -> { m_activeSetpoint = ActiveSetpoint.STORED; logSetpoints(); })
                 .andThen(new RunPivot(intake, m_storedSetpoint.getAsDouble()) {
                     @Override
@@ -79,34 +81,57 @@ public class QuickIntakeConfigBindings {
                 })
         );
 
-
-        intakeConfigMode.and(controller.rightBumper()).onTrue(
+        // Left bumper: nudge active setpoint up
+        intakeConfigMode.and(controller.leftBumper()).onTrue(
             Commands.runOnce(() -> {
                 nudgeActiveSetpoint(m_nudgeAmount.getAsDouble());
                 intake.setPivotPosition(getActiveSetpointValue());
             })
         );
 
-        
-        intakeConfigMode.and(controller.leftBumper()).onTrue(
+        // Left trigger: nudge active setpoint down
+        intakeConfigMode.and(controller.leftTrigger()).onTrue(
             Commands.runOnce(() -> {
                 nudgeActiveSetpoint(-m_nudgeAmount.getAsDouble());
                 intake.setPivotPosition(getActiveSetpointValue());
             })
         );
 
-        
+        // POV up: nudge active setpoint up
+        intakeConfigMode.and(controller.povUp()).onTrue(
+            Commands.runOnce(() -> {
+                nudgeActiveSetpoint(m_nudgeAmount.getAsDouble());
+                intake.setPivotPosition(getActiveSetpointValue());
+            })
+        );
+
+        // POV down: nudge active setpoint down
+        intakeConfigMode.and(controller.povDown()).onTrue(
+            Commands.runOnce(() -> {
+                nudgeActiveSetpoint(-m_nudgeAmount.getAsDouble());
+                intake.setPivotPosition(getActiveSetpointValue());
+            })
+        );
+
+        // POV right: increase roller speed
+        intakeConfigMode.and(controller.povRight()).onTrue(
+            Commands.runOnce(() -> {
+                m_rollerSpeed.set(m_rollerSpeed.getAsDouble() + 100);
+                logSetpoints();
+            })
+        );
+
+        // POV left: decrease roller speed
+        intakeConfigMode.and(controller.povLeft()).onTrue(
+            Commands.runOnce(() -> {
+                m_rollerSpeed.set(Math.max(0, m_rollerSpeed.getAsDouble() - 100));
+                logSetpoints();
+            })
+        );
+
+        // Y button: run roller while held
         intakeConfigMode.and(controller.y()).whileTrue(
             new RunRoller(intake, m_rollerSpeed::getAsDouble)
-        );
-
-        
-        intakeConfigMode.and(controller.rightTrigger()).onTrue(
-            Commands.runOnce(() -> m_rollerSpeed.set(m_rollerSpeed.getAsDouble() + 100))
-        );
-
-        intakeConfigMode.and(controller.leftTrigger()).onTrue(
-            Commands.runOnce(() -> m_rollerSpeed.set(Math.max(0, m_rollerSpeed.getAsDouble() - 100)))
         );
     }
 
