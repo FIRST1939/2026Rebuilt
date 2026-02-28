@@ -4,7 +4,9 @@
 
 package frc.robot;
 
+import java.lang.reflect.Field;
 import java.util.function.DoubleSupplier;
+import java.util.function.Supplier;
 
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
@@ -12,6 +14,10 @@ import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
 
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.simulation.BatterySim;
 import edu.wpi.first.wpilibj.simulation.RoboRioSim;
@@ -32,7 +38,7 @@ import frc.robot.subsystems.drive.*;
 import frc.robot.subsystems.feeder.*;
 import frc.robot.subsystems.shooter.*;
 import frc.robot.subsystems.vision.*;
-
+import frc.robot.util.FieldConstants;
 import frc.robot.generated.TunerConstants;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.spindexer.*;
@@ -84,6 +90,8 @@ public class RobotContainer {
     private final LoggedNetworkNumber m_updateProfileAllowedError = new LoggedNetworkNumber("/Tuning/Profile Allowed Error", 0);
     private DoubleSupplier m_controllerErrorSupplier = () -> 0.0;
     private DoubleSupplier m_controllerErrorSupplier2 = () -> 0.0;
+    private Supplier<Rotation2d> m_toGoal = () -> new Rotation2d(0);
+    
 
     private final CommandXboxController m_driverController = new CommandXboxController(OperatorConstants.kDriverControllerPort);
     private final CommandXboxController m_operatorController = new CommandXboxController(OperatorConstants.kOperatorControllerPort);
@@ -174,6 +182,8 @@ public class RobotContainer {
 
         Trigger matchMode = new Trigger(() -> m_opModeSelector.get() == OpModes.MATCH);
 
+
+
         m_drive.setDefaultCommand(
             DriveCommands.joystickDrive(
                 m_drive,
@@ -183,6 +193,17 @@ public class RobotContainer {
             )
         );
 
+        /*
+        m_drive.setDefaultCommand(
+            DriveCommands.joystickDriveAtAngle(
+                m_drive,
+                () -> -m_driverController.getLeftY(),
+                () -> -m_driverController.getLeftX(),
+                () -> FieldConstants.Hub.oppTopCenterPoint.toTranslation2d().minus(m_drive.getPose().getTranslation()).getAngle()
+            )
+        );
+        */
+
         matchMode.and(m_driverController.x().onTrue(Commands.runOnce(m_drive::stopWithX, m_drive)));
         matchMode.and(m_driverController.y()).whileTrue(new SetClimberPercentage(m_climber, Constants.kClimberClimbingPercentage));
         matchMode.and(m_driverController.b()).whileTrue(new SetClimberPercentage(m_climber, Constants.kClimberRaisingPercentage));
@@ -190,16 +211,16 @@ public class RobotContainer {
 
         matchMode.and(m_operatorController.x()).whileTrue(new RunRollerPercentage(m_intake, Constants.kRollerPercentage));
 
-        matchMode.and(m_operatorController.rightTrigger()).whileTrue(
-            new RunFlywheelAndHood(m_shooter, 
-            () -> 2000.0,
-            () -> 0.05));
+        //matchMode.and(m_operatorController.rightTrigger()).whileTrue(
+          //  new RunFlywheelAndHood(m_shooter, 
+        //    () -> 2000.0,
+      //      () -> 0.05));
         //Follow Shot Regression Command
 
         matchMode.and(m_operatorController.povRight()).whileTrue(
             new RunFlywheelAndHood(m_shooter, 
-            () -> Constants.kOutpostHoodSetpoint,
-            () -> Constants.kOutpostFlywheelVelocity));
+            () -> Constants.kOutpostFlywheelVelocity,
+            () -> Constants.kOutpostHoodSetpoint));
         //Static Shot Outpost Command
 
         matchMode.and(m_operatorController.povUp()).whileTrue(
@@ -215,7 +236,7 @@ public class RobotContainer {
         //Static Shot Tower Command
 
 
-        matchMode.and(m_operatorController.leftTrigger()).whileTrue((
+        (m_operatorController.rightTrigger()).whileTrue((
                 new RunSpindexerVelocity(m_spindexer, Constants.kSpindexerVelocity))
                 .alongWith(new RunFeederVelocity(m_feeder, Constants.kFeederVelocity))
                 .alongWith(new AgitateIntake(m_intake, Constants.kAgitateIntakeInterval, Constants.kRollerAgitateVelocity)));
@@ -488,11 +509,23 @@ public void updateShooterSolution() {
 
         m_solutionFinder.update(pose, speeds);
 
+        m_toGoal = () -> m_solutionFinder.getLatestSolution().robotHeading;
         Logger.recordOutput("ShooterSolution/RobotPose", pose);
         Logger.recordOutput("ShooterSolution/RobotPoseX", pose.getX());
         Logger.recordOutput("ShooterSolution/RobotPoseY", pose.getY());
         Logger.recordOutput("ShooterSolution/ChassisSpeedX", speeds.vxMetersPerSecond);
         Logger.recordOutput("ShooterSolution/ChassisSpeedY", speeds.vyMetersPerSecond);
+
+        Logger.recordOutput("ShooterSolution/HubX", FieldConstants.Hub.innerCenterPoint.getX());
+        Logger.recordOutput("ShooterSolution/HubY", FieldConstants.Hub.innerCenterPoint.getY());
+        Translation2d hub = FieldConstants.Hub.innerCenterPoint.toTranslation2d();
+
+        //  Pose2d hub = new Pose2d(FieldConstants.Hub.innerCenterPoint.getX(),FieldConstants.Hub.innerCenterPoint.getY(), new Rotation2d());
+       // Translation3d targetVector = hub.minus(robot);
+        
+        Logger.recordOutput("ShooterSolution/HubAngle",  hub.minus(pose.getTranslation()).getAngle().getDegrees());
+     
+
     }
 
         

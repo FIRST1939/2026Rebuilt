@@ -7,6 +7,7 @@ import edu.wpi.first.math.interpolation.InterpolatingTreeMap;
 import edu.wpi.first.math.interpolation.Interpolator;
 import edu.wpi.first.math.interpolation.InverseInterpolator;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import frc.robot.util.FieldConstants;
 
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
@@ -37,11 +38,11 @@ public class InterpolatingShooterSolutionFinder implements ShooterSolutionFinder
                         startValue.timeOfFlight
                                 + (endValue.timeOfFlight - startValue.timeOfFlight) * t);
     }
-
+    
     private final LoggedNetworkNumber m_goalPosX =
-            new LoggedNetworkNumber("/ShooterSolution/Goal Pos X", 8.23);
+            new LoggedNetworkNumber("/ShooterSolution/Goal Pos X",   FieldConstants.Hub.oppTopCenterPoint.toTranslation2d().getX());
     private final LoggedNetworkNumber m_goalPosY =
-            new LoggedNetworkNumber("/ShooterSolution/Goal Pos Y", 4.11);
+            new LoggedNetworkNumber("/ShooterSolution/Goal Pos Y",  FieldConstants.Hub.oppTopCenterPoint.toTranslation2d().getY());
     private final LoggedNetworkNumber m_latencyCompensation =
             new LoggedNetworkNumber("/ShooterSolution/Latency Compensation", 0.1);
 

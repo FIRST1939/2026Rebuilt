@@ -34,16 +34,16 @@ public class QuickShotBindings {
 
     // Increment constants
     private static final double RPM_INCREMENT = 50;
-    private static final double HOOD_INCREMENT = 1.0 / 360.0; // 1 degree in rotations
+    private static final double HOOD_INCREMENT = 0.5 / 360.0; // 1 degree in rotations
     private static final double HOOD_MIN = 0.0;
     private static final double HOOD_MAX = 0.1;
 
     private static final double FEEDER_RPM = 2000;
     private static final double FEEDER_THRESHOLD = 500;
-    private static final double SPINDEXER_RPM = 120;
-    private static final double ROLLER_VELOCITY = 1500.0;
-    private static final double ROLLER_VELOCITY_INWARD = -1000.0;
-    private static final double kPivotIdleSetpoint = 0.8;
+    private static final double SPINDEXER_RPM = 350;
+    private static final double ROLLER_VELOCITY = -1500.0;
+    private static final double ROLLER_VELOCITY_INWARD = 1000.0;
+    private static final double kPivotIdleSetpoint = 0.4;
 
 
 
@@ -97,34 +97,34 @@ public class QuickShotBindings {
 
         
         // Right trigger: pivot intake out and run intake roller while held
-        quickShotMode.and(controller.rightTrigger()).whileTrue(
-            new RunPivotAndRoller(intake, Constants.kPivotOutSetpoint, () -> ROLLER_VELOCITY)
-        );
+        //quickShotMode.and(controller.rightTrigger()).whileTrue(
+        //    new RunPivotAndRoller(intake, Constants.kPivotOutSetpoint, () -> ROLLER_VELOCITY)
+        //);
 
         // Right bumper: pivot intake to idle and run intake roller inward while held
-        quickShotMode.and(controller.rightBumper()).whileTrue(
-            new RunPivotAndRoller(intake, kPivotIdleSetpoint, () -> ROLLER_VELOCITY_INWARD)
-        );
+        //quickShotMode.and(controller.rightBumper()).whileTrue(
+        //    new RunPivotAndRoller(intake, kPivotIdleSetpoint, () -> ROLLER_VELOCITY_INWARD)
+        //);
 
     
             // Y button: static shot — spin up flywheel + hood, run feeder and spindexer, all while held
         //Test: Hold Y to fire a static shot at fixed RPM/hood. Release to stop everything.
         quickShotMode.and(controller.y()).whileTrue(
             Commands.parallel(
-                new RunFlywheelAndHood(shooter, () -> 3000, () -> 0.05),
-                new RunFeederVelocity(feeder, FEEDER_RPM),
-                new RunSpindexerVelocity(spindexer, SPINDEXER_RPM)
+                new RunFlywheelAndHood(shooter, () -> 3000, () -> 0.05)
+                //new RunFeederVelocity(feeder, FEEDER_RPM),
+                //new RunSpindexerVelocity(spindexer, SPINDEXER_RPM)
             )
         );
 
         // A button: static shot — spin up flywheel + hood, run feeder and spindexer, all while held
         //Test: Hold A to fire.
-        quickShotMode.and(controller.a()).whileTrue(
-            Commands.parallel(
-                new RunFeederVelocity(feeder, FEEDER_RPM),
-                new RunSpindexerVelocity(spindexer, SPINDEXER_RPM)
-            )
-        );
+        //quickShotMode.and(controller.a()).whileTrue(
+        //    Commands.parallel(
+        //        new RunFeederVelocity(feeder, FEEDER_RPM),
+        //        new RunSpindexerVelocity(spindexer, SPINDEXER_RPM)
+        //    )
+        //);
 
         // Start button: follow interpolating shooter solution for tuning
         quickShotMode.and(controller.start()).toggleOnTrue(

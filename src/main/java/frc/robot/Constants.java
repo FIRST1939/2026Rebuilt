@@ -41,13 +41,13 @@ public final class Constants {
     public static final double kRollerAgitateVelocity = 1250.0;
     public static final double kPivotIdleSetpoint = 0.100;
 
-    public static final double kHubFlywheelVelocity = 0.0;
-    public static final double kOutpostFlywheelVelocity = 0.0;
-    public static final double kTowerFlywheelVelocity = 0.0;
+    public static final double kHubFlywheelVelocity = 2750;
+    public static final double kOutpostFlywheelVelocity = 750.0;
+    public static final double kTowerFlywheelVelocity = 3000;
 
-    public static final double kHubHoodSetpoint = 0.0;
-    public static final double kOutpostHoodSetpoint = 0.0;
-    public static final double kTowerHoodSetpoint = 0.0;
+    public static final double kHubHoodSetpoint = 0.0125;
+    public static final double kOutpostHoodSetpoint = 0.05;
+    public static final double kTowerHoodSetpoint = 0.047;
 
 
     public static class OperatorConstants {
