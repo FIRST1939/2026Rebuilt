@@ -5,6 +5,7 @@
 package frc.robot;
 
 import java.lang.reflect.Field;
+import java.util.Set;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
@@ -12,6 +13,8 @@ import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
 
+import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.events.EventTrigger;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -23,6 +26,7 @@ import edu.wpi.first.wpilibj.simulation.BatterySim;
 import edu.wpi.first.wpilibj.simulation.RoboRioSim;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
@@ -236,8 +240,8 @@ public class RobotContainer {
 
         (m_operatorController.rightTrigger()).whileTrue((
             new RunSpindexerVelocity(m_spindexer, Constants.kSpindexerVelocity))
-            .alongWith(new RunFeederVelocity(m_feeder, Constants.kFeederVelocity))
-            .alongWith(new AgitateIntake(m_intake, Constants.kAgitateIntakeInterval, Constants.kRollerAgitateVelocity)));
+            .alongWith(new RunFeederVelocity(m_feeder, Constants.kFeederVelocity)));
+           // .alongWith(new AgitateIntake(m_intake, Constants.kAgitateIntakeInterval, Constants.kRollerAgitateVelocity)));
         //Feed Into Shooter Command
 
         matchMode.and(m_operatorController.leftBumper()).onTrue(new RunPivot(m_intake, Constants.kPivotInSetpoint)); 
@@ -258,6 +262,22 @@ public class RobotContainer {
         matchMode.and(m_operatorController.x()).whileTrue(new RunRollerVelocity(m_intake, Constants.kRollerReverseVelocity));
         //Roller Reverse
     }
+
+     public void configureNamedCommands () {
+        
+        new EventTrigger("RunPivotAndRoller").onTrue(new RunPivotAndRoller(m_intake, 
+            Constants.kPivotOutSetpoint, 
+            () ->  (Constants.kBaseRollerIntakeVelocity + Constants.kConversionFactor * m_drive.getSpeed())));
+        
+        NamedCommands.registerCommand("StaticShotTower", (
+            new RunFlywheelAndHood(m_shooter, 
+            () -> Constants.kHubFlywheelVelocity,
+            () -> Constants.kHubHoodSetpoint)));
+
+        NamedCommands.registerCommand("FeedShooter", (new RunSpindexerVelocity(m_spindexer, Constants.kSpindexerVelocity))
+            .alongWith(new RunFeederVelocity(m_feeder, Constants.kFeederVelocity)));
+           // .alongWith(new AgitateIntake(m_intake, Constants.kAgitateIntakeInterval, Constants.kRollerAgitateVelocity)));
+            }
 
     private void configurePercentBindings() {
 

@@ -29,7 +29,7 @@ public final class Constants {
     public static final double kPivotOutSetpoint = 0.265;
     public static final double kPivotInSetpoint = 0.05;
 
-    public static final double kSpindexerVelocity = 1500.0;
+    public static final double kSpindexerVelocity = 180.0;
     public static final double kSpindexerReverseVelocity = -1500.0;
     public static final double kFeederReverseVelocity = -1500.0;
     public static final double kRollerReverseVelocity = -1500.0;
