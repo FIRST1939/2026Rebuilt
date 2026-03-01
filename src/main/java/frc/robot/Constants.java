@@ -28,7 +28,10 @@ public final class Constants {
     public static final double kFeederVelocity = 1500.0;
     public static final double kPivotOutSetpoint = 0.265;
     public static final double kPivotInSetpoint = 0.05;
+    
     public static final double kSpindexerVelocity = 1500.0;
+    public static final double kSpindexerReverseVelocity = -1500.0;
+
     public static final double kClimberClimbingPercentage = -0.6;
     public static final double kClimberReleasingPercentage = 0.2;
     public static final double kClimberRaisingPercentage = 0.2;
@@ -44,10 +47,12 @@ public final class Constants {
     public static final double kHubFlywheelVelocity = 2750;
     public static final double kOutpostFlywheelVelocity = 750.0;
     public static final double kTowerFlywheelVelocity = 3000;
+    public static final double kTrenchFlywheelVelocity = 3250;
 
     public static final double kHubHoodSetpoint = 0.0125;
     public static final double kOutpostHoodSetpoint = 0.05;
     public static final double kTowerHoodSetpoint = 0.047;
+    public static final double kTrenchHoodSetpoint = 0.0458;
 
 
     public static class OperatorConstants {

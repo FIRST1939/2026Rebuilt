@@ -48,6 +48,7 @@ import frc.robot.commands.intake.AgitateIntake;
 import frc.robot.commands.intake.RunPivot;
 import frc.robot.commands.intake.RunPivotPercentage;
 import frc.robot.commands.intake.RunRollerPercentage;
+import frc.robot.commands.intake.RunRollerVelocity;
 import frc.robot.commands.intake.RunPivotAndRoller;
 import frc.robot.commands.shooter.*;
 
@@ -209,14 +210,6 @@ public class RobotContainer {
         matchMode.and(m_driverController.b()).whileTrue(new SetClimberPercentage(m_climber, Constants.kClimberRaisingPercentage));
         matchMode.and(m_driverController.a()).whileTrue(new SetClimberPercentage(m_climber, Constants.kClimberReleasingPercentage));
 
-        matchMode.and(m_operatorController.x()).whileTrue(new RunRollerPercentage(m_intake, Constants.kRollerPercentage));
-
-        //matchMode.and(m_operatorController.rightTrigger()).whileTrue(
-          //  new RunFlywheelAndHood(m_shooter, 
-        //    () -> 2000.0,
-      //      () -> 0.05));
-        //Follow Shot Regression Command
-
         matchMode.and(m_operatorController.povRight()).whileTrue(
             new RunFlywheelAndHood(m_shooter, 
             () -> Constants.kOutpostFlywheelVelocity,
@@ -235,27 +228,35 @@ public class RobotContainer {
             () -> Constants.kTowerHoodSetpoint));
         //Static Shot Tower Command
 
+        matchMode.and(m_operatorController.povLeft()).whileTrue(
+            new RunFlywheelAndHood(m_shooter, 
+            () -> Constants.kTrenchFlywheelVelocity,
+            () -> Constants.kTrenchHoodSetpoint));
+        //Static Shot Trench Command
 
         (m_operatorController.rightTrigger()).whileTrue((
-                new RunSpindexerVelocity(m_spindexer, Constants.kSpindexerVelocity))
-                .alongWith(new RunFeederVelocity(m_feeder, Constants.kFeederVelocity))
-                .alongWith(new AgitateIntake(m_intake, Constants.kAgitateIntakeInterval, Constants.kRollerAgitateVelocity)));
+            new RunSpindexerVelocity(m_spindexer, Constants.kSpindexerVelocity))
+            .alongWith(new RunFeederVelocity(m_feeder, Constants.kFeederVelocity))
+            .alongWith(new AgitateIntake(m_intake, Constants.kAgitateIntakeInterval, Constants.kRollerAgitateVelocity)));
         //Feed Into Shooter Command
 
-        matchMode.and(m_operatorController.b()).whileTrue(
+        matchMode.and(m_operatorController.leftBumper()).onTrue(new RunPivot(m_intake, Constants.kPivotInSetpoint)); 
+        //Pivot Intake In
+
+        matchMode.and(m_operatorController.rightBumper()).whileTrue(
             new RunPivotAndRoller(m_intake, 
             Constants.kPivotOutSetpoint, 
             () ->  (Constants.kBaseRollerIntakeVelocity + Constants.kConversionFactor * m_drive.getSpeed())));
+        //Deploy+Roller
 
-        matchMode.and(m_operatorController.a()).whileTrue(new RunPivot(m_intake, Constants.kPivotInSetpoint)); //Pivot Intake In
-        //Deploy/Intake Command
- 
-        //matchMode.and(m_operatorController.x()).whileTrue(new RunSpindexerVelocity(m_spindexer, Constants.kSpindexerVelocity)); //Run Spindexer
-        //matchMode.and(m_driverController.rightBumper()).whileTrue(new RunRoller(m_intake, () -> Constants.kRollerVelocity));
-        //matchMode.and(m_operatorController.y()).whileTrue(new RunFeederVelocity(m_feeder, Constants.kFeederVelocity)); //Run Feeder
-        //matchMode.and(m_operatorController.b()).whileTrue(new PivotIntake(m_intake, Constants.kPivotOutSetpoint)); //Pivot Intake Out
-    
-    
+        matchMode.and(m_operatorController.b()).whileTrue(new RunSpindexerVelocity(m_spindexer, Constants.kSpindexerReverseVelocity));
+        //Spindexer Reverse
+
+        matchMode.and(m_operatorController.a()).whileTrue(new RunFeederVelocity(m_feeder, Constants.kFeederReverseVelocity));
+        //Feeder Reverse
+
+        matchMode.and(m_operatorController.x()).whileTrue(new RunRollerVelocity(m_intake, Constants.kRollerReverseVelocity));
+        //Roller Reverse
     }
 
     private void configurePercentBindings() {
