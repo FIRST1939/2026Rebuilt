@@ -4,6 +4,7 @@ import com.revrobotics.PersistMode;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.ResetMode;
 import com.revrobotics.spark.SparkBase.ControlType;
+import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
@@ -47,18 +48,13 @@ public class IntakeIOHardware implements IntakeIO {
         SparkFlexConfig globalPivotConfig = new SparkFlexConfig();
 
         globalPivotConfig
-            .idleMode(IdleMode.kCoast)
+            .idleMode(IdleMode.kBrake)
             .smartCurrentLimit(IntakeConstants.kPivotCurrentLimit)
             .voltageCompensation(12.0);
 
         globalPivotConfig.encoder
             .positionConversionFactor(IntakeConstants.kPivotGearing)
             .velocityConversionFactor(IntakeConstants.kPivotGearing);
-
-        globalPivotConfig.closedLoop.maxMotion
-            .cruiseVelocity(IntakeConstants.kPivotProfileCruiseVelocity)
-            .maxAcceleration(IntakeConstants.kPivotProfileMaxAcceleration)
-            .allowedProfileError(IntakeConstants.kPivotProfileAllowedError);
 
         SparkFlexConfig leftPivotConfig = new SparkFlexConfig();
 
@@ -128,25 +124,13 @@ public class IntakeIOHardware implements IntakeIO {
     @Override
     public double getLeftPivotControllerPositionSetpoint () {
 
-        return m_leftPivotController.getMAXMotionSetpointPosition();
-    }
-
-    @Override
-    public double getLeftPivotControllerVelocitySetpoint () {
-
-        return m_leftPivotController.getMAXMotionSetpointVelocity();
+        return m_leftPivotController.getSetpoint();
     }
 
     @Override
     public double getRightPivotControllerPositionSetpoint () {
 
-        return m_leftPivotController.getMAXMotionSetpointPosition();
-    }
-
-    @Override
-    public double getRightPivotControllerVelocitySetpoint () {
-
-        return m_rightPivotController.getMAXMotionSetpointVelocity();
+        return m_leftPivotController.getSetpoint();
     }
     
     @Override
@@ -185,6 +169,13 @@ public class IntakeIOHardware implements IntakeIO {
 
         m_leftPivotMotor.configure(config, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
         m_rightPivotMotor.configure(config, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
+    }
+
+    @Override
+    public void zeroPivot () {
+
+        m_leftPivotEncoder.setPosition(0.0);
+        m_rightPivotEncoder.setPosition(0.0);
     }
 
     @Override

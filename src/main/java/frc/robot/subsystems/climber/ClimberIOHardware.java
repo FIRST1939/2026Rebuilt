@@ -24,7 +24,7 @@ public class ClimberIOHardware implements ClimberIO {
         config
             .idleMode(IdleMode.kBrake)
             .inverted(ClimberConstants.kInverted)
-            .smartCurrentLimit(ClimberConstants.kCurrentLimit)
+            //.smartCurrentLimit(ClimberConstants.kCurrentLimit)
             .voltageCompensation(12.0);
 
         config.encoder

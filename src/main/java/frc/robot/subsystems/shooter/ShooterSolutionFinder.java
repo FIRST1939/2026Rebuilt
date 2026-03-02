@@ -20,10 +20,19 @@ public interface ShooterSolutionFinder {
 
         public double flywheelRPM;
         public double hoodPositionRotations;
+        /** The heading the robot should face to hit the goal, accounting for time of flight and robot velocity. */
+        public Rotation2d robotHeading;
 
         public Solution(double flywheelRPM, double hoodPositionRotations) {
             this.flywheelRPM = flywheelRPM;
             this.hoodPositionRotations = hoodPositionRotations;
+            this.robotHeading = Rotation2d.kZero;
+        }
+
+        public Solution(double flywheelRPM, double hoodPositionRotations, Rotation2d robotHeading) {
+            this.flywheelRPM = flywheelRPM;
+            this.hoodPositionRotations = hoodPositionRotations;
+            this.robotHeading = robotHeading;
         }
     }
 

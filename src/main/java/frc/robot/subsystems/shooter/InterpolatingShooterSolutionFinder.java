@@ -1,11 +1,13 @@
 package frc.robot.subsystems.shooter;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.interpolation.InterpolatingTreeMap;
 import edu.wpi.first.math.interpolation.Interpolator;
 import edu.wpi.first.math.interpolation.InverseInterpolator;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import frc.robot.util.FieldConstants;
 
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
@@ -36,11 +38,11 @@ public class InterpolatingShooterSolutionFinder implements ShooterSolutionFinder
                         startValue.timeOfFlight
                                 + (endValue.timeOfFlight - startValue.timeOfFlight) * t);
     }
-
+    
     private final LoggedNetworkNumber m_goalPosX =
-            new LoggedNetworkNumber("/ShooterSolution/Goal Pos X", 8.23);
+            new LoggedNetworkNumber("/ShooterSolution/Goal Pos X",   FieldConstants.Hub.oppTopCenterPoint.toTranslation2d().getX());
     private final LoggedNetworkNumber m_goalPosY =
-            new LoggedNetworkNumber("/ShooterSolution/Goal Pos Y", 4.11);
+            new LoggedNetworkNumber("/ShooterSolution/Goal Pos Y",  FieldConstants.Hub.oppTopCenterPoint.toTranslation2d().getY());
     private final LoggedNetworkNumber m_latencyCompensation =
             new LoggedNetworkNumber("/ShooterSolution/Latency Compensation", 0.1);
 
@@ -49,14 +51,10 @@ public class InterpolatingShooterSolutionFinder implements ShooterSolutionFinder
                                       ShooterParams.kInterpolator);
 
     static {
-        SHOOTER_MAP.put(1.5, new ShooterParams(500.0, 0.12,  0.42));
-        SHOOTER_MAP.put(2.0, new ShooterParams(3100.0, 0.09,  0.51));
-        SHOOTER_MAP.put(2.5, new ShooterParams(3400.0, 0.10,  0.58));
-        SHOOTER_MAP.put(3.0, new ShooterParams(3650.0, 0.11,  0.65));
-        SHOOTER_MAP.put(3.5, new ShooterParams(3900.0, 0.12,  0.71));
-        SHOOTER_MAP.put(4.0, new ShooterParams(4100.0, 0.13,  0.78));
-        SHOOTER_MAP.put(4.5, new ShooterParams(4350.0, 0.14,  0.84));
-        SHOOTER_MAP.put(5.0, new ShooterParams(4550.0, 0.15,  0.91));
+        SHOOTER_MAP.put(0.5, new ShooterParams(2000.0, 0.12,  0.42));
+        SHOOTER_MAP.put(20.0, new ShooterParams(3100.0, 0.09,  0.51));
+        SHOOTER_MAP.put(50.0, new ShooterParams(5400.0, 0.18,  0.75));
+
     }
 
     private Solution m_latestSolution = new Solution(0, 0);
@@ -113,9 +111,13 @@ public class InterpolatingShooterSolutionFinder implements ShooterSolutionFinder
 
         ShooterParams compensatedParams = SHOOTER_MAP.get(virtualDistance);
 
+        // The compensated shot vector direction is where the robot needs to face
+        Rotation2d aimHeading = compensatedShotVector.getAngle();
+
         Solution solution = new Solution(
                 compensatedParams.rpm,
-                compensatedParams.hoodPositionRotations);
+                compensatedParams.hoodPositionRotations,
+                aimHeading);
 
         logSolution(solution, futurePosition, compensatedShotVector, idealHorizontalSpeed);
         return solution;
@@ -128,6 +130,7 @@ public class InterpolatingShooterSolutionFinder implements ShooterSolutionFinder
 
         Logger.recordOutput("ShooterSolution/FlywheelRPM", s.flywheelRPM);
         Logger.recordOutput("ShooterSolution/HoodPositionRot", s.hoodPositionRotations);
+        Logger.recordOutput("ShooterSolution/AimHeadingDeg", s.robotHeading.getDegrees());
         Logger.recordOutput("ShooterSolution/CompensatedSpeedMps", shotVec.getNorm());
         Logger.recordOutput("ShooterSolution/FuturePosition",
                 new double[] { futurePos.getX(), futurePos.getY() });

@@ -2,12 +2,12 @@ package frc.robot.commands.intake;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.intake.Intake;
 
-public class RunIntakeRollerPercentage extends Command {
+public class RunPivotPercentage extends Command {
     
     private final Intake m_intake;
     private final double m_percentage;
 
-    public RunIntakeRollerPercentage (Intake intake, double percentage) {
+    public RunPivotPercentage (Intake intake, double percentage) {
 
         m_intake = intake;
         m_percentage = percentage;
@@ -18,13 +18,13 @@ public class RunIntakeRollerPercentage extends Command {
     @Override
     public void initialize () {
 
-        m_intake.setRollerPercentage(m_percentage);
+        m_intake.setPivotPercentage(m_percentage);
     }
 
     @Override
-    public void end (boolean interrupted) {
-       if (interrupted) { 
-            m_intake.setRollerPercentage(0);
-        }
+    public void end(boolean interrupted) {
+        
+
+        m_intake.setPivotPercentage(0);
     }
 }

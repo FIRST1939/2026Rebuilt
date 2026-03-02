@@ -34,12 +34,8 @@ public class RunFlywheelAndHood extends Command {
 
     @Override
     public void end(boolean interrupted) {
-        
-
-       if (interrupted) {
-            m_shooter.setHoodPercentage(0.0);
+            m_shooter.setHoodPosition(0.0);
             m_shooter.setFlywheelPercentage(0.0);
-    }
     }
 
     @Override

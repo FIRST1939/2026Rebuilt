@@ -9,6 +9,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -96,6 +97,31 @@ public class DriveCommands {
         drive);
   }
 
+  public static Command snakeDrive(
+      Drive drive,
+      DoubleSupplier xSupplier,
+      DoubleSupplier ySupplier) {
+
+        SlewRateLimiter xLimiter = new SlewRateLimiter(3.5);
+        SlewRateLimiter yLimiter = new SlewRateLimiter(3.5);
+    return joystickDriveAtAngle(
+      drive, 
+      xSupplier, 
+      ySupplier, 
+      () -> {
+        double xComponent = xLimiter.calculate(MathUtil.applyDeadband(xSupplier.getAsDouble(), DEADBAND));
+        double yComponent = yLimiter.calculate(MathUtil.applyDeadband(ySupplier.getAsDouble(), DEADBAND));
+
+        if (xComponent == 0.0 && yComponent == 0.0) {
+
+          return drive.getRotation();
+        }
+
+        return new Rotation2d(xComponent, yComponent);
+      }
+    );
+  }
+
   /**
    * Field relative drive command using joystick for linear control and PID for angular control.
    * Possible use cases include snapping to an angle, aiming at a vision target, or controlling
@@ -106,6 +132,8 @@ public class DriveCommands {
       DoubleSupplier xSupplier,
       DoubleSupplier ySupplier,
       Supplier<Rotation2d> rotationSupplier) {
+
+    
 
     // Create PID controller
     ProfiledPIDController angleController =

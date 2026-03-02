@@ -4,20 +4,38 @@
 
 package frc.robot;
 
+import java.lang.reflect.Field;
+import java.util.Optional;
+import java.util.Set;
 import java.util.function.DoubleSupplier;
+import java.util.function.Supplier;
 
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
 
+import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.pathplanner.lib.events.EventTrigger;
+
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.simulation.BatterySim;
 import edu.wpi.first.wpilibj.simulation.RoboRioSim;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.bindings.QuickShotBindings;
+import frc.robot.bindings.ExampleMatchBindings;
 import frc.robot.bindings.QuickIntakeConfigBindings;
 import frc.robot.subsystems.intake.*;
 import frc.robot.subsystems.spindexer.*;
@@ -27,14 +45,24 @@ import frc.robot.subsystems.climber.ClimberIOSim;
 import frc.robot.subsystems.drive.*;
 import frc.robot.subsystems.feeder.*;
 import frc.robot.subsystems.shooter.*;
-
+import frc.robot.subsystems.vision.*;
+import frc.robot.util.FieldConstants;
+import frc.robot.util.HeadingUtil;
 import frc.robot.generated.TunerConstants;
-import frc.robot.commands.climber.*;
 import frc.robot.commands.DriveCommands;
-import frc.robot.commands.feeder.*;
-import frc.robot.commands.intake.*;
-import frc.robot.commands.shooter.*;
 import frc.robot.commands.spindexer.*;
+import frc.robot.commands.climber.LowerClimberToHeight;
+import frc.robot.commands.climber.RaiseClimberToHeight;
+import frc.robot.commands.climber.SetClimberPercentage;
+import frc.robot.commands.feeder.*;
+import frc.robot.commands.intake.AgitateIntake;
+import frc.robot.commands.intake.IdleAndZeroIntake;
+import frc.robot.commands.intake.RunPivot;
+import frc.robot.commands.intake.RunPivotPercentage;
+import frc.robot.commands.intake.RunRollerPercentage;
+import frc.robot.commands.intake.RunRollerVelocity;
+import frc.robot.commands.intake.RunPivotAndRollerAuto;
+import frc.robot.commands.shooter.*;
 
 public class RobotContainer {
 
@@ -49,6 +77,7 @@ public class RobotContainer {
         MATCH,
         PERCENT,
         QUICKSHOT,
+        EXAMPLE_MATCH_BINDINGS,
         QUICK_INTAKE_CONFIG,
         INTAKE_CHARACTERIZATION,
         SPINDEXER_CHARACTERIZATION,
@@ -90,6 +119,12 @@ public class RobotContainer {
                 new ModuleIOTalonFX(TunerConstants.BackRight)
             );
 
+            new Vision(
+                m_drive::addVisionMeasurement,
+                new VisionIOLimelight(VisionConstants.camera0Name, m_drive::getRotation),
+                new VisionIOLimelight(VisionConstants.camera1Name, m_drive::getRotation)
+            );
+
             m_intake = new Intake(new IntakeIOHardware());
             m_spindexer = new Spindexer(new SpindexerIOHardware());
             m_feeder = new Feeder(new FeederIOHardware());
@@ -105,6 +140,12 @@ public class RobotContainer {
                 new ModuleIOSim(TunerConstants.BackRight)
             );
 
+            new Vision(
+                m_drive::addVisionMeasurement,
+                new VisionIOPhotonVisionSim(VisionConstants.camera0Name, VisionConstants.robotToCamera0, m_drive::getPose),
+                new VisionIOPhotonVisionSim(VisionConstants.camera1Name, VisionConstants.robotToCamera1, m_drive::getPose)
+            );
+
             m_intake = new Intake(new IntakeIOSim());
             m_spindexer = new Spindexer(new SpindexerIOSim());
             m_feeder = new Feeder(new FeederIOSim());
@@ -116,6 +157,8 @@ public class RobotContainer {
         m_opModeSelector.addOption("Percent", OpModes.PERCENT);
         m_opModeSelector.addOption("QuickShot", OpModes.QUICKSHOT);
         m_opModeSelector.addOption("Quick Intake Config", OpModes.QUICK_INTAKE_CONFIG);
+        m_opModeSelector.addOption("Example Match Bindings", OpModes.EXAMPLE_MATCH_BINDINGS);
+
         m_opModeSelector.addOption("Intake Characterization", OpModes.INTAKE_CHARACTERIZATION);
         m_opModeSelector.addOption("Spindexer Characterization", OpModes.SPINDEXER_CHARACTERIZATION);
         m_opModeSelector.addOption("Feeder Characterization", OpModes.FEEDER_CHARACTERIZATION);
@@ -133,7 +176,12 @@ public class RobotContainer {
         Trigger intakeConfigMode = new Trigger(() -> m_opModeSelector.get() == OpModes.QUICK_INTAKE_CONFIG);
         QuickIntakeConfigBindings.configure(intakeConfigMode, m_operatorController, m_intake);
 
+        Trigger exampleMatchTrigger = new Trigger(() -> m_opModeSelector.get() == OpModes.EXAMPLE_MATCH_BINDINGS);
+        ExampleMatchBindings.configure(exampleMatchTrigger, m_operatorController, m_intake,m_shooter,m_feeder,m_spindexer,m_climber);
+
+
         configureMatchBindings();
+        configureNamedCommands();
         configurePercentBindings();
         configureIntakeCharacterizationBindings();
         configureSpindexerCharacterizationBindings();
@@ -146,7 +194,8 @@ public class RobotContainer {
 
         Trigger matchMode = new Trigger(() -> m_opModeSelector.get() == OpModes.MATCH);
 
-        matchMode.whileTrue(
+        /*
+        m_drive.setDefaultCommand(
             DriveCommands.joystickDrive(
                 m_drive,
                 () -> -m_driverController.getLeftY(),
@@ -154,20 +203,104 @@ public class RobotContainer {
                 () -> -m_driverController.getRightX()
             )
         );
+        */
+
+        m_drive.setDefaultCommand(
+            DriveCommands.snakeDrive(
+                m_drive, 
+                () -> -m_driverController.getLeftY(),
+                () -> -m_driverController.getLeftX()
+            )
+        );
+
+        /*
+        m_drive.setDefaultCommand(
+            DriveCommands.joystickDriveAtAngle(
+                m_drive,
+                () -> -m_driverController.getLeftY(),
+                () -> -m_driverController.getLeftX(),
+                () -> HeadingUtil.headingToHub(m_drive.getPose())
+            )
+        );
+        */
 
         matchMode.and(m_driverController.x().onTrue(Commands.runOnce(m_drive::stopWithX, m_drive)));
+        matchMode.and(m_driverController.y()).whileTrue(new SetClimberPercentage(m_climber, Constants.kClimberClimbingPercentage));
+        matchMode.and(m_driverController.b()).whileTrue(new SetClimberPercentage(m_climber, Constants.kClimberRaisingPercentage));
+        matchMode.and(m_driverController.a()).whileTrue(new SetClimberPercentage(m_climber, Constants.kClimberReleasingPercentage));
+        
+        matchMode.and(m_driverController.povUp()).whileTrue(new RaiseClimberToHeight(m_climber, Constants.kRaisingClimberSetpoint, Constants.kRaisingClimberPercentage));
+        matchMode.and(m_driverController.povDown()).whileTrue(new LowerClimberToHeight(m_climber, Constants.kLoweringClimberSetpoint, Constants.kLoweringClimberPercentage));
 
-        matchMode.and(m_operatorController.y()).whileTrue(new RunFeederVelocity(m_feeder, Constants.kFeederVelocity)); //Run Feeder
-        //matchMode.and(m_driverController.b()).whileTrue(new PivotAndRunIntake(m_intake, Constants.kPivotOutSetpoint, () -> 0.0)); //Pivot Out and Run Intake
-        matchMode.and(m_driverController.b()).whileTrue(new PivotIntake(m_intake, Constants.kPivotOutSetpoint));
-        matchMode.and(m_driverController.a()).whileTrue(new PivotIntake(m_intake, Constants.kPivotInSetpoint)); //Pivot Intake In
-        matchMode.and(m_driverController.x()).whileTrue(new RunSpindexerVelocity(m_spindexer, Constants.kSpindexerVelocity)); //Run Spindexer
-        //matchMode.and(m_driverController.rightBumper()).whileTrue(new RunRoller(m_intake, () -> Constants.kRollerVelocity));
-        matchMode.and(m_driverController.rightBumper()).whileTrue(new RunIntakeRollerPercentage(m_intake, Constants.kRollerPercentage));
-        matchMode.and(m_driverController.leftBumper()).whileTrue(new RunFlywheelAndHood(m_shooter, () -> 0.0, () -> 0.0));
-        matchMode.and(m_driverController.rightBumper()).whileTrue(new SetClimberClimbingPosition(m_climber, Constants.kClimberClimbingSetpoint));
-        matchMode.and(m_driverController.leftTrigger()).whileTrue(new SetClimberRaisingPosition(m_climber, Constants.kClimberRaisingSetpoint));
+        matchMode.and(m_operatorController.povRight()).whileTrue(
+            new RunFlywheelAndHood(m_shooter, 
+            () -> Constants.kOutpostFlywheelVelocity,
+            () -> Constants.kOutpostHoodSetpoint));
+        //Static Shot Outpost Command
+
+        matchMode.and(m_operatorController.leftTrigger()).whileTrue(new RunSpindexerVelocity(m_spindexer, 180));
+
+        matchMode.and(m_operatorController.povUp()).whileTrue(
+            new RunFlywheelAndHood(m_shooter, 
+            () -> Constants.kHubFlywheelVelocity,
+            () -> Constants.kHubHoodSetpoint));
+        //Static Shot Hub Command
+
+        matchMode.and(m_operatorController.povDown()).whileTrue(
+            new RunFlywheelAndHood(m_shooter, 
+            () -> Constants.kTowerFlywheelVelocity,
+            () -> Constants.kTowerHoodSetpoint));
+        //Static Shot Tower Command
+
+        matchMode.and(m_operatorController.povLeft()).whileTrue(
+            new RunFlywheelAndHood(m_shooter, 
+            () -> Constants.kTrenchFlywheelVelocity,
+            () -> Constants.kTrenchHoodSetpoint));
+        //Static Shot Trench Command
+
+        (m_operatorController.rightTrigger()).whileTrue((
+            new RunSpindexerVelocity(m_spindexer, Constants.kSpindexerVelocity))
+            .alongWith(new RunFeederVelocity(m_feeder, Constants.kFeederVelocity))
+            .alongWith(new AgitateIntake(m_intake, Constants.kAgitateIntakeInterval, Constants.kRollerAgitateVelocity)));
+        //Feed Into Shooter Command
+
+        matchMode.and(m_operatorController.leftBumper()).onTrue(new IdleAndZeroIntake(m_intake)); 
+        //Pivot Intake In
+
+
+        matchMode.and(m_operatorController.rightBumper()).whileTrue(
+            new RunPivotAndRollerAuto(m_intake, 
+            Constants.kPivotOutSetpoint, 
+            () ->  (Constants.kBaseRollerIntakeVelocity + Constants.kConversionFactor * m_drive.getSpeed())));
+        //Deploy+Roller
+
+        matchMode.and(m_operatorController.b()).whileTrue(new RunSpindexerVelocity(m_spindexer, Constants.kSpindexerReverseVelocity));
+        //Spindexer Reverse
+
+        matchMode.and(m_operatorController.a()).whileTrue(new RunFeederVelocity(m_feeder, Constants.kFeederReverseVelocity));
+        //Feeder Reverse
+
+        matchMode.and(m_operatorController.x()).whileTrue(new RunRollerVelocity(m_intake, Constants.kRollerReverseVelocity));
+        //Roller Reverse
     }
+
+    public void configureNamedCommands () {
+        
+        new EventTrigger("RunPivotAndRoller").onTrue(new RunPivotAndRollerAuto(m_intake, 
+            Constants.kPivotOutSetpoint, 
+            () ->  (Constants.kBaseRollerIntakeVelocity + Constants.kConversionFactor * m_drive.getSpeed())).withTimeout(2.0));
+        
+        NamedCommands.registerCommand("StaticShotTower", (
+            new RunFlywheelAndHood(m_shooter, 
+            () -> Constants.kTowerFlywheelVelocity,
+            () -> Constants.kTowerHoodSetpoint)));
+
+        NamedCommands.registerCommand("IdleIntake", (new RunPivot(m_intake, Constants.kPivotInSetpoint)));
+
+        NamedCommands.registerCommand("FeedShooter", (new RunSpindexerVelocity(m_spindexer, Constants.kSpindexerVelocity))
+            .alongWith(new RunFeederVelocity(m_feeder, Constants.kFeederVelocity))
+           .alongWith(new AgitateIntake(m_intake, Constants.kAgitateIntakeInterval, Constants.kRollerAgitateVelocity)));
+            }
 
     private void configurePercentBindings() {
 
@@ -178,9 +311,9 @@ public class RobotContainer {
         percentMode.and(m_operatorController.y()).whileTrue(new RunFlywheelPercentage(m_shooter, 0.3));
         percentMode.and(m_operatorController.b()).whileTrue(new RunHoodPercentage(m_shooter, -0.2));
         percentMode.and(m_operatorController.leftTrigger()).whileTrue(new RunFlywheelPercentage(m_shooter, 0.55));
-        percentMode.and(m_operatorController.rightTrigger()).whileTrue(new RunIntakeRollerPercentage(m_intake, 0.225));
-        percentMode.and(m_operatorController.leftBumper()).whileTrue(new PivotIntakePercentage(m_intake, -0.25));
-        percentMode.and(m_operatorController.rightBumper()).whileTrue(new PivotIntakePercentage(m_intake, 0.25));
+        percentMode.and(m_operatorController.rightTrigger()).whileTrue(new RunRollerPercentage(m_intake, 0.225));
+        percentMode.and(m_operatorController.leftBumper()).whileTrue(new RunPivotPercentage(m_intake, -0.25));
+        percentMode.and(m_operatorController.rightBumper()).whileTrue(new RunPivotPercentage(m_intake, 0.25));
     }
 
     public void configureIntakeCharacterizationBindings () {
@@ -240,6 +373,7 @@ public class RobotContainer {
 
     public void configureSpindexerCharacterizationBindings () {
 
+        // was here 
         Trigger spindexerCharacterizationMode = new Trigger(() -> m_opModeSelector.get() == OpModes.SPINDEXER_CHARACTERIZATION);
 
         spindexerCharacterizationMode.and(m_operatorController.leftBumper()).whileTrue(m_spindexer.sysIdQuasistaticForward());
@@ -398,7 +532,7 @@ public class RobotContainer {
 
     public Command getAutonomousCommand() {
       
-        return Commands.print("No autonomous command configured");
+        return new PathPlannerAuto("Hub-Outpost-Depot-Climb");
     }
 
     public void simulateBatteryLoad() {
@@ -411,8 +545,33 @@ public class RobotContainer {
             )
         );
     }
-      public void updateShooterSolution() {
+
+    public void updateShooterSolution() {
+
         m_solutionFinder = m_solutionFinderSelector.get();
-        m_solutionFinder.updateSimSolution();
+
+        Pose2d pose = m_drive.getPose();
+        ChassisSpeeds speeds = m_drive.getChassisSpeeds();
+
+        m_solutionFinder.update(pose, speeds);
+
+        Logger.recordOutput("ShooterSolution/RobotPose", pose);
+        Logger.recordOutput("ShooterSolution/RobotPoseX", pose.getX());
+        Logger.recordOutput("ShooterSolution/RobotPoseY", pose.getY());
+        Logger.recordOutput("ShooterSolution/ChassisSpeedX", speeds.vxMetersPerSecond);
+        Logger.recordOutput("ShooterSolution/ChassisSpeedY", speeds.vyMetersPerSecond);
+
+        Logger.recordOutput("ShooterSolution/HubX", FieldConstants.Hub.innerCenterPoint.getX());
+        Logger.recordOutput("ShooterSolution/HubY", FieldConstants.Hub.innerCenterPoint.getY());
+        Translation2d hub = FieldConstants.Hub.innerCenterPoint.toTranslation2d();
+
+        //  Pose2d hub = new Pose2d(FieldConstants.Hub.innerCenterPoint.getX(),FieldConstants.Hub.innerCenterPoint.getY(), new Rotation2d());
+       // Translation3d targetVector = hub.minus(robot);
+        
+        Logger.recordOutput("ShooterSolution/HubAngle",  hub.minus(pose.getTranslation()).getAngle().getDegrees());
+     
+
     }
+
+        
 }

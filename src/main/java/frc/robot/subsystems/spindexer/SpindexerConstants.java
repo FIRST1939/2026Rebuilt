@@ -5,6 +5,7 @@ public class SpindexerConstants {
     public static final int kSpindexerCAN = 33;
     public static final double kSpindexerGearing = (1.0/20.0)*(24.0/36.0);
     public static final boolean kInverted = true;
+    public static final int kSpindexerCurrentLimit = 40;
 
     public static final double kSysIdQuasistaticRampRate = 0.75;
     public static final double kSysIdDynamicStepUp = 7.5;

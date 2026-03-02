@@ -26,16 +26,53 @@ public final class Constants {
     }
 
     public static final double kFeederVelocity = 1500.0;
-    public static final double kPivotOutSetpoint = 0.256;
-    public static final double kPivotInSetpoint = 0.05;
-    public static final double kSpindexerVelocity = 1500.0;
-    public static final double kClimberClimbingSetpoint = 0.0;
-    public static final double kClimberRaisingSetpoint = 0.0;
-    public static final double kRollerPercentage = 0.5;
+    public static final double kPivotOutSetpoint = 0.34;
+    public static final double kPivotInSetpoint = 0.1;
+    public static final double kPivotZeroPercentage = -0.15;
+
+    public static final double kSpindexerVelocity = 180.0;
+    public static final double kSpindexerReverseVelocity = -180.0;
+    public static final double kFeederReverseVelocity = -1500.0;
+    public static final double kRollerReverseVelocity = -1500.0;
+
+    public static final double kClimberClimbingPercentage = -0.6;
+    public static final double kClimberReleasingPercentage = 0.2;
+    public static final double kClimberRaisingPercentage = 0.2;
+    public static final double kRollerPercentage = 1.0;
+    public static final double kConversionFactor = (1.0 / 0.0254) * (1.0 / (3.0 * Math.PI)) * (60.0 / 1.0);
+    public static final double kBaseRollerIntakeVelocity = 1350.0; //1350
+    public static final double kAgitateIntakeInterval = 0.5;
+    public static final double kAgitateIntakeOffset = 0.05;
+    public static final double kRollerIntakeVelocity = 3000.0;
+    public static final double kRollerAgitateVelocity = 1250.0;
+    public static final double kPivotIdleSetpoint = 0.100;
+
+    public static final double kHubFlywheelVelocity = 2750;
+    public static final double kOutpostFlywheelVelocity = 750.0;
+    public static final double kTowerFlywheelVelocity = 3000;
+    public static final double kTrenchFlywheelVelocity = 3250;
+
+    public static final double kHubHoodSetpoint = 0.0125;
+    public static final double kOutpostHoodSetpoint = 0.05;
+    public static final double kTowerHoodSetpoint = 0.047;
+    public static final double kTrenchHoodSetpoint = 0.0458;
+    
+    public static final double kRaisingClimberSetpoint = 14.0;
+    public static final double kLoweringClimberSetpoint = 0.5;
+
+      public static final double kRaisingClimberPercentage = 0.75;
+    public static final double kLoweringClimberPercentage = -0.75;
 
     public static class OperatorConstants {
       
         public static final int kDriverControllerPort = 0;
-        public static final int kOperatorControllerPort = 0;
+        public static final int kOperatorControllerPort = 1;
+    }
+
+
+    public static boolean disableHAL = false;
+
+    public static void disableHAL() {
+        disableHAL = true;
     }
 }
