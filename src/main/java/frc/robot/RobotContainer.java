@@ -184,7 +184,6 @@ public class RobotContainer {
 
         Trigger matchMode = new Trigger(() -> m_opModeSelector.get() == OpModes.MATCH);
 
-        /*
         m_drive.setDefaultCommand(
             DriveCommands.joystickDrive(
                 m_drive,
@@ -193,9 +192,8 @@ public class RobotContainer {
                 () -> -m_driverController.getRightX()
             )
         );
-        */
 
-        m_drive.setDefaultCommand(
+        matchMode.and(m_driverController.rightBumper()).whileTrue(
             DriveCommands.snakeDrive(
                 m_drive, 
                 () -> -m_driverController.getLeftY(),
@@ -203,8 +201,7 @@ public class RobotContainer {
             )
         );
 
-        /*
-        m_drive.setDefaultCommand(
+        matchMode.and(m_driverController.rightTrigger()).whileTrue(
             DriveCommands.joystickDriveAtAngle(
                 m_drive,
                 () -> -m_driverController.getLeftY(),
@@ -212,13 +209,8 @@ public class RobotContainer {
                 () -> HeadingUtil.headingToHub(m_drive.getPose())
             )
         );
-        */
 
         matchMode.and(m_driverController.x().onTrue(Commands.runOnce(m_drive::stopWithX, m_drive)));
-        matchMode.and(m_driverController.y()).whileTrue(new SetClimberPercentage(m_climber, Constants.kClimberClimbingPercentage));
-        matchMode.and(m_driverController.b()).whileTrue(new SetClimberPercentage(m_climber, Constants.kClimberRaisingPercentage));
-        matchMode.and(m_driverController.a()).whileTrue(new SetClimberPercentage(m_climber, Constants.kClimberReleasingPercentage));
-        
         matchMode.and(m_driverController.povUp()).whileTrue(new RaiseClimberToHeight(m_climber, Constants.kRaisingClimberSetpoint, Constants.kRaisingClimberPercentage));
         matchMode.and(m_driverController.povDown()).whileTrue(new LowerClimberToHeight(m_climber, Constants.kLoweringClimberSetpoint, Constants.kLoweringClimberPercentage));
 
