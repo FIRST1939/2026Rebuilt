@@ -2,11 +2,15 @@ package frc.robot.util;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.interpolation.InterpolatingTreeMap;
 import edu.wpi.first.math.interpolation.Interpolator;
 import edu.wpi.first.math.interpolation.InverseInterpolator;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+
+import frc.robot.subsystems.shooter.ShooterConstants;
 
 public class ShotSolver {
     
@@ -61,28 +65,50 @@ public class ShotSolver {
 
     private ShotSolution m_shotSolution;
 
-    public void calculateShotSolution (Pose2d robotPose, ChassisSpeeds robotSpeeds) {
+    public void calculateShotSolution(Pose2d robotPose, ChassisSpeeds robotSpeeds) {
 
-        Translation2d robotVelocity = new Translation2d(robotSpeeds.vxMetersPerSecond, robotSpeeds.vyMetersPerSecond);
+        Translation2d robotVelocity = new Translation2d(
+            robotSpeeds.vxMetersPerSecond,
+            robotSpeeds.vyMetersPerSecond);
 
-        Translation2d futurePosition = robotPose.getTranslation().plus(robotVelocity.times(0.1));
+        // Predict future robot pose
+        double lookaheadTime = 0.1;
+        Pose2d futureRobotPose = robotPose.exp(
+            new Twist2d(
+                robotSpeeds.vxMetersPerSecond * lookaheadTime,
+                robotSpeeds.vyMetersPerSecond * lookaheadTime,
+                robotSpeeds.omegaRadiansPerSecond * lookaheadTime
+            )
+        );
 
-        Translation2d targetVector = Util.getHubPosition().minus(futurePosition);
-        double rawDistance = targetVector.getNorm();
+        // Compute future shooter position
+        Translation2d futureRobotPosition = futureRobotPose.getTranslation();
 
-        if (rawDistance < 1e-3) {
+        Translation2d shooterPosition = futureRobotPose.transformBy(
+            new Transform2d(
+                ShooterConstants.kRobotToShooter, 
+                new Rotation2d()
+            )
+        ).getTranslation();
 
-            ShotSolution zero = new ShotSolution(0, 0, new Rotation2d());
-            m_shotSolution = zero;
+        // Distance used for shooter map
+        Translation2d robotCenterToTarget = Util.getHubPosition().minus(futureRobotPosition);
+        double rawDistance = robotCenterToTarget.getNorm();
+
+        // Vector used for physics + aiming
+        Translation2d shooterToTarget = Util.getHubPosition().minus(shooterPosition);
+
+        if (rawDistance < 1e-3 || shooterToTarget.getNorm() < 1e-3) {
+            
+            m_shotSolution = new ShotSolution(0, 0, new Rotation2d());
             return;
         }
 
-        // Get info from map based on raw distance.
         ShooterParams rawParams = kShooterMap.get(rawDistance);
 
         double idealHorizontalSpeed = rawDistance / rawParams.kTimeOfFlight;
 
-        Translation2d idealShotDirection = targetVector.div(rawDistance);
+        Translation2d idealShotDirection = shooterToTarget.div(shooterToTarget.getNorm());
         Translation2d idealShotVector = idealShotDirection.times(idealHorizontalSpeed);
         Translation2d compensatedShotVector = idealShotVector.minus(robotVelocity);
 
@@ -91,16 +117,12 @@ public class ShotSolver {
 
         ShooterParams compensatedParams = kShooterMap.get(virtualDistance);
 
-        // The compensated shot vector direction is where the robot needs to face
         Rotation2d aimHeading = compensatedShotVector.getAngle();
 
-        ShotSolution solution = new ShotSolution(
+        m_shotSolution = new ShotSolution(
             compensatedParams.kFlywheelRPM,
             compensatedParams.kHoodPositionRotations,
-            aimHeading
-        );
-
-        m_shotSolution = solution;
+            aimHeading);
     }
 
     public ShotSolution getShotSolution () {
