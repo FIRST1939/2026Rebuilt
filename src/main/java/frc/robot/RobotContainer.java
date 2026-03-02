@@ -260,8 +260,8 @@ public class RobotContainer {
 
         (m_operatorController.rightTrigger()).whileTrue((
             new RunSpindexerVelocity(m_spindexer, Constants.kSpindexerVelocity))
-            .alongWith(new RunFeederVelocity(m_feeder, Constants.kFeederVelocity)));
-           // .alongWith(new AgitateIntake(m_intake, Constants.kAgitateIntakeInterval, Constants.kRollerAgitateVelocity)));
+            .alongWith(new RunFeederVelocity(m_feeder, Constants.kFeederVelocity))
+            .alongWith(new AgitateIntake(m_intake, Constants.kAgitateIntakeInterval, Constants.kRollerAgitateVelocity)));
         //Feed Into Shooter Command
 
         matchMode.and(m_operatorController.leftBumper()).onTrue(new IdleAndZeroIntake(m_intake)); 
@@ -298,8 +298,8 @@ public class RobotContainer {
         NamedCommands.registerCommand("IdleIntake", (new RunPivot(m_intake, Constants.kPivotInSetpoint)));
 
         NamedCommands.registerCommand("FeedShooter", (new RunSpindexerVelocity(m_spindexer, Constants.kSpindexerVelocity))
-            .alongWith(new RunFeederVelocity(m_feeder, Constants.kFeederVelocity)));
-           // .alongWith(new AgitateIntake(m_intake, Constants.kAgitateIntakeInterval, Constants.kRollerAgitateVelocity)));
+            .alongWith(new RunFeederVelocity(m_feeder, Constants.kFeederVelocity))
+           .alongWith(new AgitateIntake(m_intake, Constants.kAgitateIntakeInterval, Constants.kRollerAgitateVelocity)));
             }
 
     private void configurePercentBindings() {
