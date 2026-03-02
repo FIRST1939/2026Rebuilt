@@ -29,12 +29,11 @@ public interface IntakeIO {
     public default void updateInputs (IntakeIOInputs inputs) {}
     public default void updateRollerControllerFeedback (double kP, double kD) {}
     public default double getLeftPivotControllerPositionSetpoint () { return 0; }
-    public default double getLeftPivotControllerVelocitySetpoint () { return 0; }
     public default double getRightPivotControllerPositionSetpoint () { return 0; }
-    public default double getRightPivotControllerVelocitySetpoint () { return 0; }
     public default void updateLeftPivotControllerFeedback(double kP, double kD) {}
     public default void updateRightPivotControllerFeedback(double kP, double kD) {}
     public default void updatePivotControllerProfile (double maxVelocity, double maxAcceleration, double allowedError) {}
+    public default void zeroPivot () {}
     public default void setRollerPercentage (double percent) {}
     public default void setRollerVoltage(double voltage) {}
     public default void setRollerVelocity (double velocity) {}

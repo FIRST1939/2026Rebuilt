@@ -25,8 +25,6 @@ public class RunPivotPercentage extends Command {
     public void end(boolean interrupted) {
         
 
-       if (interrupted) {
-            m_intake.setPivotPercentage(0.0);
-        }
+        m_intake.setPivotPercentage(0);
     }
 }

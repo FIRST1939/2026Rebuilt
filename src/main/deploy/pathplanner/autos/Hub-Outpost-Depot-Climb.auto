@@ -27,7 +27,7 @@
                     {
                       "type": "wait",
                       "data": {
-                        "waitTime": 0.25
+                        "waitTime": 0.375
                       }
                     },
                     {
@@ -59,12 +59,6 @@
           "type": "path",
           "data": {
             "pathName": "Tower-Outpost"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "IdleIntake"
           }
         },
         {
@@ -131,9 +125,22 @@
           }
         },
         {
-          "type": "wait",
+          "type": "deadline",
           "data": {
-            "waitTime": 2.0
+            "commands": [
+              {
+                "type": "wait",
+                "data": {
+                  "waitTime": 2.0
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "IdleIntake"
+                }
+              }
+            ]
           }
         },
         {
@@ -146,6 +153,6 @@
     }
   },
   "resetOdom": true,
-  "folder": "Comp Auto",
+  "folder": "Comp-Auto",
   "choreoAuto": false
 }

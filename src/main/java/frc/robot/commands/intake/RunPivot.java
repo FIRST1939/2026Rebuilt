@@ -21,6 +21,7 @@ public class RunPivot extends Command {
 
     @Override
     public void initialize() {
+
         m_intake.setPivotPosition(m_pivotPosition);
     }
 
@@ -30,11 +31,16 @@ public class RunPivot extends Command {
 
     @Override
     public boolean isFinished() {
-        return m_intake.isPivotAtSetpoint();
+
+        return m_intake.isPivotAtSetpoint(m_pivotPosition);
     }
 
     @Override
     public void end (boolean interrupted) {
-      
+
+        if (interrupted) {
+
+            m_intake.setPivotPercentage(0);
+        }
     }
 }

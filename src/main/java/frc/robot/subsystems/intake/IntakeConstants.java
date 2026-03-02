@@ -5,6 +5,7 @@ public class IntakeConstants {
     public static final int kRollerCAN = 30;
     public static final double kRollerGearing = (20.0 / 40.0);
     public static final boolean kRollerInverted = false;
+    public static final int kRollerCurrentlimit = 40;
 
     public static final double kPivotGearing = (1.0 / 9.0) * (1.0 / 5.0);
     public static final int kPivotCurrentLimit = 40;
@@ -38,13 +39,11 @@ public class IntakeConstants {
     public static final double kRightPivotFeedforwardA = 0.037106;
     public static final double kRightPivotFeedforwardG = 0.0;
 
+    public static final double kPivotAllowedError = 0.01;
+
     public static final double kLeftPivotFeedbackP = 7.5;
     public static final double kLeftPivotFeedbackD = 0.0;
 
     public static final double kRightPivotFeedbackP = 7.5;
     public static final double kRightPivotFeedbackD = 0.0;
-
-    public static final double kPivotProfileCruiseVelocity = 0.0;
-    public static final double kPivotProfileMaxAcceleration = 0.0;
-    public static final double kPivotProfileAllowedError = 0.0;
 }

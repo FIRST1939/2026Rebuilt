@@ -26,11 +26,12 @@ public final class Constants {
     }
 
     public static final double kFeederVelocity = 1500.0;
-    public static final double kPivotOutSetpoint = 0.265;
-    public static final double kPivotInSetpoint = 0.05;
+    public static final double kPivotOutSetpoint = 0.34;
+    public static final double kPivotInSetpoint = 0.1;
+    public static final double kPivotZeroPercentage = -0.15;
 
     public static final double kSpindexerVelocity = 180.0;
-    public static final double kSpindexerReverseVelocity = -1500.0;
+    public static final double kSpindexerReverseVelocity = -180.0;
     public static final double kFeederReverseVelocity = -1500.0;
     public static final double kRollerReverseVelocity = -1500.0;
 
@@ -55,7 +56,12 @@ public final class Constants {
     public static final double kOutpostHoodSetpoint = 0.05;
     public static final double kTowerHoodSetpoint = 0.047;
     public static final double kTrenchHoodSetpoint = 0.0458;
+    
+    public static final double kRaisingClimberSetpoint = 14.0;
+    public static final double kLoweringClimberSetpoint = 0.5;
 
+      public static final double kRaisingClimberPercentage = 0.75;
+    public static final double kLoweringClimberPercentage = -0.75;
 
     public static class OperatorConstants {
       

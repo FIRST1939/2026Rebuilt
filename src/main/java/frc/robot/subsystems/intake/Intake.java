@@ -98,19 +98,9 @@ public class Intake extends SubsystemBase {
         return m_io.getLeftPivotControllerPositionSetpoint();
     }
 
-    public double getLeftPivotControllerVelocitySetpoint () {
-
-        return m_io.getLeftPivotControllerVelocitySetpoint();
-    }
-
     public double getRightPivotControllerPositionSetpoint () {
 
         return m_io.getRightPivotControllerPositionSetpoint();
-    }
-
-    public double getRightPivotControllerVelocitySetpoint () {
-
-        return m_io.getRightPivotControllerVelocitySetpoint();
     }
 
     public void updateLeftPivotControllerFeedback (double kP, double kD) {
@@ -143,13 +133,38 @@ public class Intake extends SubsystemBase {
         return m_inputs.leftPivotPosition;
     }
 
+    public double getLeftPivotVelocity () {
+
+        return m_inputs.leftPivotVelocity;
+    }
+
+    public double getLeftPivotCurrent () {
+
+        return m_inputs.leftPivotCurrent;
+    }
+
     public double getRightPivotPosition () {
 
         return m_inputs.rightPivotPosition;
     }
 
+    public double getRightPivotVelocity () {
+
+        return m_inputs.rightPivotVelocity;
+    }
+
+    public double getRightPivotCurrent () {
+
+        return m_inputs.rightPivotCurrent;
+    }
+
     public double getPivotPosition () {
         return ((m_inputs.rightPivotPosition + m_inputs.leftPivotPosition) / 2);
+    }
+
+    public void zeroPivot () {
+
+        m_io.zeroPivot();
     }
 
     public void setRollerPercentage (double percentage) {
@@ -234,7 +249,9 @@ public class Intake extends SubsystemBase {
         return m_rightPivotSysIdRoutine.dynamic(SysIdRoutine.Direction.kReverse);
     }
 
-    public boolean isPivotAtSetpoint() {
-        return m_io.leftPivotIsAtSetpoint() && m_io.rightPivotIsAtSetpoint();
+    public boolean isPivotAtSetpoint(double setpoint) {
+
+        return Math.abs(setpoint - m_inputs.leftPivotPosition) < IntakeConstants.kPivotAllowedError
+        && Math.abs(setpoint - m_inputs.rightPivotPosition) < IntakeConstants.kPivotAllowedError;
     }
 }

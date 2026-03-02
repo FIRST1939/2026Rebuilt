@@ -18,7 +18,7 @@ import frc.robot.subsystems.feeder.Feeder;
 import frc.robot.subsystems.spindexer.Spindexer;
 import frc.robot.subsystems.climber.Climber;
 import frc.robot.commands.intake.RunPivot;
-import frc.robot.commands.intake.RunPivotAndRoller;
+import frc.robot.commands.intake.RunPivotAndRollerAuto;
 import frc.robot.commands.shooter.FollowShooterSetpoints;
 import frc.robot.commands.shooter.RunFlywheelAndHood;
 import frc.robot.commands.shooter.RunFlywheelPercentage;
@@ -69,12 +69,12 @@ public class ExampleMatchBindings {
 
         // Right trigger: pivot intake out and run intake roller while held
         exampleMatchMode.and(controller.rightTrigger()).whileTrue(
-            new RunPivotAndRoller(intake, Constants.kPivotOutSetpoint, () -> ROLLER_VELOCITY)
+            new RunPivotAndRollerAuto(intake, Constants.kPivotOutSetpoint, () -> ROLLER_VELOCITY)
         );
 
         //Right bumper: pivot intake to idle and run intake roller inward while held
         exampleMatchMode.and(controller.rightBumper()).whileTrue(
-            new RunPivotAndRoller(intake, kPivotIdleSetpoint, () -> ROLLER_VELOCITY_INWARD)
+            new RunPivotAndRollerAuto(intake, kPivotIdleSetpoint, () -> ROLLER_VELOCITY_INWARD)
         );
 
         // Left trigger: follow shooter setpoints AND run shoot sequence while held

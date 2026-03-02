@@ -5,19 +5,17 @@ import java.util.function.DoubleSupplier;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.intake.Intake;
 
-public class RunPivotAndRoller extends Command {
+public class RunPivotAndRollerAuto extends Command {
 
     private final Intake m_intake;
     private final double m_pivotPosition;
     private final DoubleSupplier m_rollerVelocitySupplier;
 
-    public RunPivotAndRoller(Intake intake, double pivotPosition, DoubleSupplier rollerVelocitySupplier) {
+    public RunPivotAndRollerAuto(Intake intake, double pivotPosition, DoubleSupplier rollerVelocitySupplier) {
 
         m_intake = intake;
         m_pivotPosition = pivotPosition;
         m_rollerVelocitySupplier = rollerVelocitySupplier;
-
-        this.addRequirements(m_intake);
     }
 
     @Override

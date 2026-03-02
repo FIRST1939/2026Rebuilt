@@ -21,7 +21,7 @@ import frc.robot.commands.spindexer.RunSpindexerVelocity;
 import frc.robot.commands.feeder.RunFeederVelocity;
 import java.util.function.Supplier;
 
-import frc.robot.commands.intake.RunPivotAndRoller;
+import frc.robot.commands.intake.RunPivotAndRollerAuto;
 import frc.robot.subsystems.shooter.ShooterSolutionFinder;
 
 public class QuickShotBindings {
