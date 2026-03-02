@@ -43,7 +43,6 @@ import frc.robot.commands.DriveCommands;
 import frc.robot.commands.spindexer.*;
 import frc.robot.commands.climber.LowerClimberToHeight;
 import frc.robot.commands.climber.RaiseClimberToHeight;
-import frc.robot.commands.climber.SetClimberPercentage;
 import frc.robot.commands.feeder.*;
 import frc.robot.commands.intake.AgitateIntake;
 import frc.robot.commands.intake.IdleAndZeroIntake;
@@ -193,19 +192,21 @@ public class RobotContainer {
             )
         );
 
-        matchMode.and(m_driverController.rightBumper()).whileTrue(
+        matchMode.and(m_driverController.rightBumper()).onTrue(
             DriveCommands.snakeDrive(
                 m_drive, 
                 () -> -m_driverController.getLeftY(),
-                () -> -m_driverController.getLeftX()
+                () -> -m_driverController.getLeftX(),
+                () -> -m_driverController.getRightX()
             )
         );
 
-        matchMode.and(m_driverController.rightTrigger()).whileTrue(
+        matchMode.and(m_driverController.rightTrigger()).onTrue(
             DriveCommands.joystickDriveAtAngle(
                 m_drive,
                 () -> -m_driverController.getLeftY(),
                 () -> -m_driverController.getLeftX(),
+                () -> -m_driverController.getRightX(),
                 () -> HeadingUtil.headingToHub(m_drive.getPose())
             )
         );

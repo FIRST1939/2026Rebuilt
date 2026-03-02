@@ -101,7 +101,8 @@ public class DriveCommands {
     public static Command snakeDrive(
         Drive drive,
         DoubleSupplier xSupplier,
-        DoubleSupplier ySupplier) {
+        DoubleSupplier ySupplier,
+        DoubleSupplier omegaSupplier) {
 
         SlewRateLimiter xLimiter = new SlewRateLimiter(3.5);
         SlewRateLimiter yLimiter = new SlewRateLimiter(3.5);
@@ -110,6 +111,7 @@ public class DriveCommands {
             drive, 
             xSupplier, 
             ySupplier, 
+            omegaSupplier,
             () -> {
 
                 Translation2d robotVelocity = getLinearVelocityFromJoysticks(xSupplier.getAsDouble(), ySupplier.getAsDouble());
@@ -154,6 +156,7 @@ public class DriveCommands {
         Drive drive,
         DoubleSupplier xSupplier,
         DoubleSupplier ySupplier,
+        DoubleSupplier omegaSupplier,
         Supplier<Rotation2d> rotationSupplier) {
 
         // Create PID controller
@@ -192,7 +195,8 @@ public class DriveCommands {
             );
         }, drive)
             // Reset PID controller when command starts
-            .beforeStarting(() -> angleController.reset(drive.getRotation().getRadians()));
+            .beforeStarting(() -> angleController.reset(drive.getRotation().getRadians()))
+            .onlyWhile(() -> MathUtil.applyDeadband(omegaSupplier.getAsDouble(), DEADBAND) == 0.0);
     }
 
     /**
