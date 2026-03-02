@@ -14,9 +14,6 @@ import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.events.EventTrigger;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.simulation.BatterySim;
 import edu.wpi.first.wpilibj.simulation.RoboRioSim;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -24,7 +21,6 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.bindings.QuickShotBindings;
 import frc.robot.bindings.ExampleMatchBindings;
 import frc.robot.bindings.QuickIntakeConfigBindings;
 import frc.robot.subsystems.intake.*;
@@ -36,21 +32,13 @@ import frc.robot.subsystems.drive.*;
 import frc.robot.subsystems.feeder.*;
 import frc.robot.subsystems.shooter.*;
 import frc.robot.subsystems.vision.*;
-import frc.robot.util.FieldConstants;
-import frc.robot.util.HeadingUtil;
+import frc.robot.util.*;
 import frc.robot.generated.TunerConstants;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.spindexer.*;
-import frc.robot.commands.climber.LowerClimberToHeight;
-import frc.robot.commands.climber.RaiseClimberToHeight;
+import frc.robot.commands.climber.*;
 import frc.robot.commands.feeder.*;
-import frc.robot.commands.intake.AgitateIntake;
-import frc.robot.commands.intake.IdleAndZeroIntake;
-import frc.robot.commands.intake.RunPivot;
-import frc.robot.commands.intake.RunPivotPercentage;
-import frc.robot.commands.intake.RunRollerPercentage;
-import frc.robot.commands.intake.RunRollerVelocity;
-import frc.robot.commands.intake.RunPivotAndRollerAuto;
+import frc.robot.commands.intake.*;
 import frc.robot.commands.shooter.*;
 
 public class RobotContainer {
@@ -61,6 +49,8 @@ public class RobotContainer {
     private final Feeder m_feeder;
     private final Shooter m_shooter;
     private final Climber m_climber;
+
+    private final ShotSolver m_shotSolver;
 
     private enum OpModes {
         MATCH,
@@ -74,11 +64,6 @@ public class RobotContainer {
         SHOOTER_CHARACTERIZATION,
         CLIMBER_CHARACTERIZATION
     }
-
-    private final LoggedDashboardChooser<ShooterSolutionFinder> m_solutionFinderSelector =
-            new LoggedDashboardChooser<>("Solution Finder Selector");
-
-    private ShooterSolutionFinder m_solutionFinder;
 
     private final LoggedDashboardChooser<OpModes> m_opModeSelector = new LoggedDashboardChooser<>("Op Mode Selector");
 
@@ -141,6 +126,8 @@ public class RobotContainer {
             m_shooter = new Shooter(new ShooterIOSim());
             m_climber = new Climber(new ClimberIOSim());
         }
+
+        m_shotSolver = new ShotSolver();
         
         m_opModeSelector.addDefaultOption("Match", OpModes.MATCH);
         m_opModeSelector.addOption("Percent", OpModes.PERCENT);
@@ -153,14 +140,6 @@ public class RobotContainer {
         m_opModeSelector.addOption("Feeder Characterization", OpModes.FEEDER_CHARACTERIZATION);
         m_opModeSelector.addOption("Shooter Characterization", OpModes.SHOOTER_CHARACTERIZATION);
         m_opModeSelector.addOption("Climber Characterization", OpModes.CLIMBER_CHARACTERIZATION);
-
-        m_solutionFinderSelector.addDefaultOption("Fixed", new FixedShooterSolutionFinder());
-        m_solutionFinderSelector.addOption("Interpolating", new InterpolatingShooterSolutionFinder());
-        m_solutionFinderSelector.addOption("QuickShot", new QuickShotShooterSolutionFinder());
-        m_solutionFinder = m_solutionFinderSelector.get();
-
-        Trigger quickShotMode = new Trigger(() -> m_opModeSelector.get() == OpModes.QUICKSHOT);
-        QuickShotBindings.configure(quickShotMode, m_operatorController, m_intake, m_spindexer, m_feeder, m_shooter, () -> m_solutionFinder);
 
         Trigger intakeConfigMode = new Trigger(() -> m_opModeSelector.get() == OpModes.QUICK_INTAKE_CONFIG);
         QuickIntakeConfigBindings.configure(intakeConfigMode, m_operatorController, m_intake);
@@ -207,7 +186,7 @@ public class RobotContainer {
                 () -> -m_driverController.getLeftY(),
                 () -> -m_driverController.getLeftX(),
                 () -> -m_driverController.getRightX(),
-                () -> HeadingUtil.headingToHub(m_drive.getPose())
+                () -> m_shotSolver.getShotSolution().aimHeading
             )
         );
 
@@ -221,7 +200,12 @@ public class RobotContainer {
             () -> Constants.kOutpostHoodSetpoint));
         //Static Shot Outpost Command
 
-        matchMode.and(m_operatorController.leftTrigger()).whileTrue(new RunSpindexerVelocity(m_spindexer, 180));
+        matchMode.and(m_operatorController.leftTrigger()).whileTrue(
+            new RunFlywheelAndHood(m_shooter,
+                () -> m_shotSolver.getShotSolution().flywheelRPM,
+                () -> m_shotSolver.getShotSolution().hoodPositionRotations
+            )
+        );
 
         matchMode.and(m_operatorController.povUp()).whileTrue(
             new RunFlywheelAndHood(m_shooter, 
@@ -529,32 +513,8 @@ public class RobotContainer {
         );
     }
 
-    public void updateShooterSolution() {
+    public void updateShotSolution() {
 
-        m_solutionFinder = m_solutionFinderSelector.get();
-
-        Pose2d pose = m_drive.getPose();
-        ChassisSpeeds speeds = m_drive.getChassisSpeeds();
-
-        m_solutionFinder.update(pose, speeds);
-
-        Logger.recordOutput("ShooterSolution/RobotPose", pose);
-        Logger.recordOutput("ShooterSolution/RobotPoseX", pose.getX());
-        Logger.recordOutput("ShooterSolution/RobotPoseY", pose.getY());
-        Logger.recordOutput("ShooterSolution/ChassisSpeedX", speeds.vxMetersPerSecond);
-        Logger.recordOutput("ShooterSolution/ChassisSpeedY", speeds.vyMetersPerSecond);
-
-        Logger.recordOutput("ShooterSolution/HubX", FieldConstants.Hub.innerCenterPoint.getX());
-        Logger.recordOutput("ShooterSolution/HubY", FieldConstants.Hub.innerCenterPoint.getY());
-        Translation2d hub = FieldConstants.Hub.innerCenterPoint.toTranslation2d();
-
-        //  Pose2d hub = new Pose2d(FieldConstants.Hub.innerCenterPoint.getX(),FieldConstants.Hub.innerCenterPoint.getY(), new Rotation2d());
-       // Translation3d targetVector = hub.minus(robot);
-        
-        Logger.recordOutput("ShooterSolution/HubAngle",  hub.minus(pose.getTranslation()).getAngle().getDegrees());
-     
-
-    }
-
-        
+        m_shotSolver.calculateShotSolution(m_drive.getPose(), m_drive.getChassisSpeeds());
+    }        
 }
