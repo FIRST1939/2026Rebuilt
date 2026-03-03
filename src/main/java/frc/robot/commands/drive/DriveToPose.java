@@ -74,4 +74,10 @@ public class DriveToPose extends Command {
         Rotation2d rotationError = m_pose.getRotation().minus(m_drive.getRotation());
         return translationError.getX() < 0.025 && translationError.getY() < 0.025 && rotationError.getDegrees() < 2.5;
     }
+
+    @Override
+    public void end (boolean interrupted) {
+
+        m_drive.stop();
+    }
 }

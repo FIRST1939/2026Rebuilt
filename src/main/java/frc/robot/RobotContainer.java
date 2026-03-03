@@ -35,6 +35,7 @@ import frc.robot.subsystems.shooter.*;
 import frc.robot.subsystems.vision.*;
 import frc.robot.util.*;
 import frc.robot.generated.TunerConstants;
+import frc.robot.commands.*;
 import frc.robot.commands.drive.*;
 import frc.robot.commands.spindexer.*;
 import frc.robot.commands.climber.*;
@@ -212,7 +213,7 @@ public class RobotContainer {
         );
 
         matchMode.and(m_driverController.x().onTrue(Commands.runOnce(m_drive::stopWithX, m_drive)));
-        matchMode.and(m_driverController.povUp()).whileTrue(new RaiseClimberToHeight(m_climber, Constants.kRaisingClimberSetpoint, Constants.kRaisingClimberPercentage));
+        matchMode.and(m_driverController.povUp()).whileTrue(new Climb(m_drive, m_climber));
         matchMode.and(m_driverController.povDown()).whileTrue(new LowerClimberToHeight(m_climber, Constants.kLoweringClimberSetpoint, Constants.kLoweringClimberPercentage));
 
         matchMode.and(m_operatorController.povRight()).whileTrue(
