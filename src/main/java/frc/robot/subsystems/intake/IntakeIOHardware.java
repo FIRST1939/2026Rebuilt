@@ -56,6 +56,8 @@ public class IntakeIOHardware implements IntakeIO {
             .positionConversionFactor(IntakeConstants.kPivotGearing)
             .velocityConversionFactor(IntakeConstants.kPivotGearing);
 
+        globalPivotConfig.closedLoop.maxOutput(0.3);
+
         SparkFlexConfig leftPivotConfig = new SparkFlexConfig();
 
         leftPivotConfig

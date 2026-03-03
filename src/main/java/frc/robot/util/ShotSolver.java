@@ -100,7 +100,7 @@ public class ShotSolver {
 
         if (rawDistance < 1e-3 || shooterToTarget.getNorm() < 1e-3) {
             
-            m_shotSolution = new ShotSolution(0, 0, new Rotation2d());
+            m_shotSolution = new ShotSolution(0, 0, robotPose.getRotation());
             return;
         }
 
@@ -117,7 +117,7 @@ public class ShotSolver {
 
         ShooterParams compensatedParams = kShooterMap.get(virtualDistance);
 
-        Rotation2d aimHeading = compensatedShotVector.getAngle();
+        Rotation2d aimHeading = compensatedShotVector.getAngle().plus(new Rotation2d(Math.PI));
 
         m_shotSolution = new ShotSolution(
             compensatedParams.kFlywheelRPM,
