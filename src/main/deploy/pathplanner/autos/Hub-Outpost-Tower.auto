@@ -56,9 +56,22 @@
           }
         },
         {
-          "type": "path",
+          "type": "deadline",
           "data": {
-            "pathName": "Tower-Outpost"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Tower-Outpost"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "IdleIntake"
+                }
+              }
+            ]
           }
         },
         {
