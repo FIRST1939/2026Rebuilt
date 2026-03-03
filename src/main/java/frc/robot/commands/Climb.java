@@ -17,11 +17,11 @@ public class Climb extends SequentialCommandGroup {
 
         super(
             Commands.parallel(
-                new DriveToPose(drive, new Pose2d(1.27 + (2 * (FieldConstants.LinesVertical.center - 1.27)), FieldConstants.Tower.centerPoint.getY() - (4.74 - FieldConstants.Tower.centerPoint.getY()), new Rotation2d())),
+                new DriveToPose(drive, new Pose2d(1.27 + (2 * (FieldConstants.LinesVertical.center - 1.27)), FieldConstants.Tower.centerPoint.getY() - (4.74 - FieldConstants.Tower.centerPoint.getY()), new Rotation2d(Math.PI / 2))),
                 new RaiseClimberToHeight(climber, Constants.kRaisingClimberSetpoint, Constants.kRaisingClimberPercentage)
             ),
-            new DriveToPose(drive, new Pose2d(1.067 + (2 * (FieldConstants.LinesVertical.center - 1.067)), FieldConstants.Tower.centerPoint.getY() - (4.74 - FieldConstants.Tower.centerPoint.getY()), new Rotation2d())),
-            new DriveToPose(drive, new Pose2d(1.067 + (2 * (FieldConstants.LinesVertical.center - 1.067)), FieldConstants.Tower.centerPoint.getY() - (4.617 - FieldConstants.Tower.centerPoint.getY()), new Rotation2d())),
+            new DriveToPose(drive, new Pose2d(1.067 + (2 * (FieldConstants.LinesVertical.center - 1.067)), FieldConstants.Tower.centerPoint.getY() - (4.74 - FieldConstants.Tower.centerPoint.getY()), new Rotation2d(Math.PI / 2))),
+            new DriveToPose(drive, new Pose2d(1.067 + (2 * (FieldConstants.LinesVertical.center - 1.067)), FieldConstants.Tower.centerPoint.getY() - (4.617 - FieldConstants.Tower.centerPoint.getY()), new Rotation2d(Math.PI / 2))),
             new LowerClimberToHeight(climber, Constants.kLoweringClimberSetpoint, Constants.kLoweringClimberPercentage)
         );
     }

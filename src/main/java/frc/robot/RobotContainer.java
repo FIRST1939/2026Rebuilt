@@ -213,8 +213,8 @@ public class RobotContainer {
         );
 
         matchMode.and(m_driverController.x().onTrue(Commands.runOnce(m_drive::stopWithX, m_drive)));
-        matchMode.and(m_driverController.povUp()).whileTrue(new Climb(m_drive, m_climber));
-        matchMode.and(m_driverController.povDown()).whileTrue(new LowerClimberToHeight(m_climber, Constants.kLoweringClimberSetpoint, Constants.kLoweringClimberPercentage));
+        matchMode.and(m_driverController.povUp()).toggleOnTrue(new RaiseClimberToHeight(m_climber, Constants.kRaisingClimberSetpoint, Constants.kRaisingClimberPercentage));
+        matchMode.and(m_driverController.povDown()).toggleOnTrue(new LowerClimberToHeight(m_climber, Constants.kLoweringClimberSetpoint, Constants.kLoweringClimberPercentage));
 
         matchMode.and(m_operatorController.povRight()).whileTrue(
             new RunFlywheelAndHood(m_shooter, 
