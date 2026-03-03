@@ -5,7 +5,7 @@
 // license that can be found in the LICENSE file
 // at the root directory of this project.
 
-package frc.robot.commands;
+package frc.robot.commands.drive;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -29,6 +29,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
+
+import frc.robot.util.Util;
 
 public class DriveCommands {
 
@@ -86,12 +88,10 @@ public class DriveCommands {
                 omega * drive.getMaxAngularSpeedRadPerSec()
             );
 
-            boolean flip = DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red;
-
             drive.runVelocity(
                 ChassisSpeeds.fromFieldRelativeSpeeds(
                     speeds,
-                    flip ? drive.getRotation().plus(new Rotation2d(Math.PI)) : drive.getRotation()
+                    Util.flipField() ? drive.getRotation().plus(new Rotation2d(Math.PI)) : drive.getRotation()
                 )
             );
         },
@@ -124,9 +124,7 @@ public class DriveCommands {
                 }
 
                 Rotation2d driverRelative = new Rotation2d(xComponent, yComponent);
-                boolean flip = DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red;
-
-                return flip ? driverRelative.plus(new Rotation2d(Math.PI)) : driverRelative;
+                return Util.flipField() ? driverRelative.plus(new Rotation2d(Math.PI)) : driverRelative;
             }
         )
             .beforeStarting(() -> {
@@ -135,8 +133,7 @@ public class DriveCommands {
                 double xPower = chassisSpeeds.vxMetersPerSecond / drive.getMaxLinearSpeedMetersPerSec();
                 double yPower = chassisSpeeds.vyMetersPerSecond / drive.getMaxLinearSpeedMetersPerSec();
 
-                boolean flip = DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red;
-                if (flip) {
+                if (Util.flipField()) {
 
                     xPower *= -1;
                     yPower *= -1;
@@ -185,12 +182,10 @@ public class DriveCommands {
                 omega
             );
 
-            boolean flip = DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red;
-
             drive.runVelocity(
                 ChassisSpeeds.fromFieldRelativeSpeeds(
                     speeds,
-                    flip ? drive.getRotation().plus(new Rotation2d(Math.PI)) : drive.getRotation()
+                    Util.flipField() ? drive.getRotation().plus(new Rotation2d(Math.PI)) : drive.getRotation()
                 )
             );
         }, drive)

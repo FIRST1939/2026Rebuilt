@@ -14,6 +14,7 @@ import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.events.EventTrigger;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.simulation.BatterySim;
 import edu.wpi.first.wpilibj.simulation.RoboRioSim;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -34,7 +35,7 @@ import frc.robot.subsystems.shooter.*;
 import frc.robot.subsystems.vision.*;
 import frc.robot.util.*;
 import frc.robot.generated.TunerConstants;
-import frc.robot.commands.DriveCommands;
+import frc.robot.commands.drive.*;
 import frc.robot.commands.spindexer.*;
 import frc.robot.commands.climber.*;
 import frc.robot.commands.feeder.*;
@@ -187,6 +188,26 @@ public class RobotContainer {
                 () -> -m_driverController.getLeftX(),
                 () -> -m_driverController.getRightX(),
                 () -> m_shotSolver.getShotSolution().aimHeading
+            )
+        );
+
+        matchMode.and(m_driverController.a()).onTrue(
+            DriveCommands.joystickDriveAtAngle(
+                m_drive,
+                () -> -m_driverController.getLeftY(),
+                () -> -m_driverController.getLeftX(),
+                () -> -m_driverController.getRightX(),
+                () -> Util.flipField() ? new Rotation2d() : new Rotation2d(Math.PI)
+            )
+        );
+
+        matchMode.and(m_driverController.y()).onTrue(
+            DriveCommands.joystickDriveAtAngle(
+                m_drive,
+                () -> -m_driverController.getLeftY(),
+                () -> -m_driverController.getLeftX(),
+                () -> -m_driverController.getRightX(),
+                () -> Util.flipField() ? new Rotation2d(Math.PI) : new Rotation2d()
             )
         );
 
