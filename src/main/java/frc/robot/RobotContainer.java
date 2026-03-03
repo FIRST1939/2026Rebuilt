@@ -252,7 +252,7 @@ public class RobotContainer {
             .alongWith(new AgitateIntake(m_intake, Constants.kAgitateIntakeInterval, Constants.kRollerAgitateVelocity)));
         //Feed Into Shooter Command
 
-        matchMode.and(m_operatorController.leftBumper()).onTrue(new IdleAndZeroIntake(m_intake)); 
+        matchMode.and(m_operatorController.leftBumper()).onTrue(new ZeroAndIdleIntake(m_intake)); 
         //Pivot Intake In
 
 

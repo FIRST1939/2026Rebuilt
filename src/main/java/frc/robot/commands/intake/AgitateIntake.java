@@ -53,7 +53,7 @@ public class AgitateIntake extends Command {
     @Override
     public void end(boolean interrupted) {
         m_intake.setPivotPosition(m_centerPosition);
-        m_intake.setPivotPercentage(0.0);
+        m_intake.setRollerPercentage(0);
     }
 
     @Override
