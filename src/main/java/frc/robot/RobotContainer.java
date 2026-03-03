@@ -249,12 +249,13 @@ public class RobotContainer {
 
         (m_operatorController.rightTrigger()).whileTrue((
             new RunSpindexerVelocity(m_spindexer, Constants.kSpindexerVelocity))
-            .alongWith(new RunFeederVelocity(m_feeder, Constants.kFeederVelocity))
-            .alongWith(new AgitateIntake(m_intake, Constants.kAgitateIntakeInterval, Constants.kRollerAgitateVelocity)));
+            .alongWith(new RunFeederVelocity(m_feeder, Constants.kFeederVelocity)));
         //Feed Into Shooter Command
 
         matchMode.and(m_operatorController.leftBumper()).onTrue(new ZeroAndIdleIntake(m_intake)); 
         //Pivot Intake In
+
+        matchMode.and(m_operatorController.a()).whileTrue(new AgitateIntake(m_intake, Constants.kAgitateIntakeInterval, Constants.kRollerAgitateVelocity));
 
 
         matchMode.and(m_operatorController.rightBumper()).whileTrue(
@@ -266,7 +267,7 @@ public class RobotContainer {
         matchMode.and(m_operatorController.b()).whileTrue(new RunSpindexerVelocity(m_spindexer, Constants.kSpindexerReverseVelocity));
         //Spindexer Reverse
 
-        matchMode.and(m_operatorController.a()).whileTrue(new RunFeederVelocity(m_feeder, Constants.kFeederReverseVelocity));
+        matchMode.and(m_operatorController.y()).whileTrue(new RunFeederVelocity(m_feeder, Constants.kFeederReverseVelocity));
         //Feeder Reverse
 
         matchMode.and(m_operatorController.x()).whileTrue(new RunRollerVelocity(m_intake, Constants.kRollerReverseVelocity));
