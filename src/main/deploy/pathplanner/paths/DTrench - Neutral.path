@@ -3,35 +3,42 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.5,
-        "y": 0.725
+        "x": 4.388402282458444,
+        "y": 7.431398002848417
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.25,
-        "y": 0.725
+        "x": 8.388402282458443,
+        "y": 7.431398002848417
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 0.46,
-        "y": 0.7
+        "x": 7.75,
+        "y": 5.594108416547789
       },
       "prevControl": {
-        "x": 0.96,
-        "y": 0.6999999999999998
+        "x": 7.75,
+        "y": 7.594108416547789
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Depot Neutral"
     }
   ],
   "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "RunPivotAndRoller",
+      "waypointRelativePos": 0.28727445394111584,
+      "endWaypointRelativePos": null,
+      "command": null
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 2.0,
     "maxAcceleration": 3.0,
@@ -42,12 +49,12 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 180.0
+    "rotation": -90.0
   },
   "reversed": false,
-  "folder": "OTrench-Outpost-Tower",
+  "folder": "New Folder",
   "idealStartingState": {
-    "velocity": 0.0,
+    "velocity": 0,
     "rotation": 180.0
   },
   "useDefaultConstraints": true

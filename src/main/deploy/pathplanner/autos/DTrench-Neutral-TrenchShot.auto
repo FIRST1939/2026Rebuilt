@@ -7,19 +7,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "OTrench - Outpost"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 2.4
+            "pathName": "DTrench - Neutral"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Outpost-Tower"
+            "pathName": "Neutral - Trench"
           }
         },
         {
@@ -29,7 +23,7 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "StaticShotTower"
+                  "name": "RegressionShot"
                 }
               },
               {
