@@ -1,5 +1,8 @@
 package frc.robot.util;
 
+import static edu.wpi.first.units.Units.Inches;
+import static edu.wpi.first.units.Units.Meters;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
@@ -93,7 +96,7 @@ public class ShotSolver {
 
         // Distance used for shooter map
         Translation2d robotCenterToTarget = Util.getHubPosition().minus(futureRobotPosition);
-        double rawDistance = robotCenterToTarget.getNorm();
+        double rawDistance = robotCenterToTarget.getNorm() + Inches.of(4).in(Meters);
 
         // Vector used for physics + aiming
         Translation2d shooterToTarget = Util.getHubPosition().minus(shooterPosition);

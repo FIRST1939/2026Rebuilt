@@ -278,9 +278,11 @@ public class RobotContainer {
 
     public void configureNamedCommands () {
         
-        new EventTrigger("RunPivotAndRoller").onTrue(new RunPivotAndRollerAuto(m_intake, 
-            Constants.kPivotOutSetpoint, 
-            () ->  (Constants.kBaseRollerIntakeVelocity + Constants.kConversionFactor * m_drive.getSpeed())).withTimeout(2.0));
+        new EventTrigger("RunPivotAndRoller").onTrue(
+            new RunPivotAndRollerAuto(
+                m_intake, 
+                Constants.kPivotOutSetpoint, 
+                () ->  (Constants.kBaseRollerIntakeVelocity + Constants.kConversionFactor * m_drive.getSpeed())).withTimeout(2.0));
         
         NamedCommands.registerCommand("RegressionShot", 
             new RunFlywheelAndHood(
@@ -289,15 +291,32 @@ public class RobotContainer {
                 () -> m_shotSolver.getShotSolution().hoodPositionRotations
             )
         );
+
+        NamedCommands.registerCommand("ClimberUp",
+            new RaiseClimberToHeight(
+            m_climber, 
+            Constants.kRaisingClimberSetpoint, 
+            Constants.kRaisingClimberPercentage)
+        );
+
+        NamedCommands.registerCommand("ClimberDown",
+            new RaiseClimberToHeight(
+            m_climber, 
+            Constants.kLoweringClimberSetpoint, 
+            Constants.kLoweringClimberPercentage)
+        );
         
-        NamedCommands.registerCommand("StaticShotTower", (
-            new RunFlywheelAndHood(m_shooter, 
+        NamedCommands.registerCommand("StaticShotTower",
+           new RunFlywheelAndHood(
+            m_shooter, 
             () -> Constants.kTowerFlywheelVelocity,
-            () -> Constants.kTowerHoodSetpoint)));
+            () -> Constants.kTowerHoodSetpoint));
 
-        NamedCommands.registerCommand("IdleIntake", (new RunPivot(m_intake, Constants.kPivotInSetpoint)));
+        NamedCommands.registerCommand("IdleIntake",
+         (new RunPivot(m_intake, Constants.kPivotInSetpoint)));
 
-        NamedCommands.registerCommand("FeedShooter", (new RunSpindexerVelocity(m_spindexer, Constants.kSpindexerVelocity))
+        NamedCommands.registerCommand("FeedShooter",
+         (new RunSpindexerVelocity(m_spindexer, Constants.kSpindexerVelocity))
             .alongWith(new RunFeederVelocity(m_feeder, Constants.kFeederVelocity))
            .alongWith(new AgitateIntake(m_intake, Constants.kAgitateIntakeInterval, Constants.kRollerAgitateVelocity)));
             }
