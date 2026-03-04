@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.5,
+        "x": 0.46,
         "y": 0.725
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.25,
-        "y": 0.725
+        "x": 1.224900142653353,
+        "y": 1.2467189728958648
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 0.46,
-        "y": 0.7
+        "x": 1.7165691868758919,
+        "y": 1.7383880171184036
       },
       "prevControl": {
-        "x": 0.96,
-        "y": 0.6999999999999998
+        "x": 1.0955135520684742,
+        "y": 1.1302710413694728
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Outpost1"
+      "linkedName": "OutpostShot"
     }
   ],
   "rotationTargets": [],
@@ -42,12 +42,12 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 180.0
+    "rotation": -140.0
   },
   "reversed": false,
   "folder": "OTrench-Outpost-Tower",
   "idealStartingState": {
-    "velocity": 0.0,
+    "velocity": 0,
     "rotation": 180.0
   },
   "useDefaultConstraints": true
