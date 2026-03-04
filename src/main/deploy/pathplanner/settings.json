@@ -3,7 +3,8 @@
   "robotLength": 0.855218,
   "holonomicMode": true,
   "pathFolders": [
-    "Hub-Outpost-Depot-Climb"
+    "Hub-Outpost-Depot-Climb",
+    "OTrench-Outpost"
   ],
   "autoFolders": [
     "Comp-Auto"
