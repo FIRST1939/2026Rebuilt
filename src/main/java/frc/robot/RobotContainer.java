@@ -10,8 +10,8 @@ import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
 
+import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
-import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.events.EventTrigger;
 
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -35,7 +35,6 @@ import frc.robot.subsystems.shooter.*;
 import frc.robot.subsystems.vision.*;
 import frc.robot.util.*;
 import frc.robot.generated.TunerConstants;
-import frc.robot.commands.*;
 import frc.robot.commands.drive.*;
 import frc.robot.commands.spindexer.*;
 import frc.robot.commands.climber.*;
@@ -53,6 +52,7 @@ public class RobotContainer {
     private final Climber m_climber;
 
     private final ShotSolver m_shotSolver;
+    private final LoggedDashboardChooser<Command> m_autoSelector;
 
     private enum OpModes {
         MATCH,
@@ -130,6 +130,9 @@ public class RobotContainer {
         }
 
         m_shotSolver = new ShotSolver();
+
+        configureNamedCommands();
+        m_autoSelector = new LoggedDashboardChooser<>("Auto Selector", AutoBuilder.buildAutoChooser());
         
         m_opModeSelector.addDefaultOption("Match", OpModes.MATCH);
         m_opModeSelector.addOption("Percent", OpModes.PERCENT);
@@ -151,7 +154,6 @@ public class RobotContainer {
 
 
         configureMatchBindings();
-        configureNamedCommands();
         configurePercentBindings();
         configureIntakeCharacterizationBindings();
         configureSpindexerCharacterizationBindings();
@@ -279,6 +281,14 @@ public class RobotContainer {
         new EventTrigger("RunPivotAndRoller").onTrue(new RunPivotAndRollerAuto(m_intake, 
             Constants.kPivotOutSetpoint, 
             () ->  (Constants.kBaseRollerIntakeVelocity + Constants.kConversionFactor * m_drive.getSpeed())).withTimeout(2.0));
+        
+        NamedCommands.registerCommand("RegressionShot", 
+            new RunFlywheelAndHood(
+                m_shooter,
+                () -> m_shotSolver.getShotSolution().flywheelRPM,
+                () -> m_shotSolver.getShotSolution().hoodPositionRotations
+            )
+        );
         
         NamedCommands.registerCommand("StaticShotTower", (
             new RunFlywheelAndHood(m_shooter, 
@@ -522,7 +532,7 @@ public class RobotContainer {
 
     public Command getAutonomousCommand() {
       
-        return new PathPlannerAuto("Hub-Outpost-Depot-Climb");
+        return m_autoSelector.get();
     }
 
     public void simulateBatteryLoad() {
