@@ -4,7 +4,8 @@
   "holonomicMode": true,
   "pathFolders": [
     "Hub-Outpost-Depot-Climb",
-    "OTrench-Outpost"
+    "New Folder",
+    "OTrench-Outpost-Tower"
   ],
   "autoFolders": [
     "Comp-Auto"

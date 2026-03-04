@@ -3,12 +3,12 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.0,
+        "x": 3.5,
         "y": 0.725
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.75,
+        "x": 3.25,
         "y": 0.725
       },
       "isLocked": false,
@@ -45,7 +45,7 @@
     "rotation": 180.0
   },
   "reversed": false,
-  "folder": "OTrench-Outpost",
+  "folder": "OTrench-Outpost-Tower",
   "idealStartingState": {
     "velocity": 0.0,
     "rotation": 180.0
