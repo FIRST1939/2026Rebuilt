@@ -267,9 +267,10 @@ public class RobotContainer {
         matchMode.and(m_operatorController.leftBumper()).onTrue(new ZeroAndIdleIntake(m_intake)); 
         //Pivot Intake In
 
-        matchMode.and(m_operatorController.a()).whileTrue(new AgitateIntake(m_intake, Constants.kAgitateIntakeInterval, Constants.kRollerAgitateVelocity));
+        matchMode.and(m_operatorController.a()).whileTrue(new AgitateIntake(m_intake, Constants.kAutoAgitateIntakeInterval, Constants.kRollerAgitateVelocity));
 
 
+        
         matchMode.and(m_operatorController.rightBumper()).whileTrue(
             new RunPivotAndRoller(m_intake, 
             Constants.kPivotOutSetpoint, 
@@ -327,10 +328,13 @@ public class RobotContainer {
 
         NamedCommands.registerCommand("FeedShooter",
          (new RunSpindexerVelocity(m_spindexer, Constants.kSpindexerVelocity))
-            .alongWith(new RunFeederVelocity(m_feeder, Constants.kFeederVelocity))
-           .alongWith(new AgitateIntake(m_intake, Constants.kAgitateIntakeInterval, Constants.kRollerAgitateVelocity)));
-            }
+            .alongWith(new RunFeederVelocity(m_feeder, Constants.kFeederVelocity)));
 
+         NamedCommands.registerCommand("AgitateIntake",
+        (new AgitateIntake(m_intake, Constants.kAutoAgitateIntakeInterval, Constants.kRollerAgitateVelocity)));
+            }
+        
+       
     private void configurePercentBindings() {
 
         Trigger percentMode = new Trigger(() -> m_opModeSelector.get() == OpModes.PERCENT);

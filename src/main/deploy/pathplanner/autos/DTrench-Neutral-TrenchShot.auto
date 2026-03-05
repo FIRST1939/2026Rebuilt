@@ -47,9 +47,22 @@
                             }
                           },
                           {
-                            "type": "named",
+                            "type": "parallel",
                             "data": {
-                              "name": "FeedShooter"
+                              "commands": [
+                                {
+                                  "type": "named",
+                                  "data": {
+                                    "name": "FeedShooter"
+                                  }
+                                },
+                                {
+                                  "type": "named",
+                                  "data": {
+                                    "name": "AgitateIntake"
+                                  }
+                                }
+                              ]
                             }
                           }
                         ]

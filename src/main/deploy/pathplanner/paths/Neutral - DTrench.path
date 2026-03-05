@@ -75,7 +75,7 @@
   "folder": "DTrench-Middle",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -90.0
+    "rotation": -115.0
   },
   "useDefaultConstraints": true
 }

@@ -33,9 +33,22 @@
     {
       "name": "Constraints Zone",
       "minWaypointRelativePos": 0.10057816644562333,
-      "maxWaypointRelativePos": 0.4282472645888594,
+      "maxWaypointRelativePos": 0.42593062858508596,
       "constraints": {
         "maxVelocity": 3.0,
+        "maxAcceleration": 3.0,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    },
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 0.4317638623326963,
+      "maxWaypointRelativePos": 1.0,
+      "constraints": {
+        "maxVelocity": 1.0,
         "maxAcceleration": 3.0,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,
@@ -63,7 +76,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -90.0
+    "rotation": -115.0
   },
   "reversed": false,
   "folder": "DTrench-Middle",
