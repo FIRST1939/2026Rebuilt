@@ -8,24 +8,24 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.2664305131276885,
-        "y": 7.651372734013351
+        "x": 2.7130122593189356,
+        "y": 6.881012826621747
       },
       "isLocked": false,
       "linkedName": "DTrench-Shot"
     },
     {
       "anchor": {
-        "x": 2.01862240720524,
-        "y": 5.547479928584425
+        "x": 2.1429610535983112,
+        "y": 5.745044531686709
       },
       "prevControl": {
-        "x": 2.6933068367903927,
-        "y": 6.407615311135371
+        "x": 2.436935891535168,
+        "y": 6.532713739502726
       },
       "nextControl": {
-        "x": 1.6750672166373957,
-        "y": 5.109491496795457
+        "x": 1.8787785325531199,
+        "y": 5.037200151089755
       },
       "isLocked": false,
       "linkedName": null
@@ -33,18 +33,23 @@
     {
       "anchor": {
         "x": 1.096,
-        "y": 4.543
+        "y": 4.575
       },
       "prevControl": {
-        "x": 0.3555018549761635,
-        "y": 4.423993709341661
+        "x": 2.0295423796417373,
+        "y": 4.3743684308620985
       },
       "nextControl": null,
       "isLocked": false,
       "linkedName": null
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.9446614583333327,
+      "rotationDegrees": 90.0
+    }
+  ],
   "constraintZones": [
     {
       "name": "Constraints Zone",
