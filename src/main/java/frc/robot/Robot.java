@@ -90,7 +90,7 @@ public class Robot extends LoggedRobot {
             Logger.recordOutput("Shift Timer", matchTime - 80);
         } else if (matchTime > 55) { // Shift 3
 
-            Logger.recordOutput("Shift Timer", matchTime - 105);
+            Logger.recordOutput("Shift Timer", matchTime - 55);
         } else if (matchTime > 30) { // Shift 4
 
             Logger.recordOutput("Shift Timer", matchTime - 30);

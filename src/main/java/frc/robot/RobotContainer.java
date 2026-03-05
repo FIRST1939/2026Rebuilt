@@ -267,7 +267,7 @@ public class RobotContainer {
         matchMode.and(m_operatorController.leftBumper()).onTrue(new ZeroAndIdleIntake(m_intake)); 
         //Pivot Intake In
 
-        matchMode.and(m_operatorController.a()).whileTrue(new Agitate(m_intake, Constants.kRollerAgitateVelocity, Constants.kAutoAgitateIntakeInterval));
+        matchMode.and(m_operatorController.a()).whileTrue(new AgitateIntake(m_intake, Constants.kAgitateIntakeInterval, Constants.kRollerAgitateVelocity));
         
         matchMode.and(m_operatorController.rightBumper()).whileTrue(
             new RunPivotAndRoller(m_intake, 
@@ -291,7 +291,7 @@ public class RobotContainer {
             new RunPivotAndRollerAuto(
                 m_intake, 
                 Constants.kPivotOutSetpoint, 
-                () ->  (Constants.kBaseRollerIntakeVelocity + Constants.kConversionFactor * m_drive.getSpeed())).withTimeout(2.0));
+                () ->  (Constants.kBaseRollerIntakeVelocity)));
         
         NamedCommands.registerCommand("RegressionShot", 
             new RunFlywheelAndHood(
