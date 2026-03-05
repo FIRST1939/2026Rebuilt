@@ -12,9 +12,9 @@ public class Agitate extends RepeatCommand {
 
         super(
             Commands.sequence(
-                new RunPivot(intake, Constants.kPivotIdleSetpoint),
+                new RunPivot(intake, Constants.kPivotIdleSetpoint).withTimeout(0.75),
                 new WaitCommand(0.5),
-                new RunPivot(intake, Constants.kPivotOutSetpoint),
+                new RunPivot(intake, Constants.kPivotOutSetpoint).withTimeout(0.75),
                 new WaitCommand(pumpInterval)
             )
         );
