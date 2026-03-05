@@ -9,8 +9,10 @@ import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.NT4Publisher;
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.util.Util;
 
 public class Robot extends LoggedRobot {
 
@@ -50,6 +52,51 @@ public class Robot extends LoggedRobot {
         if (isSimulation()) {
 
             m_robotContainer.simulateBatteryLoad();
+        }
+
+        updateActiveDisplay();
+    }
+
+    public void updateActiveDisplay () {
+
+        double matchTime = DriverStation.getMatchTime();
+
+        /*
+        String gameData = DriverStation.getGameSpecificMessage();
+        if (gameData.isEmpty()) { return; }
+
+        boolean redActiveFirst;
+
+        switch (gameData.charAt(0)) { // Who Won Auto
+            case 'R' -> redActiveFirst = false;
+            case 'B' -> redActiveFirst = true;
+            default -> { return; }
+        }
+
+        boolean firstActiveShift = Util.isRedAlliance() ? redActiveFirst : !redActiveFirst;
+        */
+
+        if (matchTime > 140) {
+
+            Logger.recordOutput("Shift Timer", matchTime - 140);
+        } else if (matchTime > 130) { // Transition Shift
+
+            Logger.recordOutput("Shift Timer", matchTime - 130);
+        } else if (matchTime > 105) { // Shift 1
+
+            Logger.recordOutput("Shift Timer", matchTime - 105);
+        } else if (matchTime > 80) { // Shift 2
+
+            Logger.recordOutput("Shift Timer", matchTime - 80);
+        } else if (matchTime > 55) { // Shift 3
+
+            Logger.recordOutput("Shift Timer", matchTime - 105);
+        } else if (matchTime > 30) { // Shift 4
+
+            Logger.recordOutput("Shift Timer", matchTime - 30);
+        } else { // Endgame
+
+            Logger.recordOutput("Shift Timer", matchTime);
         }
     }
 

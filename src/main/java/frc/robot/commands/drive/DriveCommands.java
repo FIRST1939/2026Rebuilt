@@ -91,7 +91,7 @@ public class DriveCommands {
             drive.runVelocity(
                 ChassisSpeeds.fromFieldRelativeSpeeds(
                     speeds,
-                    Util.flipField() ? drive.getRotation().plus(new Rotation2d(Math.PI)) : drive.getRotation()
+                    Util.isRedAlliance() ? drive.getRotation().plus(new Rotation2d(Math.PI)) : drive.getRotation()
                 )
             );
         },
@@ -124,7 +124,7 @@ public class DriveCommands {
                 }
 
                 Rotation2d driverRelative = new Rotation2d(xComponent, yComponent);
-                return Util.flipField() ? driverRelative.plus(new Rotation2d(Math.PI)) : driverRelative;
+                return Util.isRedAlliance() ? driverRelative.plus(new Rotation2d(Math.PI)) : driverRelative;
             }
         )
             .beforeStarting(() -> {
@@ -133,7 +133,7 @@ public class DriveCommands {
                 double xPower = chassisSpeeds.vxMetersPerSecond / drive.getMaxLinearSpeedMetersPerSec();
                 double yPower = chassisSpeeds.vyMetersPerSecond / drive.getMaxLinearSpeedMetersPerSec();
 
-                if (Util.flipField()) {
+                if (Util.isRedAlliance()) {
 
                     xPower *= -1;
                     yPower *= -1;
@@ -185,7 +185,7 @@ public class DriveCommands {
             drive.runVelocity(
                 ChassisSpeeds.fromFieldRelativeSpeeds(
                     speeds,
-                    Util.flipField() ? drive.getRotation().plus(new Rotation2d(Math.PI)) : drive.getRotation()
+                    Util.isRedAlliance() ? drive.getRotation().plus(new Rotation2d(Math.PI)) : drive.getRotation()
                 )
             );
         }, drive)

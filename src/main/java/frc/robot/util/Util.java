@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 
 public class Util {
 
-    public static boolean flipField () {
+    public static boolean isRedAlliance () {
 
         Optional<Alliance> alliance = DriverStation.getAlliance();
         return alliance.isPresent() && alliance.get().equals(Alliance.Red);
@@ -20,7 +20,7 @@ public class Util {
     public static Translation2d getHubPosition () {
 
         Translation2d hubPosition = FieldConstants.Hub.innerCenterPoint.toTranslation2d();
-        if (flipField()) { hubPosition = FieldConstants.Hub.oppTopCenterPoint.toTranslation2d(); }
+        if (isRedAlliance()) { hubPosition = FieldConstants.Hub.oppTopCenterPoint.toTranslation2d(); }
 
         return hubPosition;
     }
@@ -29,7 +29,7 @@ public class Util {
 
         ArrayList<Translation2d> corners = new ArrayList<>();
 
-        if (!flipField()) {
+        if (!isRedAlliance()) {
 
             corners.add(new Translation2d(0.0, 0.0));
             corners.add(new Translation2d(0.0, FieldConstants.fieldWidth));

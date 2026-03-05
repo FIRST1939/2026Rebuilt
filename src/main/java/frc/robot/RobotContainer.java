@@ -200,7 +200,7 @@ public class RobotContainer {
                 () -> -m_driverController.getLeftY(),
                 () -> -m_driverController.getLeftX(),
                 () -> -m_driverController.getRightX(),
-                () -> Util.flipField() ? new Rotation2d() : new Rotation2d(Math.PI)
+                () -> Util.isRedAlliance() ? new Rotation2d() : new Rotation2d(Math.PI)
             )
         );
 
@@ -210,7 +210,7 @@ public class RobotContainer {
                 () -> -m_driverController.getLeftY(),
                 () -> -m_driverController.getLeftX(),
                 () -> -m_driverController.getRightX(),
-                () -> Util.flipField() ? new Rotation2d(Math.PI) : new Rotation2d()
+                () -> Util.isRedAlliance() ? new Rotation2d(Math.PI) : new Rotation2d()
             )
         );
 
