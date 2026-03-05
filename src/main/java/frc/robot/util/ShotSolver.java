@@ -96,7 +96,7 @@ public class ShotSolver {
 
         // Distance used for shooter map
         Translation2d robotCenterToTarget = Util.getHubPosition().minus(futureRobotPosition);
-        double rawDistance = robotCenterToTarget.getNorm() + Inches.of(4).in(Meters);
+        double rawDistance = robotCenterToTarget.getNorm() + Inches.of(12).in(Meters);
 
         // Vector used for physics + aiming
         Translation2d shooterToTarget = Util.getHubPosition().minus(shooterPosition);

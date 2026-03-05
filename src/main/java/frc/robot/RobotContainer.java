@@ -178,8 +178,8 @@ public class RobotContainer {
         matchMode.and(m_driverController.rightBumper()).onTrue(
             DriveCommands.snakeDrive(
                 m_drive, 
-                () -> -m_driverController.getLeftY(),
-                () -> -m_driverController.getLeftX(),
+                () -> -m_driverController.getLeftY() * 0.6,
+                () -> -m_driverController.getLeftX() * 0.6,
                 () -> -m_driverController.getRightX()
             )
         );
@@ -261,9 +261,9 @@ public class RobotContainer {
 
 
         matchMode.and(m_operatorController.rightBumper()).whileTrue(
-            new RunPivotAndRollerAuto(m_intake, 
+            new RunPivotAndRoller(m_intake, 
             Constants.kPivotOutSetpoint, 
-            () ->  (Constants.kBaseRollerIntakeVelocity + Constants.kConversionFactor * m_drive.getSpeed())));
+            () -> Constants.kBaseRollerIntakeVelocity));
         //Deploy+Roller
 
         matchMode.and(m_operatorController.b()).whileTrue(new RunSpindexerVelocity(m_spindexer, Constants.kSpindexerReverseVelocity));
@@ -300,7 +300,7 @@ public class RobotContainer {
         );
 
         NamedCommands.registerCommand("ClimberDown",
-            new RaiseClimberToHeight(
+            new LowerClimberToHeight(
             m_climber, 
             Constants.kLoweringClimberSetpoint, 
             Constants.kLoweringClimberPercentage)
