@@ -3,39 +3,55 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.388402282458444,
-        "y": 7.431398002848417
+        "x": 2.874579172610556,
+        "y": 7.314950071326677
       },
       "prevControl": null,
       "nextControl": {
-        "x": 8.388402282458443,
-        "y": 7.431398002848417
+        "x": 2.2664305131276885,
+        "y": 7.651372734013351
+      },
+      "isLocked": false,
+      "linkedName": "DTrench-Shot"
+    },
+    {
+      "anchor": {
+        "x": 2.01862240720524,
+        "y": 5.547479928584425
+      },
+      "prevControl": {
+        "x": 2.6933068367903927,
+        "y": 6.407615311135371
+      },
+      "nextControl": {
+        "x": 1.6750672166373957,
+        "y": 5.109491496795457
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 8.125,
-        "y": 5.0
+        "x": 1.096,
+        "y": 4.543
       },
       "prevControl": {
-        "x": 8.125,
-        "y": 7.0
+        "x": 0.3555018549761635,
+        "y": 4.423993709341661
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Mid-Trench"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.10057816644562333,
-      "maxWaypointRelativePos": 0.4282472645888594,
+      "minWaypointRelativePos": 1.2888759946949602,
+      "maxWaypointRelativePos": 2.0,
       "constraints": {
-        "maxVelocity": 3.0,
+        "maxVelocity": 0.5,
         "maxAcceleration": 3.0,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,
@@ -45,14 +61,7 @@
     }
   ],
   "pointTowardsZones": [],
-  "eventMarkers": [
-    {
-      "name": "RunPivotAndRoller",
-      "waypointRelativePos": 0.3,
-      "endWaypointRelativePos": 1.0,
-      "command": null
-    }
-  ],
+  "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 2.0,
     "maxAcceleration": 3.0,
@@ -63,13 +72,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -90.0
+    "rotation": 90.0
   },
   "reversed": false,
-  "folder": "DTrench-Middle",
+  "folder": "DTrench-Middle-Climb",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 180.0
+    "rotation": 119.99999999999999
   },
   "useDefaultConstraints": true
 }

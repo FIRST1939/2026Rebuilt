@@ -3,8 +3,9 @@
   "robotLength": 0.855218,
   "holonomicMode": true,
   "pathFolders": [
+    "DTrench-Middle",
     "Hub-Outpost-Depot-Climb",
-    "New Folder",
+    "DTrench-Middle-Climb",
     "OTrench-Outpost-Tower"
   ],
   "autoFolders": [
