@@ -214,7 +214,17 @@ public class RobotContainer {
             )
         );
 
-        matchMode.and(m_driverController.x().onTrue(Commands.runOnce(m_drive::stopWithX, m_drive)));
+        matchMode.and(m_driverController.b()).onTrue(
+            DriveCommands.joystickDriveAtAngle(
+                m_drive, 
+                () -> -m_driverController.getLeftY(),
+                () -> -m_driverController.getLeftX(),
+                () -> -m_driverController.getRightX(),
+                () -> (m_drive.getPose().getY() > FieldConstants.Tower.centerPoint.getY()) ? new Rotation2d(Math.PI / 2.0) : new Rotation2d(-Math.PI / 2.0)
+            )
+        );
+
+        matchMode.and(m_driverController.x()).onTrue(Commands.runOnce(m_drive::stopWithX, m_drive));
         matchMode.and(m_driverController.povUp()).toggleOnTrue(new RaiseClimberToHeight(m_climber, Constants.kRaisingClimberSetpoint, Constants.kRaisingClimberPercentage));
         matchMode.and(m_driverController.povDown()).toggleOnTrue(new LowerClimberToHeight(m_climber, Constants.kLoweringClimberSetpoint, Constants.kLoweringClimberPercentage));
 
