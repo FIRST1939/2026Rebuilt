@@ -60,43 +60,52 @@ public class Robot extends LoggedRobot {
     public void updateActiveDisplay () {
 
         double matchTime = DriverStation.getMatchTime();
-
-        /*
-        String gameData = DriverStation.getGameSpecificMessage();
-        if (gameData.isEmpty()) { return; }
-
         boolean redActiveFirst;
 
-        switch (gameData.charAt(0)) { // Who Won Auto
-            case 'R' -> redActiveFirst = false;
-            case 'B' -> redActiveFirst = true;
-            default -> { return; }
+        String gameData = DriverStation.getGameSpecificMessage();
+
+        if (gameData.isEmpty()) {
+
+            redActiveFirst = false;
+        } else {
+
+            switch (gameData.charAt(0)) { // Who Won Auto
+                case 'R' -> redActiveFirst = false;
+                case 'B' -> redActiveFirst = true;
+                default -> redActiveFirst = false;
+            }
         }
 
         boolean firstActiveShift = Util.isRedAlliance() ? redActiveFirst : !redActiveFirst;
-        */
 
         if (matchTime > 140) {
 
             Logger.recordOutput("Shift Timer", matchTime - 140);
+            Logger.recordOutput("Current Shift", "Autonomous (Active)");
         } else if (matchTime > 130) { // Transition Shift
 
             Logger.recordOutput("Shift Timer", matchTime - 130);
+            Logger.recordOutput("Current Shift", "Transition (Active)");
         } else if (matchTime > 105) { // Shift 1
 
             Logger.recordOutput("Shift Timer", matchTime - 105);
+            Logger.recordOutput("Current Shift", "Shift 1 " + (firstActiveShift ? "(Active)" : "(Inactive)"));
         } else if (matchTime > 80) { // Shift 2
 
             Logger.recordOutput("Shift Timer", matchTime - 80);
+            Logger.recordOutput("Current Shift", "Shift 2 " + (firstActiveShift ? "(Inactive)" : "(Active)"));
         } else if (matchTime > 55) { // Shift 3
 
             Logger.recordOutput("Shift Timer", matchTime - 55);
+            Logger.recordOutput("Current Shift", "Shift 3 " + (firstActiveShift ? "(Active)" : "(Inactive)"));
         } else if (matchTime > 30) { // Shift 4
 
             Logger.recordOutput("Shift Timer", matchTime - 30);
+            Logger.recordOutput("Current Shift", "Shift 4 " + (firstActiveShift ? "(Inactive)" : "(Active)"));
         } else { // Endgame
 
             Logger.recordOutput("Shift Timer", matchTime);
+            Logger.recordOutput("Current Shift", "Endgame (Active)");
         }
     }
 
