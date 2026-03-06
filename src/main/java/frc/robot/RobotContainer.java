@@ -269,9 +269,9 @@ public class RobotContainer {
 
         matchMode.and(m_operatorController.start()).onTrue(new ZeroAndIdleIntake(m_intake)); 
 
-        matchMode.and(m_operatorController.a()).whileTrue(new AgitateIntake(m_intake, Constants.kAgitateIntakeInterval, Constants.kRollerAgitateVelocity));
+        //matchMode.and(m_operatorController.a()).whileTrue(new AgitateIntake(m_intake, Constants.kAgitateIntakeInterval, Constants.kRollerAgitateVelocity));
 
-        //matchMode.and(m_operatorController.a()).whileTrue(new LightAgitate(m_intake, Constants.kAgitateIntakeInterval, Constants.kRollerAgitateVelocity));
+        matchMode.and(m_operatorController.a()).whileTrue(new Agitate(m_intake, Constants.kRollerAgitateVelocity, Constants.kAgitateIntakeInterval));
         
         matchMode.and(m_operatorController.rightBumper()).whileTrue(
             new RunPivotAndRoller(m_intake, 
