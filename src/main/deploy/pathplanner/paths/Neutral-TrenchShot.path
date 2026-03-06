@@ -1,0 +1,63 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 7.999,
+        "y": 2.745
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 7.816106336805555,
+        "y": 0.6196437355324069
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 2.7822694589120376,
+        "y": 0.7086772280092601
+      },
+      "prevControl": {
+        "x": 6.306079933449077,
+        "y": 0.658222728587964
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.5,
+      "rotationDegrees": 0.0
+    },
+    {
+      "waypointRelativePos": 0.8984615631416836,
+      "rotationDegrees": 0.0
+    }
+  ],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 2.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -112.5
+  },
+  "reversed": false,
+  "folder": "DTrench-Middle",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 115.0
+  },
+  "useDefaultConstraints": true
+}
