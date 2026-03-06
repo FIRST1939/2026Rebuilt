@@ -23,8 +23,7 @@ public class SpindexerIOHardware implements SpindexerIO {
         config
             .idleMode(IdleMode.kCoast)
             .inverted(SpindexerConstants.kInverted)
-            .voltageCompensation(12.0)
-            .smartCurrentLimit(SpindexerConstants.kSpindexerCurrentLimit);
+            .voltageCompensation(12.0);
         
 
         config.encoder
