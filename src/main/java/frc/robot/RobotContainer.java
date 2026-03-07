@@ -278,7 +278,8 @@ public class RobotContainer {
         matchMode.and(m_operatorController.rightBumper()).whileTrue(
             new RunPivotAndRoller(m_intake, 
             Constants.kPivotOutSetpoint, 
-            () -> Constants.kBaseRollerIntakeVelocity));
+            () -> Constants.kBaseRollerIntakeVelocity)
+            .alongWith(new RunSpindexerVelocity(m_spindexer, Constants.kSpindexerVelocity)));
         //Deploy+Roller
 
         matchMode.and(m_operatorController.b()).whileTrue(new RunSpindexerVelocity(m_spindexer, Constants.kSpindexerReverseVelocity));
