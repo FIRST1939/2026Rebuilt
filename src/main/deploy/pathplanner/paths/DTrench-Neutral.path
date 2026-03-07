@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.97867942185085,
-        "y": 7.419329175521638
+        "x": 8.688366016228748,
+        "y": 7.287631496329211
       },
       "isLocked": false,
       "linkedName": null
@@ -35,7 +35,7 @@
     },
     {
       "waypointRelativePos": 0.5445177801724138,
-      "rotationDegrees": 45.0
+      "rotationDegrees": 135.0
     }
   ],
   "constraintZones": [
@@ -65,7 +65,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 45.0
+    "rotation": 135.0
   },
   "reversed": false,
   "folder": "Mess-Up-Neutral",
