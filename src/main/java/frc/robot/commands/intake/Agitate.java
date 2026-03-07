@@ -7,7 +7,7 @@ import frc.robot.subsystems.intake.Intake;
 
 public class Agitate extends RepeatCommand {
     
-    public Agitate(Intake intake, double rollerVelocity, double pumpInterval) {
+    public Agitate(Intake intake, double pumpInterval) {
 
         super(
             Commands.sequence(
