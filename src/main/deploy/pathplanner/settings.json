@@ -4,15 +4,17 @@
   "holonomicMode": true,
   "pathFolders": [
     "DTrench-Middle",
-    "Hub-Outpost-Depot-Climb",
     "DTrench-Middle-Climb",
+    "Hub-Outpost-Depot-Climb",
+    "New Folder",
+    "Mess-Up-Neutral",
     "OTrench-Outpost-Tower"
   ],
   "autoFolders": [
     "Comp-Auto"
   ],
   "defaultMaxVel": 2.0,
-  "defaultMaxAccel": 7.0,
+  "defaultMaxAccel": 3.0,
   "defaultMaxAngVel": 540.0,
   "defaultMaxAngAccel": 720.0,
   "defaultNominalVoltage": 12.0,
