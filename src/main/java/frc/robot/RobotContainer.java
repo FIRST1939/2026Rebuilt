@@ -584,5 +584,11 @@ public class RobotContainer {
     public void updateShotSolution() {
 
         m_shotSolver.calculateShotSolution(m_drive.getPose(), m_drive.getChassisSpeeds());
-    }        
+    }
+    
+    public void checkHubAlignment() {
+
+        double error = Math.abs(m_drive.getRotation().getDegrees() - m_shotSolver.getShotSolution().aimHeading.getDegrees());
+        Logger.recordOutput("Hub Aligned", error < 1.5);
+    }
 }
