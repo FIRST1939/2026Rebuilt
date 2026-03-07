@@ -328,7 +328,7 @@ public class RobotContainer {
             () -> Constants.kTowerHoodSetpoint));
 
         NamedCommands.registerCommand("IdleIntake",
-         (new RunPivot(m_intake, Constants.kPivotInSetpoint)));
+         (new IdleIntakeAuto(m_intake)));
 
         NamedCommands.registerCommand("FeedShooter",
          (new RunSpindexerVelocity(m_spindexer, Constants.kSpindexerVelocity))
