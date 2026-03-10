@@ -35,7 +35,7 @@ public final class Constants {
     public static final double kSpindexerVelocity = 300.0;
     public static final double kSpindexerReverseVelocity = -180.0;
     public static final double kFeederReverseVelocity = -1500.0;
-    public static final double kRollerReverseVelocity = -1500.0;
+    public static final double kRollerReverseVelocity = -2750.0;
 
     public static final double kClimberClimbingPercentage = -0.6;
     public static final double kClimberReleasingPercentage = 0.2;
