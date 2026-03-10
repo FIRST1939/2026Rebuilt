@@ -3,40 +3,53 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.388402282458444,
-        "y": 7.431398002848417
+        "x": 2.875,
+        "y": 7.315
       },
       "prevControl": null,
       "nextControl": {
-        "x": 8.388402282458443,
-        "y": 7.431398002848417
+        "x": 6.861091361899563,
+        "y": 7.293431586608444
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 8.125,
-        "y": 5.0
+        "x": 5.883721456513828,
+        "y": 5.2143264419577875
       },
       "prevControl": {
-        "x": 8.125,
-        "y": 7.0
+        "x": 5.867116141284571,
+        "y": 8.490809452328968
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Mid-Trench"
+      "linkedName": null
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.12,
+      "rotationDegrees": 180.0
+    },
+    {
+      "waypointRelativePos": 0.51,
+      "rotationDegrees": 180.0
+    },
+    {
+      "waypointRelativePos": 0.6840224004424781,
+      "rotationDegrees": -115.0
+    }
+  ],
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.0,
-      "maxWaypointRelativePos": 0.5124421296296295,
+      "minWaypointRelativePos": 0,
+      "maxWaypointRelativePos": 0.3970791538065846,
       "constraints": {
         "maxVelocity": 3.0,
-        "maxAcceleration": 7.0,
+        "maxAcceleration": 3.0,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,
         "nominalVoltage": 12.0,
@@ -45,8 +58,8 @@
     },
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.4317638623326963,
-      "maxWaypointRelativePos": 1.0,
+      "minWaypointRelativePos": 0.6762554655349792,
+      "maxWaypointRelativePos": 0.9900736239711935,
       "constraints": {
         "maxVelocity": 1.0,
         "maxAcceleration": 3.0,
@@ -61,14 +74,14 @@
   "eventMarkers": [
     {
       "name": "RunPivotAndRoller",
-      "waypointRelativePos": 0.3,
+      "waypointRelativePos": 0.0,
       "endWaypointRelativePos": 1.0,
       "command": null
     }
   ],
   "globalConstraints": {
     "maxVelocity": 2.0,
-    "maxAcceleration": 7.0,
+    "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
@@ -82,7 +95,7 @@
   "folder": "DTrench-Middle",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 180.0
+    "rotation": 119.99999999999999
   },
   "useDefaultConstraints": true
 }

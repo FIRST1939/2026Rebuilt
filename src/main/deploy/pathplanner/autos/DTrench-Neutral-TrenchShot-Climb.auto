@@ -85,22 +85,9 @@
                 }
               },
               {
-                "type": "deadline",
+                "type": "path",
                 "data": {
-                  "commands": [
-                    {
-                      "type": "path",
-                      "data": {
-                        "pathName": "TrenchShot-Tower"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "IdleIntake"
-                      }
-                    }
-                  ]
+                  "pathName": "TrenchShot-Tower"
                 }
               }
             ]

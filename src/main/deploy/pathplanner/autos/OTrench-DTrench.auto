@@ -7,65 +7,53 @@
         {
           "type": "path",
           "data": {
-            "pathName": "OTrench - Outpost"
+            "pathName": "OTrench-DTrench"
           }
         },
         {
-          "type": "wait",
-          "data": {
-            "waitTime": 2.4
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Outpost-OutpostShot"
-          }
-        },
-        {
-          "type": "parallel",
+          "type": "race",
           "data": {
             "commands": [
               {
                 "type": "named",
                 "data": {
-                  "name": "ClimberUp"
+                  "name": "RegressionShot"
                 }
               },
               {
-                "type": "race",
+                "type": "sequential",
                 "data": {
                   "commands": [
                     {
-                      "type": "named",
+                      "type": "wait",
                       "data": {
-                        "name": "RegressionShot"
+                        "waitTime": 0.375
                       }
                     },
                     {
-                      "type": "sequential",
+                      "type": "deadline",
                       "data": {
                         "commands": [
                           {
                             "type": "wait",
                             "data": {
-                              "waitTime": 0.375
+                              "waitTime": 15.0
                             }
                           },
                           {
-                            "type": "deadline",
+                            "type": "parallel",
                             "data": {
                               "commands": [
                                 {
-                                  "type": "wait",
+                                  "type": "named",
                                   "data": {
-                                    "waitTime": 6.5
+                                    "name": "FeedShooter"
                                   }
                                 },
                                 {
                                   "type": "named",
                                   "data": {
-                                    "name": "FeedShooter"
+                                    "name": "AgitateIntake"
                                   }
                                 }
                               ]
@@ -78,31 +66,6 @@
                 }
               }
             ]
-          }
-        },
-        {
-          "type": "deadline",
-          "data": {
-            "commands": [
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 4.0
-                }
-              },
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "OutpostShot-Tower"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "ClimberDown"
           }
         }
       ]
