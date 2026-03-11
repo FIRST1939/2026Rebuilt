@@ -39,4 +39,10 @@ public class ShooterConstants {
 
     // Position tolerance (in rotations) for the hood to be considered "at goal".
     public static final double kHoodToleranceRotations = 1.0 / 360.0; // 1 degree
+
+    // Entry angle model constants
+    public static final double kTargetHeightMeters        = 1.8288;  // hoop height above ground
+    public static final double kDefaultHoodHeightMeters   = 0.363;   // hood height above ground
+    public static final double kEntryAngleDegrees         = 45.0;    // desired projectile entry angle
+    public static final double kFlywheelWheelRadiusMeters = 0.0508;  // TODO: measure and confirm
 }
