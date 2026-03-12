@@ -25,6 +25,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.bindings.ExampleMatchBindings;
 import frc.robot.bindings.QuickIntakeConfigBindings;
+import frc.robot.bindings.QuickShotBindings;
 import frc.robot.subsystems.intake.*;
 import frc.robot.subsystems.spindexer.*;
 import frc.robot.subsystems.climber.Climber;
@@ -53,6 +54,7 @@ public class RobotContainer {
     private final Climber m_climber;
 
     private final ShotSolver m_shotSolver;
+    private final ShotLogger m_shotLogger;
     private final LoggedDashboardChooser<Command> m_autoSelector;
 
     private enum OpModes {
@@ -131,6 +133,7 @@ public class RobotContainer {
         }
 
         m_shotSolver = new ShotSolver();
+        m_shotLogger = new ShotLogger(m_feeder);
 
         configureNamedCommands();
         m_autoSelector = new LoggedDashboardChooser<>("Auto Selector", AutoBuilder.buildAutoChooser());
@@ -152,6 +155,9 @@ public class RobotContainer {
 
         Trigger exampleMatchTrigger = new Trigger(() -> m_opModeSelector.get() == OpModes.EXAMPLE_MATCH_BINDINGS);
         ExampleMatchBindings.configure(exampleMatchTrigger, m_operatorController, m_intake,m_shooter,m_feeder,m_spindexer,m_climber);
+
+        Trigger quickShoTrigger = new Trigger(() -> m_opModeSelector.get() == OpModes.QUICKSHOT);
+        QuickShotBindings.configure(quickShoTrigger, m_operatorController, m_intake, m_spindexer, m_feeder, m_shooter);
 
 
         configureMatchBindings();
@@ -593,5 +599,10 @@ public class RobotContainer {
 
         double error = Math.abs(m_drive.getRotation().getDegrees() - m_shotSolver.getShotSolution().aimHeading.getDegrees());
         Logger.recordOutput("Hub Aligned", error < 1.5);
+    }
+
+    public void updateShotLogger() {
+
+        m_shotLogger.update();
     }
 }

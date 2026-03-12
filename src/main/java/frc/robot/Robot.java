@@ -49,6 +49,7 @@ public class Robot extends LoggedRobot {
         m_robotContainer.updateShotSolution();
         m_robotContainer.logControllerError();
         m_robotContainer.checkHubAlignment();
+        m_robotContainer.updateShotLogger();
 
         if (isSimulation()) {
 
