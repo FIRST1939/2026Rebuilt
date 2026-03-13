@@ -13,6 +13,8 @@ import edu.wpi.first.math.interpolation.Interpolator;
 import edu.wpi.first.math.interpolation.InverseInterpolator;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 
+import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
+
 import frc.robot.subsystems.shooter.ShooterConstants;
 
 public class ShotSolver {
@@ -66,6 +68,11 @@ public class ShotSolver {
         kShooterMap.put(5.70, new ShooterParams(3400, 0.07, 1.34));
     }
 
+    private static final double LOOKAHEAD_INCREMENT = 0.01;
+
+    private static final LoggedNetworkNumber m_lookaheadTime = 
+        new LoggedNetworkNumber("/ShotSolver/Lookahead Time", 0.1);
+
     private ShotSolution m_shotSolution;
 
     public void calculateShotSolution(Pose2d robotPose, ChassisSpeeds robotSpeeds) {
@@ -75,7 +82,7 @@ public class ShotSolver {
             robotSpeeds.vyMetersPerSecond);
 
         // Predict future robot pose
-        double lookaheadTime = 0.1;
+        double lookaheadTime = m_lookaheadTime.getAsDouble();
         Pose2d futureRobotPose = robotPose.exp(
             new Twist2d(
                 robotSpeeds.vxMetersPerSecond * lookaheadTime,
@@ -131,5 +138,15 @@ public class ShotSolver {
     public ShotSolution getShotSolution () {
 
         return m_shotSolution;
+    }
+
+    public void increaseLookahead() {
+
+        m_lookaheadTime.set(m_lookaheadTime.getAsDouble() + LOOKAHEAD_INCREMENT);
+    }
+
+    public void decreaseLookahead() {
+
+        m_lookaheadTime.set(Math.max(0, m_lookaheadTime.getAsDouble() - LOOKAHEAD_INCREMENT));
     }
 }

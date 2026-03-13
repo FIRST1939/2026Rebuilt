@@ -23,6 +23,7 @@ import java.util.function.Supplier;
 
 import frc.robot.commands.intake.RunPivotAndRollerAuto;
 import frc.robot.subsystems.shooter.ShooterSolutionFinder;
+import frc.robot.util.ShotSolver;
 
 public class QuickShotBindings {
 
@@ -53,9 +54,10 @@ public class QuickShotBindings {
             Intake intake,
             Spindexer spindexer,
             Feeder feeder,
-            Shooter shooter) {
+            Shooter shooter,
+            ShotSolver shotSolver) {
 
-         quickShotMode.and(controller.leftBumper()).toggleOnTrue(new FollowShooterSetpoints(shooter,
+         quickShotMode.and(controller.x()).toggleOnTrue(new FollowShooterSetpoints(shooter,
                  m_flywheelRPM::getAsDouble,
                  m_hoodPosition::getAsDouble)
         .finallyDo(() -> {
@@ -63,6 +65,18 @@ public class QuickShotBindings {
             shooter.setFlywheelPercentage(0);
         })
         );
+
+        // Left bumper: follow ShotSolver solution for testing
+        quickShotMode.and(controller.leftBumper()).toggleOnTrue(new FollowShooterSetpoints(shooter,
+                () -> shotSolver.getShotSolution().flywheelRPM,
+                () -> shotSolver.getShotSolution().hoodPositionRotations)
+        .finallyDo(() -> {
+            shooter.setHoodPosition(0);
+            shooter.setFlywheelPercentage(0);
+        })
+        );
+
+        
 
         quickShotMode.and(controller.leftTrigger()).whileTrue(
             ShootSequence.create(
@@ -106,6 +120,16 @@ public class QuickShotBindings {
         //);
 
     
+        // Right bumper: increase lookahead time by 0.01
+        quickShotMode.and(controller.rightBumper()).onTrue(
+            Commands.runOnce(() -> shotSolver.increaseLookahead())
+        );
+
+        // A button: decrease lookahead time by 0.01
+        quickShotMode.and(controller.a()).onTrue(
+            Commands.runOnce(() -> shotSolver.decreaseLookahead())
+        );
+
             // Y button: static shot — spin up flywheel + hood, run feeder and spindexer, all while held
         //Test: Hold Y to fire a static shot at fixed RPM/hood. Release to stop everything.
         quickShotMode.and(controller.y()).whileTrue(
