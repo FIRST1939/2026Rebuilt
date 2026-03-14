@@ -54,6 +54,7 @@ public class RobotContainer {
     private final Climber m_climber;
 
     private final ShotSolver m_shotSolver;
+      private final ShotLogger m_shotLogger;
     private final LoggedDashboardChooser<Command> m_autoSelector;
 
     private enum OpModes {
@@ -133,6 +134,7 @@ public class RobotContainer {
 
         m_shotSolver = new ShotSolver();
 
+        m_shotLogger = new ShotLogger(m_feeder);
         configureNamedCommands();
         m_autoSelector = new LoggedDashboardChooser<>("Auto Selector", AutoBuilder.buildAutoChooser());
         
@@ -591,6 +593,10 @@ public class RobotContainer {
         m_shotSolver.calculateShotSolution(m_drive.getPose(), m_drive.getChassisSpeeds());
     }
     
+        public void updateShotLogger() {
+
+        m_shotLogger.update();
+    }
     public void checkHubAlignment() {
 
         double error = Math.abs(m_drive.getRotation().getDegrees() - m_shotSolver.getShotSolution().aimHeading.getDegrees());

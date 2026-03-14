@@ -103,7 +103,9 @@ public class ShotSolver {
         double lookaheadTime = 0.1;
         //ShooterParams staticSolution getShotShotSolition(robotPose);
 
-        Pose2d futureRobotPose = findFuturePose(robotPose, robotSpeeds, lookaheadTime + Constants.kTimeOfFlight );
+        Pose2d futureRobotPose = findFuturePose(robotPose, robotSpeeds, lookaheadTime + Constants.kTimeOfFlight);
+        Logger.recordOutput("ShotSolver/FutureXPose", futureRobotPose.getX());
+        Logger.recordOutput("ShotSolver/FutureYPose", futureRobotPose.getY());
 
         // Compute future shooter position
         Translation2d futureRobotPosition = futureRobotPose.getTranslation();
@@ -126,11 +128,11 @@ public class ShotSolver {
         // Vector used for physics + aiming
         Translation2d shooterToTarget = Util.getHubPosition().minus(shooterPosition);
 
-        if (shooterToTargetDistance < 1e-3 || shooterToTarget.getNorm() < 1e-3) {
+        // if (shooterToTargetDistance < 1e-3 || shooterToTarget.getNorm() < 1e-3) {
             
-            m_shotSolution = new ShotSolution(0, 0, robotPose.getRotation());
-            return;
-        }
+        //     m_shotSolution = new ShotSolution(0, 0, robotPose.getRotation());
+        //     return;
+        // }
 
         ShooterParams shooterToTargetParams = kShooterMap.get(shooterToTargetDistance);
 
@@ -146,7 +148,9 @@ public class ShotSolver {
         // ShooterParams compensatedParams = kShooterMap.get(virtualDistance);
 
         Rotation2d aimHeading = shooterToTarget.getAngle().plus(new Rotation2d(Math.PI));
-
+        Logger.recordOutput("ShotSolver/kFlyWheelRPM", shooterToTargetParams.kFlywheelRPM);
+        Logger.recordOutput("ShotSolver/kHoodPositionRotations", shooterToTargetParams.kHoodPositionRotations);
+        
         m_shotSolution = new ShotSolution(
             shooterToTargetParams.kFlywheelRPM,
             shooterToTargetParams.kHoodPositionRotations,

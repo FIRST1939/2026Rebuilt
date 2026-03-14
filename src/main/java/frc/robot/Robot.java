@@ -47,6 +47,7 @@ public class Robot extends LoggedRobot {
         CommandScheduler.getInstance().run();
 
         m_robotContainer.updateShotSolution();
+        m_robotContainer.updateShotLogger();
         m_robotContainer.logControllerError();
         m_robotContainer.checkHubAlignment();
 
