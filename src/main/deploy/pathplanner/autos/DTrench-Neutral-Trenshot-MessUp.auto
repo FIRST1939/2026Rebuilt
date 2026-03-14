@@ -11,12 +11,6 @@
           }
         },
         {
-          "type": "path",
-          "data": {
-            "pathName": null
-          }
-        },
-        {
           "type": "race",
           "data": {
             "commands": [
@@ -78,6 +72,6 @@
     }
   },
   "resetOdom": true,
-  "folder": null,
+  "folder": "DTrench_Starting",
   "choreoAuto": false
 }
