@@ -8,6 +8,8 @@ import frc.robot.commands.intake.IntakeStateManager.State;
 
 public class AgitateIntake extends RepeatCommand {
     
+    private final IntakeStateManager m_intakeStateManager;
+
     public AgitateIntake(Intake intake, IntakeStateManager intakeStateManager) {
 
         super(
@@ -20,5 +22,13 @@ public class AgitateIntake extends RepeatCommand {
                 Commands.waitSeconds(0.5)
             )
         );
+
+        m_intakeStateManager = intakeStateManager;
+    }
+
+    @Override
+    public void end (boolean interrupted) {
+
+        m_intakeStateManager.setGoalState(State.EXTENDED);
     }
 }

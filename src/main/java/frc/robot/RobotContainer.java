@@ -294,7 +294,8 @@ public class RobotContainer {
 
         matchMode.and(m_operatorController.a()).onTrue(new DeepAgitateIntake(m_intake, m_intakeStateManager));
         
-        matchMode.and(m_operatorController.rightBumper()).whileTrue(Commands.runOnce(() -> m_intakeStateManager.setGoalState(State.INTAKING)));
+        matchMode.and(m_operatorController.rightBumper()).onTrue(Commands.runOnce(() -> m_intakeStateManager.setGoalState(State.INTAKING)));
+        matchMode.and(m_operatorController.rightBumper()).onFalse(Commands.runOnce(() -> m_intakeStateManager.setGoalState(State.EXTENDED)));
         //Deploy+Roller
 
         matchMode.and(m_operatorController.b()).whileTrue(new RunSpindexerVelocity(m_spindexer, Constants.kSpindexerReverseVelocity));
