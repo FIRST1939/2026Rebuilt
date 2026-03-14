@@ -317,10 +317,7 @@ public class RobotContainer {
     public void configureNamedCommands () {
         
         new EventTrigger("RunPivotAndRoller").onTrue(
-            new RunPivotAndRollerAuto(
-                m_intake, 
-                Constants.kPivotOutSetpoint, 
-                () ->  (Constants.kBaseRollerIntakeVelocity)));
+            Commands.runOnce(() -> m_intakeStateManager.setGoalState(State.INTAKING)));
         
         NamedCommands.registerCommand("RegressionShot", 
             new RunFlywheelAndHood(
@@ -351,7 +348,7 @@ public class RobotContainer {
             () -> Constants.kTowerHoodSetpoint));
 
         NamedCommands.registerCommand("IdleIntake",
-         (new IdleIntakeAuto(m_intake)));
+         Commands.runOnce(() -> m_intakeStateManager.setGoalState(State.IDLE)));
 
         NamedCommands.registerCommand("FeedShooter",
          (new RunSpindexerVelocity(m_spindexer, Constants.kSpindexerVelocity))
