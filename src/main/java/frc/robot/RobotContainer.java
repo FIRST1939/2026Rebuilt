@@ -54,6 +54,7 @@ public class RobotContainer {
 
     private final ShotSolver m_shotSolver;
     private final LoggedDashboardChooser<Command> m_autoSelector;
+    private Command m_intakeStateManager;
 
     private enum OpModes {
         MATCH,
@@ -167,35 +168,33 @@ public class RobotContainer {
 
         Trigger matchMode = new Trigger(() -> m_opModeSelector.get() == OpModes.MATCH);
 
-        if (matchMode.getAsBoolean()) {
+        Command defaultDriveCommand = DriveCommands.joystickDrive(
+            m_drive,
+            () -> -m_driverController.getLeftY(),
+            () -> -m_driverController.getLeftX(),
+            () -> -m_driverController.getRightX()
+        ).onlyWhile(matchMode);
 
-            m_drive.setDefaultCommand(
-                DriveCommands.joystickDrive(
-                    m_drive,
-                    () -> -m_driverController.getLeftY(),
-                    () -> -m_driverController.getLeftX(),
-                    () -> -m_driverController.getRightX()
-                )
-            );
+        m_intakeStateManager = new IntakeStateManager(m_intake).onlyWhile(matchMode);
+
+        if (matchMode.getAsBoolean()) { 
+            
+            m_drive.setDefaultCommand(defaultDriveCommand); 
+            m_intake.setDefaultCommand(m_intakeStateManager);
         }
 
         matchMode.onTrue(
-            Commands.runOnce(() ->
-                m_drive.setDefaultCommand(
-                    DriveCommands.joystickDrive(
-                        m_drive,
-                        () -> -m_driverController.getLeftY(),
-                        () -> -m_driverController.getLeftX(),
-                        () -> -m_driverController.getRightX()
-                    )
-                )
-            )
+            Commands.runOnce(() -> {
+                m_drive.setDefaultCommand(defaultDriveCommand);
+                m_intake.setDefaultCommand(m_intakeStateManager);
+            })
         );
 
         matchMode.onFalse(
-            Commands.runOnce(() ->
-                m_drive.removeDefaultCommand()
-            )
+            Commands.runOnce(() -> {
+                m_drive.removeDefaultCommand();
+                m_intake.removeDefaultCommand();
+            })
         );
 
         matchMode.and(m_driverController.rightBumper()).onTrue(
@@ -250,27 +249,6 @@ public class RobotContainer {
         matchMode.and(m_driverController.x()).onTrue(Commands.runOnce(m_drive::stopWithX, m_drive));
         matchMode.and(m_driverController.povUp()).toggleOnTrue(new RaiseClimberToHeight(m_climber, Constants.kRaisingClimberSetpoint, Constants.kRaisingClimberPercentage));
         matchMode.and(m_driverController.povDown()).toggleOnTrue(new LowerClimberToHeight(m_climber, Constants.kLoweringClimberSetpoint, Constants.kLoweringClimberPercentage));
-
-        if (matchMode.getAsBoolean()) {
-
-            m_intake.setDefaultCommand(
-                new IntakeStateManager(m_intake)
-            );
-        }
-
-        matchMode.onTrue(
-            Commands.runOnce(() ->
-                m_intake.setDefaultCommand(
-                    new IntakeStateManager(m_intake)
-                )
-            )
-        );
-
-        matchMode.onFalse(
-            Commands.runOnce(() ->
-                m_intake.removeDefaultCommand()
-            )
-        );
 
         matchMode.and(m_operatorController.povRight()).whileTrue(
             new RunFlywheelAndHood(m_shooter, 
