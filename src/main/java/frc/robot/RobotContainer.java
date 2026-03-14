@@ -285,7 +285,7 @@ public class RobotContainer {
         matchMode.and(m_operatorController.leftBumper()).onTrue(Commands.runOnce(() -> m_intakeStateManager.setGoalState(State.IDLE)));
         //Pivot Intake In
 
-        matchMode.and(m_operatorController.start()).onTrue(new ZeroAndIdleIntake(m_intake)); 
+        matchMode.and(m_operatorController.start()).onTrue(new ZeroAndIdleIntake(m_intake, m_intakeStateManager)); 
         //Pivot Intake Stow
 
         //matchMode.and(m_operatorController.a()).whileTrue(new AgitateIntake(m_intake, Constants.kAgitateIntakeInterval, Constants.kRollerAgitateVelocity));
