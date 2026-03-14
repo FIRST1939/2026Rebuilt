@@ -11,8 +11,8 @@ public class DeepAgitateIntake extends SequentialCommandGroup {
     public DeepAgitateIntake(Intake intake, IntakeStateManager intakeStateManager) {
 
         super(
-            Commands.runOnce(() -> intakeStateManager.setOverrideGoal(State.AGITATING_IN)),
-            Commands.waitUntil(() -> intake.isPivotAtSetpoint(Constants.kPivotLightSetpoint)),
+            Commands.runOnce(() -> intakeStateManager.setOverrideGoal(State.DEEP_AGITATE_IN)),
+            Commands.waitUntil(() -> intake.isPivotAtSetpoint(Constants.kPivotIdleSetpoint)),
             Commands.waitSeconds(0.5),
             Commands.runOnce(() -> intakeStateManager.setOverrideGoal(State.AGITATING_OUT)),
             Commands.waitUntil(() -> intake.isPivotAtSetpoint(Constants.kPivotOutSetpoint)),

@@ -27,7 +27,7 @@ public final class Constants {
 
     public static final double kFeederVelocity = 1500.0;
     public static final double kPivotOutSetpoint = 0.35;
-    public static final double kPivotLightSetpoint = 0.2; // 0.275
+    public static final double kPivotLightSetpoint = 0.25; // 0.275
     public static final double kPivotInSetpoint = 0.1;
     
     public static final double kPivotZeroPercentage = -0.25;

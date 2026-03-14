@@ -19,6 +19,7 @@ public class IntakeStateManager extends Command {
         INTAKING,
         AGITATING_IN,
         AGITATING_OUT,
+        DEEP_AGITATE_IN,
         REVERSING
     }
 
@@ -61,11 +62,11 @@ public class IntakeStateManager extends Command {
             m_intake.setRollerPercentage(0);
         } else if (goalState == State.EXTENDED) {
 
-            m_intake.setPivotPosition(Constants.kPivotOutSetpoint);
+            m_intake.setPivotPercentage(0.1);
             m_intake.setRollerPercentage(0);
         } else if (goalState == State.INTAKING) {
 
-            m_intake.setPivotPosition(Constants.kPivotOutSetpoint);
+            m_intake.setPivotPercentage(0.25);
             m_intake.setRollerVelocity(Constants.kBaseRollerIntakeVelocity);
         } else if (goalState == State.AGITATING_IN) {
 
@@ -74,6 +75,10 @@ public class IntakeStateManager extends Command {
         } else if (goalState == State.AGITATING_OUT) {
 
             m_intake.setPivotPosition(Constants.kPivotOutSetpoint);
+            m_intake.setRollerVelocity(Constants.kRollerAgitateVelocity);
+        } else if (goalState == State.DEEP_AGITATE_IN) {
+
+            m_intake.setPivotPosition(Constants.kPivotIdleSetpoint);
             m_intake.setRollerVelocity(Constants.kRollerAgitateVelocity);
         } else if (goalState == State.REVERSING) {
 

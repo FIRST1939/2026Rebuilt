@@ -131,10 +131,10 @@ public class RobotContainer {
         }
 
         m_shotSolver = new ShotSolver();
+        m_intakeStateManager = new IntakeStateManager(m_intake);
 
         configureNamedCommands();
         m_autoSelector = new LoggedDashboardChooser<>("Auto Selector", AutoBuilder.buildAutoChooser());
-        m_intakeStateManager = new IntakeStateManager(m_intake);
         
         m_opModeSelector.addDefaultOption("Match", OpModes.MATCH);
         m_opModeSelector.addOption("Percent", OpModes.PERCENT);
