@@ -59,7 +59,7 @@
     "rotation": 90.0
   },
   "reversed": false,
-  "folder": "Hub-Outpost-Depot-Climb",
+  "folder": "Hub-Starting-Paths",
   "idealStartingState": {
     "velocity": 0,
     "rotation": 142.0

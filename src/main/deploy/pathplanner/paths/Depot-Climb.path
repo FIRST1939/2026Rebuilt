@@ -64,7 +64,7 @@
     "rotation": 90.0
   },
   "reversed": false,
-  "folder": "Hub-Outpost-Depot-Climb",
+  "folder": "DTrench-Starting-Paths",
   "idealStartingState": {
     "velocity": 0,
     "rotation": 180.0

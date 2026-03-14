@@ -3,15 +3,14 @@
   "robotLength": 0.855218,
   "holonomicMode": true,
   "pathFolders": [
-    "DTrench-Middle",
-    "DTrench-Middle-Climb",
-    "Hub-Outpost-Depot-Climb",
-    "New Folder",
-    "Mess-Up-Neutral",
-    "OTrench-Outpost-Tower"
+    "Hub-Starting-Paths",
+    "DTrench-Starting-Paths",
+    "OTrench-Starting-Paths"
   ],
   "autoFolders": [
-    "Comp-Auto"
+    "DTrench_Starting",
+    "Hub-Starting",
+    "OTrench_Starting"
   ],
   "defaultMaxVel": 3.0,
   "defaultMaxAccel": 3.0,
