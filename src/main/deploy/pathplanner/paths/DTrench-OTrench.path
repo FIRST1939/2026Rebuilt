@@ -113,9 +113,9 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "RunPivotAndRoller",
+      "name": "Intake",
       "waypointRelativePos": 2.201775888826185,
-      "endWaypointRelativePos": 3.0,
+      "endWaypointRelativePos": null,
       "command": null
     }
   ],

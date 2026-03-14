@@ -13,7 +13,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": null
+            "pathName": "Neutral-TrenchShot"
           }
         },
         {
@@ -54,12 +54,6 @@
                                   "type": "named",
                                   "data": {
                                     "name": "FeedShooter"
-                                  }
-                                },
-                                {
-                                  "type": "named",
-                                  "data": {
-                                    "name": "AgitateIntake"
                                   }
                                 }
                               ]

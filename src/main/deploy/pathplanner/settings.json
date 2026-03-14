@@ -6,13 +6,10 @@
     "DTrench-Middle",
     "DTrench-Middle-Climb",
     "Hub-Outpost-Depot-Climb",
-    "New Folder",
     "Mess-Up-Neutral",
     "OTrench-Outpost-Tower"
   ],
-  "autoFolders": [
-    "Comp-Auto"
-  ],
+  "autoFolders": [],
   "defaultMaxVel": 3.0,
   "defaultMaxAccel": 3.0,
   "defaultMaxAngVel": 540.0,
