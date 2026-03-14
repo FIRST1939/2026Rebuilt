@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.commands.intake.RunPivot;
 import frc.robot.commands.intake.RunPivotAndRollerAuto;
-import frc.robot.commands.intake.RunRoller;
+import frc.robot.commands.intake.RunRollerVelocity;
 
 public class QuickIntakeConfigBindings {
 
@@ -131,7 +131,7 @@ public class QuickIntakeConfigBindings {
 
         // Y button: run roller while held
         intakeConfigMode.and(controller.y()).whileTrue(
-            new RunRoller(intake, m_rollerSpeed::getAsDouble)
+            new RunRollerVelocity(intake, m_rollerSpeed::getAsDouble)
         );
     }
 

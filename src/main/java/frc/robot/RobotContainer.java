@@ -289,7 +289,7 @@ public class RobotContainer {
         matchMode.and(m_operatorController.y()).whileTrue(new RunFeederVelocity(m_feeder, Constants.kFeederReverseVelocity));
         //Feeder Reverse
 
-        matchMode.and(m_operatorController.x()).whileTrue(new RunRollerVelocity(m_intake, Constants.kRollerReverseVelocity));
+        matchMode.and(m_operatorController.x()).whileTrue(new RunRollerVelocity(m_intake, () -> Constants.kRollerReverseVelocity));
         //Roller Reverse
     }
 

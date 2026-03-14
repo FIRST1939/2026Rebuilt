@@ -10,7 +10,7 @@ public class AgitateOnce extends SequentialCommandGroup {
         
         super(
             new RunAgitatePivot(intake, Constants.kPivotLightSetpoint, () -> Constants.kRollerAgitateVelocity).withTimeout(0.5),
-            new RunRoller(intake, () -> Constants.kRollerAgitateVelocity).withTimeout(0.5),
+            new RunRollerVelocity(intake, () -> Constants.kRollerAgitateVelocity).withTimeout(0.5),
             new RunAgitatePivot(intake, Constants.kPivotOutSetpoint, () -> Constants.kRollerAgitateVelocity).withTimeout(0.5)
         );
     }

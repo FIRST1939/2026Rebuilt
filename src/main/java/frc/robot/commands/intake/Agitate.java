@@ -12,9 +12,9 @@ public class Agitate extends RepeatCommand {
         super(
             Commands.sequence(
                 new RunAgitatePivot(intake, Constants.kPivotLightSetpoint, () -> Constants.kRollerAgitateVelocity),
-                new RunRoller(intake, () -> Constants.kRollerAgitateVelocity).withTimeout(0.5),
+                new RunRollerVelocity(intake, () -> Constants.kRollerAgitateVelocity).withTimeout(0.5),
                 new RunAgitatePivot(intake, Constants.kPivotOutSetpoint, () -> Constants.kRollerAgitateVelocity),
-                new RunRoller(intake, () -> Constants.kRollerAgitateVelocity).withTimeout(pumpInterval)
+                new RunRollerVelocity(intake, () -> Constants.kRollerAgitateVelocity).withTimeout(pumpInterval)
             )
         );
     }
