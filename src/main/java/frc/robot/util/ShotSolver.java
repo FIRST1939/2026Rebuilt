@@ -80,16 +80,24 @@ public class ShotSolver {
 
         return futureRobotPose;
     };
-
+    // public ShooterParams getShotSolution(Pose2d robotPose)
+    // {
+    //     Translation2d shooterToTarget = Util.getHubPosition().minus(shooterPosition);
+    //     ShooterParams shooterToTargetParams = kShooterMap.get(shooterToTargetDistance);
+    //     return shooterToTargetParams;
+    // }
+    
     public void calculateShotSolution(Pose2d robotPose, ChassisSpeeds robotSpeeds) {
 
         // Translation2d robotVelocity = new Translation2d(
         //     robotSpeeds.vxMetersPerSecond,
         //     robotSpeeds.vyMetersPerSecond);
-
         // Predict future robot pose
+
         double lookaheadTime = 0.1;
-        Pose2d futureRobotPose = findFuturePose(robotPose, robotSpeeds, lookaheadTime + Constants.kTimeOfFlight);
+        //ShooterParams staticSolution getShotShotSolition(robotPose);
+
+        Pose2d futureRobotPose = findFuturePose(robotPose, robotSpeeds, lookaheadTime + Constants.kTimeOfFlight );
 
         // Compute future shooter position
         Translation2d futureRobotPosition = futureRobotPose.getTranslation();
@@ -102,8 +110,11 @@ public class ShotSolver {
         ).getTranslation();
 
         // Distance used for shooter map
+
+        
         Translation2d robotCenterToTarget = Util.getHubPosition().minus(futureRobotPosition);
-        double shooterToTargetDistance = robotCenterToTarget.getNorm() + Inches.of(12).in(Meters);
+        
+        double shooterToTargetDistance = robotCenterToTarget.getNorm();
 
         // Vector used for physics + aiming
         Translation2d shooterToTarget = Util.getHubPosition().minus(shooterPosition);
