@@ -171,12 +171,9 @@ public class RobotContainer {
         ).onlyWhile(matchMode);
 
         Command defaultIntakeCommand = m_intakeStateManager.onlyWhile(matchMode);
-
-        if (matchMode.getAsBoolean()) { 
-            
-            m_drive.setDefaultCommand(defaultDriveCommand); 
-            m_intake.setDefaultCommand(defaultIntakeCommand);
-        }
+        
+        m_drive.setDefaultCommand(defaultDriveCommand); 
+        m_intake.setDefaultCommand(defaultIntakeCommand);
 
         matchMode.onTrue(
             Commands.runOnce(() -> {
