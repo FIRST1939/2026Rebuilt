@@ -168,7 +168,7 @@ public class RobotContainer {
         Trigger matchMode = new Trigger(() -> m_opModeSelector.get() == OpModes.MATCH);
 
         if (matchMode.getAsBoolean()) {
-            
+
             m_drive.setDefaultCommand(
                 DriveCommands.joystickDrive(
                     m_drive,
@@ -250,6 +250,27 @@ public class RobotContainer {
         matchMode.and(m_driverController.x()).onTrue(Commands.runOnce(m_drive::stopWithX, m_drive));
         matchMode.and(m_driverController.povUp()).toggleOnTrue(new RaiseClimberToHeight(m_climber, Constants.kRaisingClimberSetpoint, Constants.kRaisingClimberPercentage));
         matchMode.and(m_driverController.povDown()).toggleOnTrue(new LowerClimberToHeight(m_climber, Constants.kLoweringClimberSetpoint, Constants.kLoweringClimberPercentage));
+
+        if (matchMode.getAsBoolean()) {
+
+            m_intake.setDefaultCommand(
+                new IntakeStateManager(m_intake)
+            );
+        }
+
+        matchMode.onTrue(
+            Commands.runOnce(() ->
+                m_intake.setDefaultCommand(
+                    new IntakeStateManager(m_intake)
+                )
+            )
+        );
+
+        matchMode.onFalse(
+            Commands.runOnce(() ->
+                m_intake.removeDefaultCommand()
+            )
+        );
 
         matchMode.and(m_operatorController.povRight()).whileTrue(
             new RunFlywheelAndHood(m_shooter, 
