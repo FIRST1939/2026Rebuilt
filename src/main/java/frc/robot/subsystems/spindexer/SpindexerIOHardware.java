@@ -63,6 +63,7 @@ public class SpindexerIOHardware implements SpindexerIO {
     @Override
     public void setSpindexerVelocity (double velocity) {
         
-        m_spindexerController.setSetpoint(velocity, ControlType.kVelocity);
+        //m_spindexerController.setSetpoint(velocity, ControlType.kVelocity);
+        m_motor.set(1.0);
     }
 }

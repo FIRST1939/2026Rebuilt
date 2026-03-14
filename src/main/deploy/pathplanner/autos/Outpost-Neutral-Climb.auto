@@ -103,6 +103,6 @@
     }
   },
   "resetOdom": true,
-  "folder": "Comp-Auto",
+  "folder": null,
   "choreoAuto": false
 }
