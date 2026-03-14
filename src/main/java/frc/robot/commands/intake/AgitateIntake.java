@@ -6,9 +6,11 @@ import frc.robot.Constants;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.commands.intake.IntakeStateManager.State;
 
-public class Agitate extends RepeatCommand {
+public class AgitateIntake extends RepeatCommand {
     
-    public Agitate(Intake intake, IntakeStateManager intakeStateManager) {
+    private final IntakeStateManager m_intakeStateManager;
+
+    public AgitateIntake(Intake intake, IntakeStateManager intakeStateManager) {
 
         super(
             Commands.sequence(
@@ -20,5 +22,13 @@ public class Agitate extends RepeatCommand {
                 Commands.waitSeconds(0.5)
             )
         );
+
+        m_intakeStateManager = intakeStateManager;
+    }
+
+    @Override
+    public void end (boolean interrupted) {
+
+        m_intakeStateManager.setGoalState(State.EXTENDED);
     }
 }

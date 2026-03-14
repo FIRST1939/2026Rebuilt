@@ -18,7 +18,8 @@ public class IntakeStateManager extends Command {
         EXTENDED,
         INTAKING,
         AGITATING_IN,
-        AGITATING_OUT
+        AGITATING_OUT,
+        REVERSING
     }
 
     public IntakeStateManager (Intake intake) {
@@ -74,6 +75,9 @@ public class IntakeStateManager extends Command {
 
             m_intake.setPivotPosition(Constants.kPivotOutSetpoint);
             m_intake.setRollerVelocity(Constants.kRollerAgitateVelocity);
+        } else if (goalState == State.REVERSING) {
+
+            m_intake.setRollerVelocity(Constants.kRollerReverseVelocity);
         }
     }
 }

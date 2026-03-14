@@ -6,9 +6,9 @@ import frc.robot.Constants;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.commands.intake.IntakeStateManager.State;
 
-public class DeepAgitate extends SequentialCommandGroup {
+public class DeepAgitateIntake extends SequentialCommandGroup {
     
-    public DeepAgitate(Intake intake, IntakeStateManager intakeStateManager) {
+    public DeepAgitateIntake(Intake intake, IntakeStateManager intakeStateManager) {
 
         super(
             Commands.runOnce(() -> intakeStateManager.setOverrideGoal(State.AGITATING_IN)),
