@@ -68,21 +68,28 @@ public class ShotSolver {
 
     private ShotSolution m_shotSolution;
 
+    public Pose2d findFuturePose(Pose2d robotPose, ChassisSpeeds robotSpeeds, double lookaheadTime) {
+    
+        Pose2d futureRobotPose = robotPose.exp(
+            new Twist2d(
+                robotSpeeds.vxMetersPerSecond * lookaheadTime,
+                robotSpeeds.vyMetersPerSecond * lookaheadTime,
+                robotSpeeds.omegaRadiansPerSecond * lookaheadTime
+            )
+        );
+
+        return futureRobotPose;
+    };
+
     public void calculateShotSolution(Pose2d robotPose, ChassisSpeeds robotSpeeds) {
 
-        Translation2d robotVelocity = new Translation2d(
-            robotSpeeds.vxMetersPerSecond,
-            robotSpeeds.vyMetersPerSecond);
+        // Translation2d robotVelocity = new Translation2d(
+        //     robotSpeeds.vxMetersPerSecond,
+        //     robotSpeeds.vyMetersPerSecond);
 
         // Predict future robot pose
         double lookaheadTime = 0.1;
-        Pose2d futureRobotPose = robotPose.exp(
-            new Twist2d(
-                (robotSpeeds.vxMetersPerSecond * lookaheadTime) + (robotSpeeds.vxMetersPerSecond * Constants.kTimeOfFlight),
-                (robotSpeeds.vyMetersPerSecond * lookaheadTime) + (robotSpeeds.vyMetersPerSecond * Constants.kTimeOfFlight),
-                (robotSpeeds.omegaRadiansPerSecond * lookaheadTime) + (robotSpeeds.omegaRadiansPerSecond * Constants.kTimeOfFlight)
-            )
-        );
+        Pose2d futureRobotPose = findFuturePose(robotPose, robotSpeeds, lookaheadTime + Constants.kTimeOfFlight);
 
         // Compute future shooter position
         Translation2d futureRobotPosition = futureRobotPose.getTranslation();
@@ -96,35 +103,35 @@ public class ShotSolver {
 
         // Distance used for shooter map
         Translation2d robotCenterToTarget = Util.getHubPosition().minus(futureRobotPosition);
-        double rawDistance = robotCenterToTarget.getNorm() + Inches.of(12).in(Meters);
+        double shooterToTargetDistance = robotCenterToTarget.getNorm() + Inches.of(12).in(Meters);
 
         // Vector used for physics + aiming
         Translation2d shooterToTarget = Util.getHubPosition().minus(shooterPosition);
 
-        if (rawDistance < 1e-3 || shooterToTarget.getNorm() < 1e-3) {
+        if (shooterToTargetDistance < 1e-3 || shooterToTarget.getNorm() < 1e-3) {
             
             m_shotSolution = new ShotSolution(0, 0, robotPose.getRotation());
             return;
         }
 
-        ShooterParams rawParams = kShooterMap.get(rawDistance);
+        ShooterParams shooterToTargetParams = kShooterMap.get(shooterToTargetDistance);
 
-        double idealHorizontalSpeed = rawDistance / rawParams.kTimeOfFlight;
+        // double idealHorizontalSpeed = rawDistance / rawParams.kTimeOfFlight;
 
-        Translation2d idealShotDirection = shooterToTarget.div(shooterToTarget.getNorm());
-        Translation2d idealShotVector = idealShotDirection.times(idealHorizontalSpeed);
-        Translation2d compensatedShotVector = idealShotVector.minus(robotVelocity);
+        // Translation2d idealShotDirection = shooterToTarget.div(shooterToTarget.getNorm());
+        // Translation2d idealShotVector = idealShotDirection.times(idealHorizontalSpeed);
+        // Translation2d compensatedShotVector = idealShotVector.minus(robotVelocity);
 
-        double compensatedSpeed = compensatedShotVector.getNorm();
-        double virtualDistance = rawDistance * (compensatedSpeed / idealHorizontalSpeed);
+        // double compensatedSpeed = compensatedShotVector.getNorm();
+        // double virtualDistance = rawDistance * (compensatedSpeed / idealHorizontalSpeed);
 
-        ShooterParams compensatedParams = kShooterMap.get(virtualDistance);
+        // ShooterParams compensatedParams = kShooterMap.get(virtualDistance);
 
-        Rotation2d aimHeading = compensatedShotVector.getAngle().plus(new Rotation2d(Math.PI));
+        Rotation2d aimHeading = shooterToTarget.getAngle().plus(new Rotation2d(Math.PI));
 
         m_shotSolution = new ShotSolution(
-            compensatedParams.kFlywheelRPM,
-            compensatedParams.kHoodPositionRotations,
+            shooterToTargetParams.kFlywheelRPM,
+            shooterToTargetParams.kHoodPositionRotations,
             aimHeading);
     }
 
@@ -133,3 +140,4 @@ public class ShotSolver {
         return m_shotSolution;
     }
 }
+
