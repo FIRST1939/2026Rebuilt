@@ -54,7 +54,7 @@ public class RobotContainer {
 
     private final ShotSolver m_shotSolver;
     private final LoggedDashboardChooser<Command> m_autoSelector;
-    private Command m_intakeStateManager;
+    private final IntakeStateManager m_intakeStateManager;
 
     private enum OpModes {
         MATCH,
@@ -135,6 +135,7 @@ public class RobotContainer {
 
         configureNamedCommands();
         m_autoSelector = new LoggedDashboardChooser<>("Auto Selector", AutoBuilder.buildAutoChooser());
+        m_intakeStateManager = new IntakeStateManager(m_intake);
         
         m_opModeSelector.addDefaultOption("Match", OpModes.MATCH);
         m_opModeSelector.addOption("Percent", OpModes.PERCENT);
@@ -175,18 +176,18 @@ public class RobotContainer {
             () -> -m_driverController.getRightX()
         ).onlyWhile(matchMode);
 
-        m_intakeStateManager = new IntakeStateManager(m_intake).onlyWhile(matchMode);
+        Command defaultIntakeCommand = m_intakeStateManager.onlyWhile(matchMode);
 
         if (matchMode.getAsBoolean()) { 
             
             m_drive.setDefaultCommand(defaultDriveCommand); 
-            m_intake.setDefaultCommand(m_intakeStateManager);
+            m_intake.setDefaultCommand(defaultIntakeCommand);
         }
 
         matchMode.onTrue(
             Commands.runOnce(() -> {
                 m_drive.setDefaultCommand(defaultDriveCommand);
-                m_intake.setDefaultCommand(m_intakeStateManager);
+                m_intake.setDefaultCommand(defaultIntakeCommand);
             })
         );
 
