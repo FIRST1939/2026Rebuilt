@@ -286,7 +286,7 @@ public class RobotContainer {
         (m_operatorController.rightTrigger()).whileTrue((
             new RunSpindexerVelocity(m_spindexer, Constants.kSpindexerVelocity))
             .alongWith(new RunFeederVelocity(m_feeder, Constants.kFeederVelocity))
-            .alongWith(new RepeatCommand(new AgitateOnce(m_intake))));
+            .alongWith(new Agitate(m_intake, m_intakeStateManager)));
         //Feed Into Shooter Command
 
         matchMode.and(m_operatorController.leftBumper()).onTrue(Commands.runOnce(() -> m_intakeStateManager.setGoalState(State.IDLE)));
@@ -358,7 +358,7 @@ public class RobotContainer {
         NamedCommands.registerCommand("FeedShooter",
          (new RunSpindexerVelocity(m_spindexer, Constants.kSpindexerVelocity))
             .alongWith(new RunFeederVelocity(m_feeder, Constants.kFeederVelocity))
-            .alongWith(new Agitate(m_intake, Constants.kAutoAgitateIntakeInterval)));
+            .alongWith(new Agitate(m_intake, m_intakeStateManager)));
             }
         
        

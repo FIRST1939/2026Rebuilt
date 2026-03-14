@@ -4,17 +4,20 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import frc.robot.Constants;
 import frc.robot.subsystems.intake.Intake;
+import frc.robot.commands.intake.IntakeStateManager.State;
 
 public class Agitate extends RepeatCommand {
     
-    public Agitate(Intake intake, double pumpInterval) {
+    public Agitate(Intake intake, IntakeStateManager intakeStateManager) {
 
         super(
             Commands.sequence(
-                new RunAgitatePivot(intake, Constants.kPivotLightSetpoint, () -> Constants.kRollerAgitateVelocity),
-                new RunRollerVelocity(intake, () -> Constants.kRollerAgitateVelocity).withTimeout(0.5),
-                new RunAgitatePivot(intake, Constants.kPivotOutSetpoint, () -> Constants.kRollerAgitateVelocity),
-                new RunRollerVelocity(intake, () -> Constants.kRollerAgitateVelocity).withTimeout(pumpInterval)
+                Commands.runOnce(() -> intakeStateManager.setGoalState(State.AGITATING_IN)),
+                Commands.waitUntil(() -> intake.isPivotAtSetpoint(Constants.kPivotLightSetpoint)),
+                Commands.waitSeconds(0.5),
+                Commands.runOnce(() -> intakeStateManager.setGoalState(State.AGITATING_OUT)),
+                Commands.waitUntil(() -> intake.isPivotAtSetpoint(Constants.kPivotOutSetpoint)),
+                Commands.waitSeconds(0.5)
             )
         );
     }

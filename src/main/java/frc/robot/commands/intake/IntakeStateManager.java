@@ -13,7 +13,9 @@ public class IntakeStateManager extends Command {
         STOWED,
         IDLE,
         EXTENDED,
-        INTAKING
+        INTAKING,
+        AGITATING_IN,
+        AGITATING_OUT
     }
 
     public IntakeStateManager (Intake intake) {
@@ -46,6 +48,14 @@ public class IntakeStateManager extends Command {
 
             m_intake.setPivotPosition(Constants.kPivotOutSetpoint);
             m_intake.setRollerVelocity(Constants.kBaseRollerIntakeVelocity);
+        } else if (m_goalState == State.AGITATING_IN) {
+
+            m_intake.setPivotPosition(Constants.kPivotLightSetpoint);
+            m_intake.setRollerVelocity(Constants.kRollerAgitateVelocity);
+        } else if (m_goalState == State.AGITATING_OUT) {
+
+            m_intake.setPivotPosition(Constants.kPivotOutSetpoint);
+            m_intake.setRollerVelocity(Constants.kRollerAgitateVelocity);
         }
     }
 }
