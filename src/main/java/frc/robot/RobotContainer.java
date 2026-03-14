@@ -157,7 +157,7 @@ public class RobotContainer {
         ExampleMatchBindings.configure(exampleMatchTrigger, m_operatorController, m_intake,m_shooter,m_feeder,m_spindexer,m_climber);
 
         Trigger quickShoTrigger = new Trigger(() -> m_opModeSelector.get() == OpModes.QUICKSHOT);
-        QuickShotBindings.configure(quickShoTrigger, m_operatorController, m_intake, m_spindexer, m_feeder, m_shooter, m_shotSolver);
+        QuickShotBindings.configure(quickShoTrigger, m_operatorController, m_driverController, m_drive, m_intake, m_spindexer, m_feeder, m_shooter, m_shotSolver);
 
 
         configureMatchBindings();

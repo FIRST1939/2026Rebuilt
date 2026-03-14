@@ -3,27 +3,31 @@ package frc.robot.bindings;
 import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 import frc.robot.Constants;
+import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.spindexer.Spindexer;
 import frc.robot.subsystems.feeder.Feeder;
 import frc.robot.subsystems.shooter.Shooter;
 
-
+import frc.robot.commands.drive.DriveCommands;
+import frc.robot.commands.intake.RunPivotAndRoller;
+import frc.robot.commands.intake.RunPivotAndRollerAuto;
+import frc.robot.commands.intake.RunPivot;
 import frc.robot.commands.shooter.FollowShooterSetpoints;
 import frc.robot.commands.shooter.RunFlywheelAndHood;
 import frc.robot.commands.shooter.ShootSequence;
 import frc.robot.commands.spindexer.RunSpindexerVelocity;
 import frc.robot.commands.feeder.RunFeederVelocity;
-import java.util.function.Supplier;
 
-import frc.robot.commands.intake.RunPivotAndRollerAuto;
 import frc.robot.subsystems.shooter.ShooterSolutionFinder;
 import frc.robot.util.ShotSolver;
+import frc.robot.util.Util;
 
 public class QuickShotBindings {
 
@@ -45,12 +49,15 @@ public class QuickShotBindings {
     private static final double ROLLER_VELOCITY = -1500.0;
     private static final double ROLLER_VELOCITY_INWARD = 1000.0;
     private static final double kPivotIdleSetpoint = 0.4;
+    private static final double DPAD_SLOW_SPEED = 0.5; // m/s for d-pad slow drive
 
 
 
     public static void configure(
             Trigger quickShotMode,
             CommandXboxController controller,
+            CommandXboxController driverController,
+            Drive drive,
             Intake intake,
             Spindexer spindexer,
             Feeder feeder,
@@ -108,17 +115,18 @@ public class QuickShotBindings {
                 MathUtil.clamp(m_hoodPosition.getAsDouble() - HOOD_INCREMENT, HOOD_MIN, HOOD_MAX)))
         );
 
-        
-        // Right trigger: pivot intake out and run intake roller while held
-        //quickShotMode.and(controller.rightTrigger()).whileTrue(
-        //    new RunPivotAndRoller(intake, Constants.kPivotOutSetpoint, () -> ROLLER_VELOCITY)
-        //);
+        // --- Operator intake bindings ---
 
-        // Right bumper: pivot intake to idle and run intake roller inward while held
-        //quickShotMode.and(controller.rightBumper()).whileTrue(
-        //    new RunPivotAndRoller(intake, kPivotIdleSetpoint, () -> ROLLER_VELOCITY_INWARD)
-        //);
+        // A button: deploy intake — pivot out, run roller, and spindexer while held
+        quickShotMode.and(controller.a()).whileTrue(
+            new RunPivotAndRoller(intake, Constants.kPivotOutSetpoint, () -> Constants.kBaseRollerIntakeVelocity)
+                .alongWith(new RunSpindexerVelocity(spindexer, SPINDEXER_RPM))
+        );
 
+        // B button: pivot intake back to idle position
+        quickShotMode.and(controller.b()).onTrue(
+            new RunPivot(intake, Constants.kPivotIdleSetpoint)
+        );
     
         // Right bumper: increase lookahead time by 0.01
         quickShotMode.and(controller.rightBumper()).onTrue(
@@ -126,7 +134,7 @@ public class QuickShotBindings {
         );
 
         // A button: decrease lookahead time by 0.01
-        quickShotMode.and(controller.a()).onTrue(
+        quickShotMode.and(controller.rightTrigger()).onTrue(
             Commands.runOnce(() -> shotSolver.decreaseLookahead())
         );
 
@@ -159,32 +167,85 @@ public class QuickShotBindings {
         //         shooter.setFlywheelPercentage(0);
         //     })
         // );
-  //update Drive.java  
-//  /** Returns the measured chassis speeds of the robot. */
-//  @AutoLogOutput(key = "SwerveChassisSpeeds/Measured")
-//  public ChassisSpeeds getChassisSpeeds() {
-//    return kinematics.toChassisSpeeds(getModuleStates());
-//  }
 
-//Udpate Robot.container
-//
-//import edu.wpi.first.math.geometry.Pose2d;
-//import edu.wpi.first.math.kinematics.ChassisSpeeds;
-//   public void updateShooterSolution() {
-//         m_solutionFinder = m_solutionFinderSelector.get();
+        // --- Driver joystick bindings ---
 
-//         Pose2d pose = m_drive.getPose();
-//         ChassisSpeeds speeds = m_drive.getChassisSpeeds();
+        // Right trigger: heading lock to shot solver aim heading
+        quickShotMode.and(driverController.rightTrigger()).onTrue(
+            DriveCommands.joystickDriveAtAngle(
+                drive,
+                () -> -driverController.getLeftY(),
+                () -> -driverController.getLeftX(),
+                () -> -driverController.getRightX(),
+                () -> shotSolver.getShotSolution().aimHeading
+            )
+        );
 
-//         m_solutionFinder.update(pose, speeds);
+        
+        quickShotMode.and(driverController.a()).onTrue(
+            DriveCommands.joystickDriveAtAngle(
+                drive,
+                () -> -driverController.getLeftY(),
+                () -> -driverController.getLeftX(),
+                () -> -driverController.getRightX(),
+                () -> Util.isRedAlliance() ? new Rotation2d() : new Rotation2d(Math.PI)
+            )
+        );
 
-//         Logger.recordOutput("ShooterSolution/RobotPose", pose);
-//         Logger.recordOutput("ShooterSolution/RobotPoseX", pose.getX());
-//         Logger.recordOutput("ShooterSolution/RobotPoseY", pose.getY());
-//         Logger.recordOutput("ShooterSolution/ChassisSpeedX", speeds.vxMetersPerSecond);
-//         Logger.recordOutput("ShooterSolution/ChassisSpeedY", speeds.vyMetersPerSecond);
-//     }
+        
+        quickShotMode.and(driverController.y()).onTrue(
+            DriveCommands.joystickDriveAtAngle(
+                drive,
+                () -> -driverController.getLeftY(),
+                () -> -driverController.getLeftX(),
+                () -> -driverController.getRightX(),
+                () -> Util.isRedAlliance() ? new Rotation2d(Math.PI) : new Rotation2d()
+            )
+        );
 
+        // X button: stop with X
+        quickShotMode.and(driverController.x()).onTrue(Commands.runOnce(drive::stopWithX, drive));
+
+        // D-pad: drive slowly in the pressed direction (field-relative) while aiming at the goal
+        quickShotMode.and(driverController.povUp()).whileTrue(
+            DriveCommands.joystickDriveAtAngle(
+                drive,
+                () -> DPAD_SLOW_SPEED / drive.getMaxLinearSpeedMetersPerSec(),
+                () -> 0,
+                () -> 0,
+                () -> shotSolver.getShotSolution().aimHeading
+            )
+        );
+
+        quickShotMode.and(driverController.povDown()).whileTrue(
+            DriveCommands.joystickDriveAtAngle(
+                drive,
+                () -> -DPAD_SLOW_SPEED / drive.getMaxLinearSpeedMetersPerSec(),
+                () -> 0,
+                () -> 0,
+                () -> shotSolver.getShotSolution().aimHeading
+            )
+        );
+
+        quickShotMode.and(driverController.povLeft()).whileTrue(
+            DriveCommands.joystickDriveAtAngle(
+                drive,
+                () -> 0,
+                () -> DPAD_SLOW_SPEED / drive.getMaxLinearSpeedMetersPerSec(),
+                () -> 0,
+                () -> shotSolver.getShotSolution().aimHeading
+            )
+        );
+
+        quickShotMode.and(driverController.povRight()).whileTrue(
+            DriveCommands.joystickDriveAtAngle(
+                drive,
+                () -> 0,
+                () -> -DPAD_SLOW_SPEED / drive.getMaxLinearSpeedMetersPerSec(),
+                () -> 0,
+                () -> shotSolver.getShotSolution().aimHeading
+            )
+        );
 
     }
 }
