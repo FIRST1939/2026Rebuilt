@@ -279,7 +279,7 @@ public class RobotContainer {
         (m_operatorController.rightTrigger()).whileTrue((
             new RunSpindexerVelocity(m_spindexer, Constants.kSpindexerVelocity))
             .alongWith(new RunFeederVelocity(m_feeder, Constants.kFeederVelocity))
-            .alongWith(new Agitate(m_intake, m_intakeStateManager)));
+            .alongWith(new AgitateIntake(m_intake, m_intakeStateManager)));
         //Feed Into Shooter Command
 
         matchMode.and(m_operatorController.leftBumper()).onTrue(Commands.runOnce(() -> m_intakeStateManager.setGoalState(State.IDLE)));
@@ -292,7 +292,7 @@ public class RobotContainer {
 
         //matchMode.and(m_operatorController.a()).whileTrue(new Agitate(m_intake, Constants.kAgitateIntakeInterval));
 
-        matchMode.and(m_operatorController.a()).onTrue(new DeepAgitate(m_intake, m_intakeStateManager));
+        matchMode.and(m_operatorController.a()).onTrue(new DeepAgitateIntake(m_intake, m_intakeStateManager));
         
         matchMode.and(m_operatorController.rightBumper()).whileTrue(Commands.runOnce(() -> m_intakeStateManager.setGoalState(State.INTAKING)));
         //Deploy+Roller
@@ -309,8 +309,25 @@ public class RobotContainer {
 
     public void configureNamedCommands () {
         
-        new EventTrigger("RunPivotAndRoller").onTrue(
-            Commands.runOnce(() -> m_intakeStateManager.setGoalState(State.INTAKING)));
+        new EventTrigger("Intake").onTrue(
+            Commands.runOnce(() -> 
+                m_intakeStateManager.setGoalState(State.INTAKING)
+            )
+        );
+
+        NamedCommands.registerCommand(
+            "IdleIntake",
+            Commands.runOnce(() -> m_intakeStateManager.setGoalState(State.IDLE))
+        );
+
+        NamedCommands.registerCommand(
+            "FeedShooter",
+            Commands.parallel(
+                new AgitateIntake(m_intake, m_intakeStateManager),
+                new RunSpindexerVelocity(m_spindexer, Constants.kSpindexerVelocity),
+                new RunFeederVelocity(m_feeder, Constants.kFeederVelocity)
+            )
+        );
         
         NamedCommands.registerCommand("RegressionShot", 
             new RunFlywheelAndHood(
@@ -333,22 +350,7 @@ public class RobotContainer {
             Constants.kLoweringClimberSetpoint, 
             Constants.kLoweringClimberPercentage)
         );
-        
-        NamedCommands.registerCommand("StaticShotTower",
-           new RunFlywheelAndHood(
-            m_shooter, 
-            () -> Constants.kTowerFlywheelVelocity,
-            () -> Constants.kTowerHoodSetpoint));
-
-        NamedCommands.registerCommand("IdleIntake",
-         Commands.runOnce(() -> m_intakeStateManager.setGoalState(State.IDLE)));
-
-        NamedCommands.registerCommand("FeedShooter",
-         (new RunSpindexerVelocity(m_spindexer, Constants.kSpindexerVelocity))
-            .alongWith(new RunFeederVelocity(m_feeder, Constants.kFeederVelocity))
-            .alongWith(new Agitate(m_intake, m_intakeStateManager)));
-            }
-        
+    }
        
     private void configurePercentBindings() {
 

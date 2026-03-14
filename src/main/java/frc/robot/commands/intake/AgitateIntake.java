@@ -6,9 +6,9 @@ import frc.robot.Constants;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.commands.intake.IntakeStateManager.State;
 
-public class Agitate extends RepeatCommand {
+public class AgitateIntake extends RepeatCommand {
     
-    public Agitate(Intake intake, IntakeStateManager intakeStateManager) {
+    public AgitateIntake(Intake intake, IntakeStateManager intakeStateManager) {
 
         super(
             Commands.sequence(
