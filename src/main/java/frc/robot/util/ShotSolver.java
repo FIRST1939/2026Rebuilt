@@ -12,7 +12,7 @@ import edu.wpi.first.math.interpolation.InterpolatingTreeMap;
 import edu.wpi.first.math.interpolation.Interpolator;
 import edu.wpi.first.math.interpolation.InverseInterpolator;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-
+import frc.robot.Constants;
 import frc.robot.subsystems.shooter.ShooterConstants;
 
 public class ShotSolver {
@@ -78,9 +78,9 @@ public class ShotSolver {
         double lookaheadTime = 0.1;
         Pose2d futureRobotPose = robotPose.exp(
             new Twist2d(
-                robotSpeeds.vxMetersPerSecond * lookaheadTime,
-                robotSpeeds.vyMetersPerSecond * lookaheadTime,
-                robotSpeeds.omegaRadiansPerSecond * lookaheadTime
+                (robotSpeeds.vxMetersPerSecond * lookaheadTime) + (robotSpeeds.vxMetersPerSecond * Constants.kTimeOfFlight),
+                (robotSpeeds.vyMetersPerSecond * lookaheadTime) + (robotSpeeds.vyMetersPerSecond * Constants.kTimeOfFlight),
+                (robotSpeeds.omegaRadiansPerSecond * lookaheadTime) + (robotSpeeds.omegaRadiansPerSecond * Constants.kTimeOfFlight)
             )
         );
 

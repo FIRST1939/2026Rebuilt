@@ -66,6 +66,8 @@ public final class Constants {
 
       public static final double kRaisingClimberPercentage = 0.75;
     public static final double kLoweringClimberPercentage = -0.75;
+   
+    public static final double kTimeOfFlight = 1.278;
 
     public static class OperatorConstants {
       
