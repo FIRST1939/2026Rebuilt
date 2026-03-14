@@ -3,6 +3,8 @@ package frc.robot.util;
 import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Meters;
 
+import org.littletonrobotics.junction.Logger;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
@@ -60,10 +62,14 @@ public class ShotSolver {
     static {
 
         kShooterMap.put(1.09, new ShooterParams(2750, 0.0125, 1.18));
-        kShooterMap.put(1.93, new ShooterParams(2650, 0.0458, 1.14));
-        kShooterMap.put(2.94, new ShooterParams(3000, 0.047, 1.31));
-        kShooterMap.put(3.54, new ShooterParams(3250, 0.0458, 1.42));
-        kShooterMap.put(5.70, new ShooterParams(3400, 0.07, 1.34));
+        kShooterMap.put(1.5, new ShooterParams(2850, 0.0264, 1.33));
+        kShooterMap.put(2.0, new ShooterParams(2650, 0.0458, 1.145));
+        kShooterMap.put(2.5, new ShooterParams(2850, 0.0458, 1.175));
+        kShooterMap.put(3.0, new ShooterParams(3000, 0.04861, 1.3));
+        kShooterMap.put(3.5, new ShooterParams(3300, 0.05277, 1.36));
+        kShooterMap.put(4.0, new ShooterParams(3400, 0.05694, 1.45));
+        kShooterMap.put(4.5, new ShooterParams(3500, 0.0597, 1.5));
+        kShooterMap.put(5.0, new ShooterParams(3600, 0.0625, 1.55));
     }
 
     private ShotSolution m_shotSolution;
@@ -82,8 +88,8 @@ public class ShotSolver {
     };
     // public ShooterParams getShotSolution(Pose2d robotPose)
     // {
-    //     Translation2d shooterToTarget = Util.getHubPosition().minus(shooterPosition);
-    //     ShooterParams shooterToTargetParams = kShooterMap.get(shooterToTargetDistance);
+    //     Translation2d shooterToTarget = Util.getHubPosition().minus(robotPose);
+    //     ShooterParams shooterToTargetParams = kShooterMap.get(shooterToTargetDistance.getNorm());
     //     return shooterToTargetParams;
     // }
     
@@ -115,6 +121,7 @@ public class ShotSolver {
         Translation2d robotCenterToTarget = Util.getHubPosition().minus(futureRobotPosition);
         
         double shooterToTargetDistance = robotCenterToTarget.getNorm();
+        Logger.recordOutput("ShotSolver/distanceToTarget", shooterToTargetDistance);
 
         // Vector used for physics + aiming
         Translation2d shooterToTarget = Util.getHubPosition().minus(shooterPosition);

@@ -53,8 +53,7 @@ public class QuickShotBindings {
             Intake intake,
             Spindexer spindexer,
             Feeder feeder,
-            Shooter shooter,
-            Supplier<ShooterSolutionFinder> solutionFinderSupplier) {
+            Shooter shooter) {
 
          quickShotMode.and(controller.leftBumper()).toggleOnTrue(new FollowShooterSetpoints(shooter,
                  m_flywheelRPM::getAsDouble,
@@ -127,15 +126,15 @@ public class QuickShotBindings {
         //);
 
         // Start button: follow interpolating shooter solution for tuning
-        quickShotMode.and(controller.start()).toggleOnTrue(
-            new FollowShooterSetpoints(shooter,
-                () -> solutionFinderSupplier.get().getLatestSolution().flywheelRPM,
-                () -> solutionFinderSupplier.get().getLatestSolution().hoodPositionRotations)
-            .finallyDo(() -> {
-                shooter.setHoodPosition(0);
-                shooter.setFlywheelPercentage(0);
-            })
-        );
+        // quickShotMode.and(controller.start()).toggleOnTrue(
+        //     new FollowShooterSetpoints(shooter,
+        //         () -> solutionFinderSupplier.get().getLatestSolution().flywheelRPM,
+        //         () -> solutionFinderSupplier.get().getLatestSolution().hoodPositionRotations)
+        //     .finallyDo(() -> {
+        //         shooter.setHoodPosition(0);
+        //         shooter.setFlywheelPercentage(0);
+        //     })
+        // );
   //update Drive.java  
 //  /** Returns the measured chassis speeds of the robot. */
 //  @AutoLogOutput(key = "SwerveChassisSpeeds/Measured")

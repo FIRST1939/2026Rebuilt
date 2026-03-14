@@ -25,6 +25,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.bindings.ExampleMatchBindings;
 import frc.robot.bindings.QuickIntakeConfigBindings;
+import frc.robot.bindings.QuickShotBindings;
 import frc.robot.subsystems.intake.*;
 import frc.robot.subsystems.spindexer.*;
 import frc.robot.subsystems.climber.Climber;
@@ -153,6 +154,8 @@ public class RobotContainer {
         Trigger exampleMatchTrigger = new Trigger(() -> m_opModeSelector.get() == OpModes.EXAMPLE_MATCH_BINDINGS);
         ExampleMatchBindings.configure(exampleMatchTrigger, m_operatorController, m_intake,m_shooter,m_feeder,m_spindexer,m_climber);
 
+        Trigger quickShotTrigger = new Trigger(() -> m_opModeSelector.get() == OpModes.QUICKSHOT);
+        QuickShotBindings.configure(quickShotTrigger, m_operatorController, m_intake,m_spindexer,m_feeder,m_shooter);
 
         configureMatchBindings();
         configurePercentBindings();
