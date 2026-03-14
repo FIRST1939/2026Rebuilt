@@ -167,12 +167,34 @@ public class RobotContainer {
 
         Trigger matchMode = new Trigger(() -> m_opModeSelector.get() == OpModes.MATCH);
 
-        m_drive.setDefaultCommand(
-            DriveCommands.joystickDrive(
-                m_drive,
-                () -> -m_driverController.getLeftY(),
-                () -> -m_driverController.getLeftX(),
-                () -> -m_driverController.getRightX()
+        if (matchMode.getAsBoolean()) {
+            
+            m_drive.setDefaultCommand(
+                DriveCommands.joystickDrive(
+                    m_drive,
+                    () -> -m_driverController.getLeftY(),
+                    () -> -m_driverController.getLeftX(),
+                    () -> -m_driverController.getRightX()
+                )
+            );
+        }
+
+        matchMode.onTrue(
+            Commands.runOnce(() ->
+                m_drive.setDefaultCommand(
+                    DriveCommands.joystickDrive(
+                        m_drive,
+                        () -> -m_driverController.getLeftY(),
+                        () -> -m_driverController.getLeftX(),
+                        () -> -m_driverController.getRightX()
+                    )
+                )
+            )
+        );
+
+        matchMode.onFalse(
+            Commands.runOnce(() ->
+                m_drive.removeDefaultCommand()
             )
         );
 
