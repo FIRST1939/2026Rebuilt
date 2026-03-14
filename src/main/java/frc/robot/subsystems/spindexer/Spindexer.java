@@ -7,6 +7,7 @@ import static edu.wpi.first.units.Units.Volts;
 
 import org.littletonrobotics.junction.Logger;
 
+import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -17,6 +18,9 @@ public class Spindexer extends SubsystemBase {
     private final SpindexerIO m_io;
     private final SpindexerIOInputsAutoLogged m_inputs = new SpindexerIOInputsAutoLogged();
     private final SysIdRoutine m_sysIdRoutine;
+
+    private final Debouncer m_cloggedDebouncer = new Debouncer(0.5);
+    private boolean m_isClogged = false;
 
     public Spindexer (SpindexerIO io) {
 
@@ -49,6 +53,13 @@ public class Spindexer extends SubsystemBase {
         m_io.updateInputs(m_inputs);
         Logger.processInputs("Spindexer", m_inputs);
 
+        m_isClogged = m_cloggedDebouncer.calculate(m_inputs.spindexerCurrent > 60.0 && m_inputs.spindexerVelocity < 30.0);
+        Logger.recordOutput("Spindexer Clogged", m_isClogged);
+    }
+
+    public boolean isClogged () {
+
+        return m_isClogged;
     }
 
     public double getSpindexerCurrent() {

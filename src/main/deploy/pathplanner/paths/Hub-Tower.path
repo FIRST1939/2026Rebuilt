@@ -16,11 +16,11 @@
     },
     {
       "anchor": {
-        "x": 1.69,
+        "x": 1.9,
         "y": 4.12
       },
       "prevControl": {
-        "x": 1.94,
+        "x": 2.15,
         "y": 4.12
       },
       "nextControl": null,
@@ -42,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 180.0
   },
   "reversed": false,
   "folder": "Hub-Outpost-Depot-Climb",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 180.0
   },
   "useDefaultConstraints": true
 }

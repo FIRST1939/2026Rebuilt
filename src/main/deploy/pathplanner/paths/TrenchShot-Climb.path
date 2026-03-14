@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.46,
-        "y": 0.7
+        "x": 2.782,
+        "y": 0.709
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.46,
-        "y": 0.7
+        "x": 1.7529636181414219,
+        "y": 0.7824780235703233
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 1.9,
-        "y": 4.12
+        "x": 1.0372895863052778,
+        "y": 2.915805991440799
       },
       "prevControl": {
-        "x": 2.8999999999999995,
-        "y": 4.12
+        "x": 0.07758100509982013,
+        "y": 2.365538467317709
       },
       "nextControl": null,
       "isLocked": false,
@@ -29,7 +29,21 @@
     }
   ],
   "rotationTargets": [],
-  "constraintZones": [],
+  "constraintZones": [
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 0.6471354166666666,
+      "maxWaypointRelativePos": 1.0,
+      "constraints": {
+        "maxVelocity": 0.5,
+        "maxAcceleration": 3.0,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    }
+  ],
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
@@ -42,13 +56,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 180.0
+    "rotation": -90.0
   },
   "reversed": false,
-  "folder": "Hub-Outpost-Depot-Climb",
+  "folder": "DTrench-Middle",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 180.0
+    "rotation": -112.5
   },
   "useDefaultConstraints": true
 }

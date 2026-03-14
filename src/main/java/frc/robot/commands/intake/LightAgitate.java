@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.intake.Intake;
 
-public class AgitateIntake extends Command {
+public class LightAgitate extends Command {
 
     private final Intake m_intake;
     private final double m_interval;
@@ -15,7 +15,7 @@ public class AgitateIntake extends Command {
     private double m_centerPosition;
     private boolean m_forward = true;
 
-    public AgitateIntake(Intake intake, double intervalSeconds, double rollerVelocity) {
+    public LightAgitate(Intake intake, double intervalSeconds, double rollerVelocity) {
         m_intake = intake;
         m_interval = intervalSeconds;
         m_rollerVelocity = rollerVelocity;
@@ -43,7 +43,7 @@ public class AgitateIntake extends Command {
         if (m_forward) {
             target = Constants.kPivotOutSetpoint;
         } else {
-            target = Constants.kPivotIdleSetpoint;
+            target = Constants.kPivotLightSetpoint;
         }
 
         m_intake.setPivotPosition(target);

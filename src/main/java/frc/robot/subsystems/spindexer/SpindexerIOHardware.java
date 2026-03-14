@@ -23,9 +23,7 @@ public class SpindexerIOHardware implements SpindexerIO {
         config
             .idleMode(IdleMode.kCoast)
             .inverted(SpindexerConstants.kInverted)
-            .voltageCompensation(12.0)
-            .smartCurrentLimit(SpindexerConstants.kSpindexerCurrentLimit);
-        
+            .voltageCompensation(12.0);
 
         config.encoder
             .velocityConversionFactor(SpindexerConstants.kSpindexerGearing)
@@ -65,6 +63,7 @@ public class SpindexerIOHardware implements SpindexerIO {
     @Override
     public void setSpindexerVelocity (double velocity) {
         
-        m_spindexerController.setSetpoint(velocity, ControlType.kVelocity);
+        //m_spindexerController.setSetpoint(velocity, ControlType.kVelocity);
+        m_motor.set(1.0);
     }
 }

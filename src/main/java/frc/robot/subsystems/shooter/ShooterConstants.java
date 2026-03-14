@@ -1,7 +1,11 @@
 package frc.robot.subsystems.shooter;
 
+import edu.wpi.first.math.geometry.Translation2d;
+
 public class ShooterConstants {
     
+    public static final Translation2d kRobotToShooter = new Translation2d(-0.145923, 0.142875);
+
     public static final double kFlywheelGearing = 1.0;
     public static final boolean kFlywheelInverted = false;
 
