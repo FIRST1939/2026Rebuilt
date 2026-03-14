@@ -42,6 +42,7 @@ import frc.robot.commands.climber.*;
 import frc.robot.commands.feeder.*;
 import frc.robot.commands.intake.*;
 import frc.robot.commands.shooter.*;
+import frc.robot.commands.intake.IntakeStateManager.State;
 
 public class RobotContainer {
 
@@ -288,7 +289,7 @@ public class RobotContainer {
             .alongWith(new RepeatCommand(new AgitateOnce(m_intake))));
         //Feed Into Shooter Command
 
-        matchMode.and(m_operatorController.leftBumper()).onTrue(new RunPivot(m_intake, Constants.kPivotIdleSetpoint)); 
+        matchMode.and(m_operatorController.leftBumper()).onTrue(Commands.runOnce(() -> m_intakeStateManager.setGoalState(State.IDLE)));
         //Pivot Intake In
 
         matchMode.and(m_operatorController.start()).onTrue(new ZeroAndIdleIntake(m_intake)); 
