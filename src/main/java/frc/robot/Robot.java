@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import org.ironmaple.simulation.SimulatedArena;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.NT4Publisher;
@@ -30,7 +31,7 @@ public class Robot extends LoggedRobot {
         } else {
 
             // TODO Replay
-            setUseTiming(false);
+            //setUseTiming(false);
             Logger.addDataReceiver(new NT4Publisher());
             //Logger.setReplaySource(new WPILOGReader(logPath));
             //Logger.addDataReceiver(new WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_sim")));
@@ -149,6 +150,13 @@ public class Robot extends LoggedRobot {
 
     @Override
     public void teleopExit() {}
+
+    @Override
+    public void simulationPeriodic() {
+
+        SimulatedArena.getInstance().simulationPeriodic();
+        m_robotContainer.displayFieldSimToAdvantageScope();
+    }
 
     @Override
     public void testInit() {

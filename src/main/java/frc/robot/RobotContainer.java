@@ -4,8 +4,15 @@
 
 package frc.robot;
 
+import static edu.wpi.first.units.Units.*;
+
 import java.util.function.DoubleSupplier;
 
+import org.ironmaple.simulation.SimulatedArena;
+import org.ironmaple.simulation.drivesims.COTS;
+import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
+import org.ironmaple.simulation.drivesims.configs.DriveTrainSimulationConfig;
+import org.ironmaple.simulation.drivesims.configs.SwerveModuleSimulationConfig;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
@@ -14,7 +21,9 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.events.EventTrigger;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.simulation.BatterySim;
 import edu.wpi.first.wpilibj.simulation.RoboRioSim;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -45,76 +54,108 @@ import frc.robot.commands.intake.IntakeStateManager.State;
 public class RobotContainer {
 
     private final Drive m_drive;
-    private final Intake m_intake;
-    private final Spindexer m_spindexer;
-    private final Feeder m_feeder;
-    private final Shooter m_shooter;
-    private final Climber m_climber;
-
-    private final ShotSolver m_shotSolver;
-    private final LoggedDashboardChooser<Command> m_autoSelector;
-    private final IntakeStateManager m_intakeStateManager;
-
-    private enum OpModes {
-        MATCH,
-        PERCENT,
-        QUICKSHOT,
-        EXAMPLE_MATCH_BINDINGS,
-        QUICK_INTAKE_CONFIG,
-        INTAKE_CHARACTERIZATION,
-        SPINDEXER_CHARACTERIZATION,
-        FEEDER_CHARACTERIZATION,
-        SHOOTER_CHARACTERIZATION,
-        CLIMBER_CHARACTERIZATION
-    }
-
-    private final LoggedDashboardChooser<OpModes> m_opModeSelector = new LoggedDashboardChooser<>("Op Mode Selector");
-
-    private final LoggedNetworkNumber m_controllerSetpoint = new LoggedNetworkNumber("/Tuning/Controller Setpoint", 0);
-    private final LoggedNetworkNumber m_updateFeedbackP = new LoggedNetworkNumber("/Tuning/Feedback P", 0);
-    private final LoggedNetworkNumber m_updateFeedbackD = new LoggedNetworkNumber("/Tuning/Feedback D", 0);
-    private final LoggedNetworkNumber m_updateFeedbackP2 = new LoggedNetworkNumber("/Tuning/Feedback P2", 0);
-    private final LoggedNetworkNumber m_updateFeedbackD2 = new LoggedNetworkNumber("/Tuning/Feedback D2", 0);
-    private final LoggedNetworkNumber m_updateProfileCruiseVelocity = new LoggedNetworkNumber("/Tuning/Profile Cruise Velocity", 0);
-    private final LoggedNetworkNumber m_updateProfileMaxAcceleration = new LoggedNetworkNumber("/Tuning/Profile Max Acceleration", 0);
-    private final LoggedNetworkNumber m_updateProfileAllowedError = new LoggedNetworkNumber("/Tuning/Profile Allowed Error", 0);
-    private DoubleSupplier m_controllerErrorSupplier = () -> 0.0;
-    private DoubleSupplier m_controllerErrorSupplier2 = () -> 0.0;
-
-    private final CommandXboxController m_driverController = new CommandXboxController(OperatorConstants.kDriverControllerPort);
-    private final CommandXboxController m_operatorController = new CommandXboxController(OperatorConstants.kOperatorControllerPort);
-
-    public RobotContainer(boolean isReal) {
-
-        if (isReal) {
-
-            m_drive = new Drive(
-                new GyroIOPigeon2(), 
-                new ModuleIOTalonFX(TunerConstants.FrontLeft),
-                new ModuleIOTalonFX(TunerConstants.FrontRight), 
-                new ModuleIOTalonFX(TunerConstants.BackLeft), 
-                new ModuleIOTalonFX(TunerConstants.BackRight)
+    private SwerveDriveSimulation m_swerveDriveSimulation = null;
+    
+        private final Intake m_intake;
+        private final Spindexer m_spindexer;
+        private final Feeder m_feeder;
+        private final Shooter m_shooter;
+        private final Climber m_climber;
+    
+        private final ShotSolver m_shotSolver;
+        private final LoggedDashboardChooser<Command> m_autoSelector;
+        private final IntakeStateManager m_intakeStateManager;
+    
+        private enum OpModes {
+            MATCH,
+            PERCENT,
+            QUICKSHOT,
+            EXAMPLE_MATCH_BINDINGS,
+            QUICK_INTAKE_CONFIG,
+            INTAKE_CHARACTERIZATION,
+            SPINDEXER_CHARACTERIZATION,
+            FEEDER_CHARACTERIZATION,
+            SHOOTER_CHARACTERIZATION,
+            CLIMBER_CHARACTERIZATION
+        }
+    
+        private final LoggedDashboardChooser<OpModes> m_opModeSelector = new LoggedDashboardChooser<>("Op Mode Selector");
+    
+        private final LoggedNetworkNumber m_controllerSetpoint = new LoggedNetworkNumber("/Tuning/Controller Setpoint", 0);
+        private final LoggedNetworkNumber m_updateFeedbackP = new LoggedNetworkNumber("/Tuning/Feedback P", 0);
+        private final LoggedNetworkNumber m_updateFeedbackD = new LoggedNetworkNumber("/Tuning/Feedback D", 0);
+        private final LoggedNetworkNumber m_updateFeedbackP2 = new LoggedNetworkNumber("/Tuning/Feedback P2", 0);
+        private final LoggedNetworkNumber m_updateFeedbackD2 = new LoggedNetworkNumber("/Tuning/Feedback D2", 0);
+        private final LoggedNetworkNumber m_updateProfileCruiseVelocity = new LoggedNetworkNumber("/Tuning/Profile Cruise Velocity", 0);
+        private final LoggedNetworkNumber m_updateProfileMaxAcceleration = new LoggedNetworkNumber("/Tuning/Profile Max Acceleration", 0);
+        private final LoggedNetworkNumber m_updateProfileAllowedError = new LoggedNetworkNumber("/Tuning/Profile Allowed Error", 0);
+        private DoubleSupplier m_controllerErrorSupplier = () -> 0.0;
+        private DoubleSupplier m_controllerErrorSupplier2 = () -> 0.0;
+    
+        private final CommandXboxController m_driverController = new CommandXboxController(OperatorConstants.kDriverControllerPort);
+        private final CommandXboxController m_operatorController = new CommandXboxController(OperatorConstants.kOperatorControllerPort);
+    
+        public RobotContainer(boolean isReal) {
+    
+            if (isReal) {
+    
+                m_drive = new Drive(
+                    new GyroIOPigeon2(), 
+                    new ModuleIOTalonFX(TunerConstants.FrontLeft),
+                    new ModuleIOTalonFX(TunerConstants.FrontRight), 
+                    new ModuleIOTalonFX(TunerConstants.BackLeft), 
+                    new ModuleIOTalonFX(TunerConstants.BackRight),
+                    (Pose2d pose) -> {}
+                );
+    
+                new Vision(
+                    m_drive::addVisionMeasurement,
+                    new VisionIOLimelight(VisionConstants.camera0Name, m_drive::getRotation),
+                    new VisionIOLimelight(VisionConstants.camera1Name, m_drive::getRotation)
+                );
+    
+                m_intake = new Intake(new IntakeIOHardware());
+                m_spindexer = new Spindexer(new SpindexerIOHardware());
+                m_feeder = new Feeder(new FeederIOHardware());
+                m_shooter = new Shooter(new ShooterIOHardware());
+                m_climber = new Climber(new ClimberIOHardware());
+            } else {
+    
+                @SuppressWarnings("unchecked")
+                DriveTrainSimulationConfig driveTrainSimulationConfig = new DriveTrainSimulationConfig(
+                    Pounds.of(121.1),
+                    Inches.of(34.25),
+                    Inches.of(34.25),
+                    Inches.of(21.75),
+                    Inches.of(21.75),
+                    COTS.ofPigeon2(),
+                    new SwerveModuleSimulationConfig(
+                        DCMotor.getKrakenX60(1),
+                        DCMotor.getKrakenX60(1),
+                        TunerConstants.kDriveGearRatio,
+                        TunerConstants.kSteerGearRatio,
+                        TunerConstants.kDriveFrictionVoltage,
+                        TunerConstants.kSteerFrictionVoltage,
+                        TunerConstants.kWheelRadius,
+                        TunerConstants.kSteerInertia,
+                        1.2
+                    )
+                );
+    
+                m_swerveDriveSimulation = new SwerveDriveSimulation(
+                driveTrainSimulationConfig, 
+                new Pose2d()
             );
 
-            new Vision(
-                m_drive::addVisionMeasurement,
-                new VisionIOLimelight(VisionConstants.camera0Name, m_drive::getRotation),
-                new VisionIOLimelight(VisionConstants.camera1Name, m_drive::getRotation)
-            );
-
-            m_intake = new Intake(new IntakeIOHardware());
-            m_spindexer = new Spindexer(new SpindexerIOHardware());
-            m_feeder = new Feeder(new FeederIOHardware());
-            m_shooter = new Shooter(new ShooterIOHardware());
-            m_climber = new Climber(new ClimberIOHardware());
-        } else {
+            SimulatedArena.getInstance().addDriveTrainSimulation(m_swerveDriveSimulation);
 
             m_drive = new Drive(
-                new GyroIO() {}, 
-                new ModuleIOSim(TunerConstants.FrontLeft), 
-                new ModuleIOSim(TunerConstants.FrontRight),
-                new ModuleIOSim(TunerConstants.BackLeft),
-                new ModuleIOSim(TunerConstants.BackRight)
+                new GyroIOSim(m_swerveDriveSimulation.getGyroSimulation()), 
+                new ModuleIOSim(m_swerveDriveSimulation.getModules()[0]), 
+                new ModuleIOSim(m_swerveDriveSimulation.getModules()[1]),
+                new ModuleIOSim(m_swerveDriveSimulation.getModules()[2]),
+                new ModuleIOSim(m_swerveDriveSimulation.getModules()[3]),
+                (Pose2d pose) -> m_swerveDriveSimulation.setSimulationWorldPose(pose)
             );
 
             new Vision(
@@ -581,6 +622,11 @@ public class RobotContainer {
     public Command getAutonomousCommand() {
       
         return m_autoSelector.get();
+    }
+
+    public void displayFieldSimToAdvantageScope() {
+
+        Logger.recordOutput("FieldSimulation/RobotPosition", m_swerveDriveSimulation.getSimulatedDriveTrainPose());
     }
 
     public void simulateBatteryLoad() {
