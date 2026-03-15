@@ -11,8 +11,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.commands.intake.RunPivot;
-import frc.robot.commands.intake.RunPivotAndRollerAuto;
-import frc.robot.commands.intake.RunRoller;
+import frc.robot.commands.intake.RunRollerVelocity;
 
 public class QuickIntakeConfigBindings {
 
@@ -51,23 +50,11 @@ public class QuickIntakeConfigBindings {
         // Right trigger: pivot intake to deployed setpoint and run roller while held
         intakeConfigMode.and(controller.rightTrigger()).whileTrue(
             Commands.runOnce(() -> { m_activeSetpoint = ActiveSetpoint.DEPLOYED; logSetpoints(); })
-                .andThen(new RunPivotAndRollerAuto(intake, m_deployedSetpoint.getAsDouble(), m_rollerSpeed::getAsDouble) {
-                    @Override
-                    public void initialize() {
-                        intake.setPivotPosition(m_deployedSetpoint.getAsDouble());
-                    }
-                })
         );
 
         // Right bumper: pivot intake to idle setpoint and run roller inward while held
         intakeConfigMode.and(controller.rightBumper()).whileTrue(
             Commands.runOnce(() -> { m_activeSetpoint = ActiveSetpoint.IDLE; logSetpoints(); })
-                .andThen(new RunPivotAndRollerAuto(intake, m_idleSetpoint.getAsDouble(), () -> -m_rollerSpeed.getAsDouble()) {
-                    @Override
-                    public void initialize() {
-                        intake.setPivotPosition(m_idleSetpoint.getAsDouble());
-                    }
-                })
         );
 
         // Back button: pivot intake to stored setpoint
@@ -131,7 +118,7 @@ public class QuickIntakeConfigBindings {
 
         // Y button: run roller while held
         intakeConfigMode.and(controller.y()).whileTrue(
-            new RunRoller(intake, m_rollerSpeed::getAsDouble)
+            new RunRollerVelocity(intake, m_rollerSpeed::getAsDouble)
         );
     }
 

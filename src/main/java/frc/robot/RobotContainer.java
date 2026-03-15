@@ -19,11 +19,9 @@ import edu.wpi.first.wpilibj.simulation.BatterySim;
 import edu.wpi.first.wpilibj.simulation.RoboRioSim;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.bindings.ExampleMatchBindings;
 import frc.robot.bindings.QuickIntakeConfigBindings;
 import frc.robot.subsystems.intake.*;
 import frc.robot.subsystems.spindexer.*;
@@ -42,6 +40,7 @@ import frc.robot.commands.climber.*;
 import frc.robot.commands.feeder.*;
 import frc.robot.commands.intake.*;
 import frc.robot.commands.shooter.*;
+import frc.robot.commands.intake.IntakeStateManager.State;
 
 public class RobotContainer {
 
@@ -54,6 +53,7 @@ public class RobotContainer {
 
     private final ShotSolver m_shotSolver;
     private final LoggedDashboardChooser<Command> m_autoSelector;
+    private final IntakeStateManager m_intakeStateManager;
 
     private enum OpModes {
         MATCH,
@@ -131,6 +131,7 @@ public class RobotContainer {
         }
 
         m_shotSolver = new ShotSolver();
+        m_intakeStateManager = new IntakeStateManager(m_intake);
 
         configureNamedCommands();
         m_autoSelector = new LoggedDashboardChooser<>("Auto Selector", AutoBuilder.buildAutoChooser());
@@ -139,7 +140,6 @@ public class RobotContainer {
         m_opModeSelector.addOption("Percent", OpModes.PERCENT);
         m_opModeSelector.addOption("QuickShot", OpModes.QUICKSHOT);
         m_opModeSelector.addOption("Quick Intake Config", OpModes.QUICK_INTAKE_CONFIG);
-        m_opModeSelector.addOption("Example Match Bindings", OpModes.EXAMPLE_MATCH_BINDINGS);
 
         m_opModeSelector.addOption("Intake Characterization", OpModes.INTAKE_CHARACTERIZATION);
         m_opModeSelector.addOption("Spindexer Characterization", OpModes.SPINDEXER_CHARACTERIZATION);
@@ -149,10 +149,6 @@ public class RobotContainer {
 
         Trigger intakeConfigMode = new Trigger(() -> m_opModeSelector.get() == OpModes.QUICK_INTAKE_CONFIG);
         QuickIntakeConfigBindings.configure(intakeConfigMode, m_operatorController, m_intake);
-
-        Trigger exampleMatchTrigger = new Trigger(() -> m_opModeSelector.get() == OpModes.EXAMPLE_MATCH_BINDINGS);
-        ExampleMatchBindings.configure(exampleMatchTrigger, m_operatorController, m_intake,m_shooter,m_feeder,m_spindexer,m_climber);
-
 
         configureMatchBindings();
         configurePercentBindings();
@@ -167,13 +163,30 @@ public class RobotContainer {
 
         Trigger matchMode = new Trigger(() -> m_opModeSelector.get() == OpModes.MATCH);
 
-        m_drive.setDefaultCommand(
-            DriveCommands.joystickDrive(
-                m_drive,
-                () -> -m_driverController.getLeftY(),
-                () -> -m_driverController.getLeftX(),
-                () -> -m_driverController.getRightX()
-            )
+        Command defaultDriveCommand = DriveCommands.joystickDrive(
+            m_drive,
+            () -> -m_driverController.getLeftY(),
+            () -> -m_driverController.getLeftX(),
+            () -> -m_driverController.getRightX()
+        ).onlyWhile(matchMode);
+
+        Command defaultIntakeCommand = m_intakeStateManager.onlyWhile(matchMode);
+        
+        m_drive.setDefaultCommand(defaultDriveCommand); 
+        m_intake.setDefaultCommand(defaultIntakeCommand);
+
+        matchMode.onTrue(
+            Commands.runOnce(() -> {
+                m_drive.setDefaultCommand(defaultDriveCommand);
+                m_intake.setDefaultCommand(defaultIntakeCommand);
+            })
+        );
+
+        matchMode.onFalse(
+            Commands.runOnce(() -> {
+                m_drive.removeDefaultCommand();
+                m_intake.removeDefaultCommand();
+            })
         );
 
         matchMode.and(m_driverController.rightBumper()).onTrue(
@@ -263,24 +276,23 @@ public class RobotContainer {
         (m_operatorController.rightTrigger()).whileTrue((
             new RunSpindexerVelocity(m_spindexer, Constants.kSpindexerVelocity))
             .alongWith(new RunFeederVelocity(m_feeder, Constants.kFeederVelocity))
-            .alongWith(new RepeatCommand(new AgitateOnce(m_intake))));
+            .alongWith(new AgitateIntake(m_intake, m_intakeStateManager)));
         //Feed Into Shooter Command
 
-        matchMode.and(m_operatorController.leftBumper()).onTrue(new RunPivot(m_intake, Constants.kPivotIdleSetpoint)); 
+        matchMode.and(m_operatorController.leftBumper()).onTrue(Commands.runOnce(() -> m_intakeStateManager.setGoalState(State.IDLE)));
         //Pivot Intake In
 
-        matchMode.and(m_operatorController.start()).onTrue(new ZeroAndIdleIntake(m_intake)); 
+        matchMode.and(m_operatorController.start()).onTrue(new ZeroAndIdleIntake(m_intake, m_intakeStateManager)); 
+        //Pivot Intake Stow
 
         //matchMode.and(m_operatorController.a()).whileTrue(new AgitateIntake(m_intake, Constants.kAgitateIntakeInterval, Constants.kRollerAgitateVelocity));
 
         //matchMode.and(m_operatorController.a()).whileTrue(new Agitate(m_intake, Constants.kAgitateIntakeInterval));
 
-        matchMode.and(m_operatorController.a()).onTrue(new AgitateOnce(m_intake));
+        matchMode.and(m_operatorController.a()).onTrue(new DeepAgitateIntake(m_intake, m_intakeStateManager));
         
-        matchMode.and(m_operatorController.rightBumper()).whileTrue(
-            new RunPivotAndRoller(m_intake, 
-            Constants.kPivotOutSetpoint, 
-            () -> Constants.kBaseRollerIntakeVelocity));
+        matchMode.and(m_operatorController.rightBumper()).onTrue(Commands.runOnce(() -> m_intakeStateManager.setGoalState(State.INTAKING)));
+        matchMode.and(m_operatorController.rightBumper()).onFalse(Commands.runOnce(() -> m_intakeStateManager.setGoalState(State.EXTENDED)));
         //Deploy+Roller
 
         matchMode.and(m_operatorController.b()).whileTrue(new RunSpindexerVelocity(m_spindexer, Constants.kSpindexerReverseVelocity));
@@ -289,17 +301,31 @@ public class RobotContainer {
         matchMode.and(m_operatorController.y()).whileTrue(new RunFeederVelocity(m_feeder, Constants.kFeederReverseVelocity));
         //Feeder Reverse
 
-        matchMode.and(m_operatorController.x()).whileTrue(new RunRollerVelocity(m_intake, Constants.kRollerReverseVelocity));
+        matchMode.and(m_operatorController.x()).whileTrue(new RunRollerVelocity(m_intake, () -> Constants.kRollerReverseVelocity));
         //Roller Reverse
     }
 
     public void configureNamedCommands () {
         
-        new EventTrigger("RunPivotAndRoller").onTrue(
-            new RunPivotAndRollerAuto(
-                m_intake, 
-                Constants.kPivotOutSetpoint, 
-                () ->  (Constants.kBaseRollerIntakeVelocity)));
+        new EventTrigger("Intake").onTrue(
+            Commands.runOnce(() -> 
+                m_intakeStateManager.setGoalState(State.INTAKING)
+            )
+        );
+
+        NamedCommands.registerCommand(
+            "IdleIntake",
+            Commands.runOnce(() -> m_intakeStateManager.setGoalState(State.IDLE))
+        );
+
+        NamedCommands.registerCommand(
+            "FeedShooter",
+            Commands.parallel(
+                new AgitateIntake(m_intake, m_intakeStateManager),
+                new RunSpindexerVelocity(m_spindexer, Constants.kSpindexerVelocity),
+                new RunFeederVelocity(m_feeder, Constants.kFeederVelocity)
+            )
+        );
         
         NamedCommands.registerCommand("RegressionShot", 
             new RunFlywheelAndHood(
@@ -322,22 +348,7 @@ public class RobotContainer {
             Constants.kLoweringClimberSetpoint, 
             Constants.kLoweringClimberPercentage)
         );
-        
-        NamedCommands.registerCommand("StaticShotTower",
-           new RunFlywheelAndHood(
-            m_shooter, 
-            () -> Constants.kTowerFlywheelVelocity,
-            () -> Constants.kTowerHoodSetpoint));
-
-        NamedCommands.registerCommand("IdleIntake",
-         (new IdleIntakeAuto(m_intake)));
-
-        NamedCommands.registerCommand("FeedShooter",
-         (new RunSpindexerVelocity(m_spindexer, Constants.kSpindexerVelocity))
-            .alongWith(new RunFeederVelocity(m_feeder, Constants.kFeederVelocity))
-            .alongWith(new Agitate(m_intake, Constants.kAutoAgitateIntakeInterval)));
-            }
-        
+    }
        
     private void configurePercentBindings() {
 

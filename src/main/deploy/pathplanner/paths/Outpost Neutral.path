@@ -25,7 +25,7 @@
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "ONeutral"
     }
   ],
   "rotationTargets": [
@@ -69,9 +69,9 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "RunPivotAndRoller",
+      "name": "Intake",
       "waypointRelativePos": 0.30071736273364474,
-      "endWaypointRelativePos": 1.0,
+      "endWaypointRelativePos": null,
       "command": null
     }
   ],

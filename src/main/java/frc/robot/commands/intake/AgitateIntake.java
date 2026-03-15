@@ -1,63 +1,34 @@
 package frc.robot.commands.intake;
 
-import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import frc.robot.Constants;
 import frc.robot.subsystems.intake.Intake;
+import frc.robot.commands.intake.IntakeStateManager.State;
 
-public class AgitateIntake extends Command {
+public class AgitateIntake extends RepeatCommand {
+    
+    private final IntakeStateManager m_intakeStateManager;
 
-    private final Intake m_intake;
-    private final double m_interval;
-    private final double m_rollerVelocity;
+    public AgitateIntake(Intake intake, IntakeStateManager intakeStateManager) {
 
-    private final Timer m_timer = new Timer();
-    private double m_centerPosition;
-    private boolean m_forward = true;
+        super(
+            Commands.sequence(
+                Commands.runOnce(() -> intakeStateManager.setGoalState(State.AGITATING_IN)),
+                Commands.waitUntil(() -> intake.isPivotAtSetpoint(Constants.kPivotLightSetpoint)),
+                //Commands.waitSeconds(0.5),
+                Commands.runOnce(() -> intakeStateManager.setGoalState(State.AGITATING_OUT)),
+                Commands.waitUntil(() -> intake.isPivotAtSetpoint(Constants.kPivotOutSetpoint))
+                //Commands.waitSeconds(0.5)
+            )
+        );
 
-    public AgitateIntake(Intake intake, double intervalSeconds, double rollerVelocity) {
-        m_intake = intake;
-        m_interval = intervalSeconds;
-        m_rollerVelocity = rollerVelocity;
-        addRequirements(intake);
+        m_intakeStateManager = intakeStateManager;
     }
 
     @Override
-    public void initialize() {
-        m_centerPosition = m_intake.getPivotPosition();
-        m_timer.restart();
-        m_forward = false;
-    }
+    public void end (boolean interrupted) {
 
-    @Override
-    public void execute() {
-
-        if (m_timer.hasElapsed(m_interval)) {
-            m_timer.restart();
-
-            m_forward = !m_forward;
-        }
-
-        double target = 0.0;
-
-        if (m_forward) {
-            target = Constants.kPivotOutSetpoint;
-        } else {
-            target = Constants.kPivotIdleSetpoint;
-        }
-
-        m_intake.setPivotPosition(target);
-        m_intake.setRollerVelocity(m_rollerVelocity);
-    }
-
-    @Override
-    public void end(boolean interrupted) {
-        m_intake.setPivotPosition(m_centerPosition);
-        m_intake.setRollerPercentage(0);
-    }
-
-    @Override
-    public boolean isFinished() {
-        return false;
+        m_intakeStateManager.setGoalState(State.EXTENDED);
     }
 }
