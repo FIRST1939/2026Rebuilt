@@ -79,33 +79,31 @@ public class ShotSolver {
 
     public void calculateShotSolution(Pose2d measuredRobotPose, ChassisSpeeds robotSpeeds) {
 
-        // Get the shooter pose from the robot pose.
-        Pose2d shooterPose = getShooterPose(measuredRobotPose);
-
-        ShotSolution staticShotSolution = calculateShotSolutionStatic(shooterPose);
+        //This is for logging.  We could exit here if we wanted to only calculate the static shot solution.
+        ShotSolution staticShotSolution = calculateShotSolutionStatic(measuredRobotPose);
         Logger.recordOutput("ShotSolver/Static/FlywheelRPM", staticShotSolution.flywheelRPM);
         Logger.recordOutput("ShotSolver/Static/HoodPosition", staticShotSolution.hoodPositionRotations);
         Logger.recordOutput("ShotSolver/Static/AimHeading", staticShotSolution.aimHeading.getDegrees());
         Logger.recordOutput("ShotSolver/Static/TimeOfFlight", staticShotSolution.timeOfFlight);
 
-        // Calculate a look-ahead shooter pose by projecting the shooter position forward in time by a small amount.
-        Pose2d lookAheadShooterPose = findFuturePose(shooterPose, robotSpeeds, Constants.kLookAheadTime);
-        ShotSolution lookAheadShooterSolution = calculateShotSolutionStatic(lookAheadShooterPose);
+        // Calculate a look-ahead pose by projecting forward in time by a small amount.
+        Pose2d lookAheadRobotPose = findFuturePose(measuredRobotPose, robotSpeeds, Constants.kLookAheadTime);
+        ShotSolution lookAheadShooterSolution = calculateShotSolutionStatic(lookAheadRobotPose);
         double lookAheadTimeOfFlight = lookAheadShooterSolution.timeOfFlight;
         Logger.recordOutput("ShotSolver/LookAhead/FlywheelRPM", lookAheadShooterSolution.flywheelRPM);
         Logger.recordOutput("ShotSolver/LookAhead/HoodPosition", lookAheadShooterSolution.hoodPositionRotations);
         Logger.recordOutput("ShotSolver/LookAhead/AimHeading", lookAheadShooterSolution.aimHeading.getDegrees());
         Logger.recordOutput("ShotSolver/LookAhead/TimeOfFlight", lookAheadTimeOfFlight);
-        Logger.recordOutput("ShotSolver/LookAhead/Pose", lookAheadShooterPose);
+        Logger.recordOutput("ShotSolver/LookAhead/Pose", lookAheadRobotPose);
 
-        // Get future shooter pose by projecting the shooter position forward in time by the look-ahead time of flight
-        Pose2d futureShooterPose = findFuturePose(shooterPose, robotSpeeds, lookAheadTimeOfFlight);
-        ShotSolution futureShooterSolution = calculateShotSolutionStatic(futureShooterPose);
+        // Get future pose by projecting forward in time by the look-ahead time of flight
+        Pose2d futureRobotPose = findFuturePose(measuredRobotPose, robotSpeeds, lookAheadTimeOfFlight);
+        ShotSolution futureShooterSolution = calculateShotSolutionStatic(futureRobotPose);
         Logger.recordOutput("ShotSolver/Future/FlywheelRPM", futureShooterSolution.flywheelRPM);
         Logger.recordOutput("ShotSolver/Future/HoodPosition", futureShooterSolution.hoodPositionRotations);
         Logger.recordOutput("ShotSolver/Future/AimHeading", futureShooterSolution.aimHeading.getDegrees());
         Logger.recordOutput("ShotSolver/Future/TimeOfFlight", futureShooterSolution.timeOfFlight);
-        Logger.recordOutput("ShotSolver/Future/Pose", futureShooterPose);
+        Logger.recordOutput("ShotSolver/Future/Pose", futureRobotPose);
 
         m_shotSolution = futureShooterSolution;
     }
@@ -117,15 +115,21 @@ public class ShotSolver {
 
     /**
      * Calculate a shot solution from a static pose (no velocity compensation).
-     * Useful for auto pre-computation or anywhere you just have a position.
+     * Distance/RPM/hood are based on the shooter position (where the ball leaves).
+     * Aim heading is based on the robot center (what the robot actually rotates around).
      */
     public ShotSolution calculateShotSolutionStatic(Pose2d robotPose) {
 
-        Translation2d robotPosition = robotPose.getTranslation();
-        Translation2d robotToTarget = Util.getHubPosition().minus(robotPosition);
-
-        double distanceToTarget = robotToTarget.getNorm();
+        // Distance from shooter to hub — used for RPM, hood, and time of flight lookup
+        Pose2d shooterPose = getShooterPose(robotPose);
+        Translation2d shooterToTarget = Util.getHubPosition().minus(shooterPose.getTranslation());
+        double distanceToTarget = shooterToTarget.getNorm();
         ShooterParams params = kShooterMap.get(distanceToTarget);
+
+        // Aim heading from robot center to hub — this is the heading the robot needs to face
+        // This I think is better than shooter to hub.. and to find the real angle would be much more complex.  
+       
+        Translation2d robotToTarget = Util.getHubPosition().minus(robotPose.getTranslation());
         Rotation2d aimHeading = robotToTarget.getAngle().plus(new Rotation2d(Math.PI));
 
         return new ShotSolution(
