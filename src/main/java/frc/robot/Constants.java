@@ -64,15 +64,8 @@ public final class Constants {
     public static final double kRaisingClimberSetpoint = 14.0;
     public static final double kLoweringClimberSetpoint = 0.5;
 
-      public static final double kRaisingClimberPercentage = 0.75;
+    public static final double kRaisingClimberPercentage = 0.75;
     public static final double kLoweringClimberPercentage = -0.75;
-
-    public static class OperatorConstants {
-      
-        public static final int kDriverControllerPort = 0;
-        public static final int kOperatorControllerPort = 1;
-    }
-
 
     public static boolean disableHAL = false;
 

@@ -50,19 +50,21 @@ public class Robot extends LoggedRobot {
         m_robotContainer.updateShotSolution();
         m_robotContainer.checkHubAlignment();
 
-        if (isSimulation()) {
-
-            m_robotContainer.simulateBatteryLoad();
-        }
-
         updateActiveDisplay();
     }
 
     public void updateActiveDisplay () {
 
         double matchTime = DriverStation.getMatchTime();
-        boolean redActiveFirst;
 
+        if (isAutonomous()) {
+
+            Logger.recordOutput("Shift Timer", matchTime);
+            Logger.recordOutput("Current Shift", "Autonomous (Active)");
+            return;
+        }
+
+        boolean redActiveFirst;
         String gameData = DriverStation.getGameSpecificMessage();
 
         if (gameData.isEmpty()) {
@@ -79,11 +81,7 @@ public class Robot extends LoggedRobot {
 
         boolean firstActiveShift = Util.isRedAlliance() ? redActiveFirst : !redActiveFirst;
 
-        if (matchTime > 140) {
-
-            Logger.recordOutput("Shift Timer", matchTime - 140);
-            Logger.recordOutput("Current Shift", "Autonomous (Active)");
-        } else if (matchTime > 130) { // Transition Shift
+        if (matchTime > 130) { // Transition Shift
 
             Logger.recordOutput("Shift Timer", matchTime - 130);
             Logger.recordOutput("Current Shift", "Transition (Active)");
@@ -154,6 +152,7 @@ public class Robot extends LoggedRobot {
     public void simulationPeriodic() {
 
         SimulatedArena.getInstance().simulationPeriodic();
+        m_robotContainer.simulateBatteryLoad();
         m_robotContainer.displayFieldSimToAdvantageScope();
     }
 

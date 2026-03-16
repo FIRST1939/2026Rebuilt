@@ -23,7 +23,6 @@ import edu.wpi.first.wpilibj.simulation.RoboRioSim;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.Constants.OperatorConstants;
 import frc.robot.bindings.*;
 import frc.robot.bindings.characterization.*;
 import frc.robot.bindings.config.*;
@@ -51,9 +50,8 @@ public class RobotContainer {
         private final Shooter m_shooter;
         private final Climber m_climber;
     
-        private final ShotSolver m_shotSolver;
-        private final LoggedDashboardChooser<Command> m_autoSelector;
         private final IntakeStateManager m_intakeStateManager;
+        private final ShotSolver m_shotSolver;
     
         private enum OpModes {
             MATCH,
@@ -66,9 +64,10 @@ public class RobotContainer {
         }
     
         private final LoggedDashboardChooser<OpModes> m_opModeSelector = new LoggedDashboardChooser<>("Op Mode Selector");
+        private final LoggedDashboardChooser<Command> m_autoSelector;
     
-        private final CommandXboxController m_driverController = new CommandXboxController(OperatorConstants.kDriverControllerPort);
-        private final CommandXboxController m_operatorController = new CommandXboxController(OperatorConstants.kOperatorControllerPort);
+        private final CommandXboxController m_driverController = new CommandXboxController(0);
+        private final CommandXboxController m_operatorController = new CommandXboxController(1);
     
         public RobotContainer(boolean isReal) {
     
@@ -146,8 +145,8 @@ public class RobotContainer {
             m_climber = new Climber(new ClimberIOSim());
         }
 
-        m_shotSolver = new ShotSolver();
         m_intakeStateManager = new IntakeStateManager(m_intake);
+        m_shotSolver = new ShotSolver();
 
         m_opModeSelector.addDefaultOption("Match", OpModes.MATCH);
         m_opModeSelector.addOption("Percent", OpModes.PERCENT);
@@ -191,9 +190,15 @@ public class RobotContainer {
         return m_autoSelector.get();
     }
 
-    public void displayFieldSimToAdvantageScope() {
+    public void updateShotSolution() {
 
-        Logger.recordOutput("FieldSimulation/RobotPosition", m_swerveDriveSimulation.getSimulatedDriveTrainPose());
+        m_shotSolver.calculateShotSolution(m_drive.getPose(), m_drive.getChassisSpeeds());
+    }
+    
+    public void checkHubAlignment() {
+
+        double error = Math.abs(m_drive.getRotation().getDegrees() - m_shotSolver.getShotSolution().aimHeading.getDegrees());
+        Logger.recordOutput("Hub Aligned", error < 1.5);
     }
 
     public void simulateBatteryLoad() {
@@ -207,14 +212,8 @@ public class RobotContainer {
         );
     }
 
-    public void updateShotSolution() {
+    public void displayFieldSimToAdvantageScope() {
 
-        m_shotSolver.calculateShotSolution(m_drive.getPose(), m_drive.getChassisSpeeds());
-    }
-    
-    public void checkHubAlignment() {
-
-        double error = Math.abs(m_drive.getRotation().getDegrees() - m_shotSolver.getShotSolution().aimHeading.getDegrees());
-        Logger.recordOutput("Hub Aligned", error < 1.5);
+        Logger.recordOutput("FieldSimulation/RobotPosition", m_swerveDriveSimulation.getSimulatedDriveTrainPose());
     }
 }
