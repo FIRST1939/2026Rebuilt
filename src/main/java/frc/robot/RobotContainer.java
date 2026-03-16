@@ -134,8 +134,8 @@ public class RobotContainer {
 
             new Vision(
                 m_drive::addVisionMeasurement,
-                new VisionIOPhotonVisionSim(VisionConstants.camera0Name, VisionConstants.robotToCamera0, m_drive::getPose),
-                new VisionIOPhotonVisionSim(VisionConstants.camera1Name, VisionConstants.robotToCamera1, m_drive::getPose)
+                new VisionIOPhotonVisionSim(VisionConstants.camera0Name, VisionConstants.robotToCamera0, m_swerveDriveSimulation::getSimulatedDriveTrainPose),
+                new VisionIOPhotonVisionSim(VisionConstants.camera1Name, VisionConstants.robotToCamera1, m_swerveDriveSimulation::getSimulatedDriveTrainPose)
             );
 
             m_intake = new Intake(new IntakeIOSim());
