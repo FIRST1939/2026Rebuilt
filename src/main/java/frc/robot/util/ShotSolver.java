@@ -1,8 +1,5 @@
 package frc.robot.util;
 
-import static edu.wpi.first.units.Units.Inches;
-import static edu.wpi.first.units.Units.Meters;
-
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -56,7 +53,7 @@ public class ShotSolver {
         }
     }
 
-    private static final InterpolatingTreeMap<Double, ShooterParams> kShooterMap =new InterpolatingTreeMap<>(
+    private static final InterpolatingTreeMap<Double, ShooterParams> kShooterMap = new InterpolatingTreeMap<>(
         InverseInterpolator.forDouble(), 
         ShooterParams.kInterpolator
     );
@@ -74,7 +71,7 @@ public class ShotSolver {
         kShooterMap.put(5.0, new ShooterParams(3600, 0.0625, 1.55));
     }
 
-    private ShotSolution m_shotSolution;
+    private ShotSolution m_shotSolution = new ShotSolution(0, 0, new Rotation2d(), 0);
 
 
     public void calculateShotSolution(Pose2d measuredRobotPose, ChassisSpeeds robotSpeeds) {
@@ -105,7 +102,30 @@ public class ShotSolver {
         Logger.recordOutput("ShotSolver/Future/TimeOfFlight", futureShooterSolution.timeOfFlight);
         Logger.recordOutput("ShotSolver/Future/Pose", futureRobotPose);
 
+
         m_shotSolution = futureShooterSolution;
+
+
+        //Virtual hub heading correction: offset the hub opposite to ball drift to compensate for it. 
+        //If we are going sideways (strafing), the ball will drift in the direction we are going, so we want to aim behind the hub to compensate.
+        //This is a simple approximation that assumes constant velocity and doesn't account for acceleration from the shot.
+        
+        //Uncomment this to try that out.
+        
+        //  ChassisSpeeds fieldSpeeds = ChassisSpeeds.fromRobotRelativeSpeeds(robotSpeeds, measuredRobotPose.getRotation());
+        //  Translation2d fieldVelocity = new Translation2d(fieldSpeeds.vxMetersPerSecond, fieldSpeeds.vyMetersPerSecond);
+        //  Translation2d virtualHub = Util.getHubPosition().minus(fieldVelocity.times(futureShooterSolution.timeOfFlight));
+        //  Translation2d robotToVirtualTarget = virtualHub.minus(futureRobotPose.getTranslation());
+        //  Rotation2d robotToVirtualTargetAngle = robotToVirtualTarget.getAngle().plus(new Rotation2d(Math.PI));
+
+        //  Logger.recordOutput("ShotSolver/VirtualHub", virtualHub);
+        //  Logger.recordOutput("ShotSolver/Corrected/AimHeading", futureShooterSolution.aimHeading.getDegrees());
+    
+        // futureShooterSolution.aimHeading = robotToVirtualTargetAngle;
+
+        // m_shotSolution = futureShooterSolution;
+
+        
     }
 
     public ShotSolution getShotSolution () {
@@ -151,7 +171,7 @@ public class ShotSolver {
         );
 
         return futureRobotPose;
-    };
+    }
  
      /**
      * Get the shooter position on the field from a robot pose.
