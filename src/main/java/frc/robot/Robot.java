@@ -124,6 +124,7 @@ public class Robot extends LoggedRobot {
         if (isSimulation()) {
 
             SimulatedArena.getInstance().resetFieldForAuto();
+            m_robotContainer.simulateAutoPreload();
         }
 
         m_autonomousCommand = m_robotContainer.getAutonomousCommand();
@@ -165,6 +166,9 @@ public class Robot extends LoggedRobot {
     public void simulationPeriodic() {
 
         SimulatedArena.getInstance().simulationPeriodic();
+        m_robotContainer.simulateIntakeBody();
+        m_robotContainer.simulateShooting();
+
         m_robotContainer.displayFieldSimToAdvantageScope();
         m_robotContainer.displayRobotComponentsInAdvantageScope();
     }

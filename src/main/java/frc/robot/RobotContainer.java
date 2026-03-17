@@ -6,12 +6,15 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.*;
 
+import org.ironmaple.simulation.IntakeSimulation;
 import org.ironmaple.simulation.SimulatedArena;
+import org.ironmaple.simulation.IntakeSimulation.IntakeSide;
 import org.ironmaple.simulation.drivesims.COTS;
 import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
 import org.ironmaple.simulation.drivesims.configs.DriveTrainSimulationConfig;
 import org.ironmaple.simulation.drivesims.configs.SwerveModuleSimulationConfig;
 import org.ironmaple.simulation.motorsims.SimulatedBattery;
+import org.ironmaple.simulation.seasonspecific.rebuilt2026.RebuiltFuelOnFly;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
@@ -19,9 +22,13 @@ import com.pathplanner.lib.auto.AutoBuilder;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -40,17 +47,20 @@ import frc.robot.subsystems.vision.*;
 import frc.robot.util.*;
 import frc.robot.generated.TunerConstants;
 import frc.robot.commands.intake.IntakeStateManager;
+import frc.robot.commands.intake.IntakeStateManager.State;
 
 public class RobotContainer {
 
-    private final Drive m_drive;
-    private SwerveDriveSimulation m_swerveDriveSimulation = null;
-    
+    private final Drive m_drive;    
     private final Intake m_intake;
     private final Spindexer m_spindexer;
     private final Feeder m_feeder;
     private final Shooter m_shooter;
     private final Climber m_climber;
+
+    private SwerveDriveSimulation m_swerveDriveSimulation = null;
+    private IntakeSimulation m_intakeSimulation = null;
+    private Timer m_simulatedShotTimer = new Timer();
     
     private final IntakeStateManager m_intakeStateManager;
     private final ShotSolver m_shotSolver;
@@ -123,7 +133,17 @@ public class RobotContainer {
                 new Pose2d()
             );
 
+            m_intakeSimulation = IntakeSimulation.OverTheBumperIntake(
+                "Fuel", 
+                m_swerveDriveSimulation, 
+                Inches.of(26.35), 
+                Inches.of(6.4715), 
+                IntakeSide.FRONT, 
+                39
+            );
+
             SimulatedArena.getInstance().addDriveTrainSimulation(m_swerveDriveSimulation);
+            m_simulatedShotTimer.start();
 
             m_drive = new Drive(
                 new GyroIOSim(m_swerveDriveSimulation.getGyroSimulation()), 
@@ -210,6 +230,61 @@ public class RobotContainer {
 
         double error = Math.abs(m_drive.getRotation().getDegrees() - m_shotSolver.getShotSolution().aimHeading.getDegrees());
         Logger.recordOutput("Hub Aligned", error < 1.5);
+    }
+
+    public void simulateAutoPreload() {
+
+        m_intakeSimulation.setGamePiecesCount(8);
+    }
+
+    public void simulateIntakeBody() {
+
+        State intakeGoalState = m_intakeStateManager.getGoalState();
+
+        if (intakeGoalState == State.INTAKING) {
+
+            if (!m_intakeSimulation.isRunning()) {
+
+                m_swerveDriveSimulation.removeFixture(m_intakeSimulation);
+            }
+
+            m_intakeSimulation.startIntake();
+            return;
+        }
+
+        m_intakeSimulation.stopIntake();
+        if (intakeGoalState == State.STOWED) { return; }
+        if (intakeGoalState == State.IDLE) { return; }
+
+        if (!m_swerveDriveSimulation.containsFixture(m_intakeSimulation)) {
+
+            m_swerveDriveSimulation.addFixture(m_intakeSimulation);
+        }
+    }
+
+    public void simulateShooting() {
+
+        if (m_spindexer.getSpindexerVelocity() < 60.0) { return; }
+        if (m_feeder.getFeederVelocity() < 60.0) { return; }
+        if (m_simulatedShotTimer.get() < 0.25) { return; }
+
+        if (!m_intakeSimulation.obtainGamePieceFromIntake()) { return; }
+
+        Pose2d robotPose = m_swerveDriveSimulation.getSimulatedDriveTrainPose();
+        ChassisSpeeds chassisSpeeds = m_swerveDriveSimulation.getDriveTrainSimulatedChassisSpeedsFieldRelative();
+
+        RebuiltFuelOnFly fuelOnFly = new RebuiltFuelOnFly(
+            robotPose.getTranslation(), 
+            new Translation2d(0.145923, -0.142875), 
+            chassisSpeeds, 
+            robotPose.getRotation().plus(Rotation2d.fromRadians(Math.PI)), 
+            Meters.of(0.413243), 
+            MetersPerSecond.of(m_shooter.getFlywheelVelocity() * (0.1016 * Math.PI) * (1.0 / 60.0) - 8.5),
+            Rotations.of(0.25 - m_shooter.getHoodPosition())
+        );
+
+        SimulatedArena.getInstance().addGamePieceProjectile(fuelOnFly);
+        m_simulatedShotTimer.restart();
     }
 
     public void displayFieldSimToAdvantageScope() {

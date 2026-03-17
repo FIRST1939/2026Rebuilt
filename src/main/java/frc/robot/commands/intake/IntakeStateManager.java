@@ -29,6 +29,11 @@ public class IntakeStateManager extends Command {
         addRequirements(intake);
     }
 
+    public State getGoalState () {
+
+        return m_goalState;
+    }
+
     public void setGoalState (State goalState) {
 
         m_goalState = goalState;
