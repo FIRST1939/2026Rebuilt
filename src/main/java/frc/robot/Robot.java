@@ -152,7 +152,6 @@ public class Robot extends LoggedRobot {
     public void simulationPeriodic() {
 
         SimulatedArena.getInstance().simulationPeriodic();
-        m_robotContainer.simulateBatteryLoad();
         m_robotContainer.displayFieldSimToAdvantageScope();
         m_robotContainer.displayRobotComponentsInAdvantageScope();
     }

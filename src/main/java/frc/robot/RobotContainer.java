@@ -22,8 +22,6 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.wpilibj.simulation.BatterySim;
-import edu.wpi.first.wpilibj.simulation.RoboRioSim;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -212,17 +210,6 @@ public class RobotContainer {
 
         double error = Math.abs(m_drive.getRotation().getDegrees() - m_shotSolver.getShotSolution().aimHeading.getDegrees());
         Logger.recordOutput("Hub Aligned", error < 1.5);
-    }
-
-    public void simulateBatteryLoad() {
-
-        RoboRioSim.setVInVoltage(
-            BatterySim.calculateDefaultBatteryLoadedVoltage(
-                m_intake.getRollerCurrent(),
-                m_spindexer.getSpindexerCurrent(),
-                m_feeder.getFeederCurrent()
-            )
-        );
     }
 
     public void displayFieldSimToAdvantageScope() {
