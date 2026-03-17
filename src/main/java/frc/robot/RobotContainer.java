@@ -17,6 +17,9 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 import com.pathplanner.lib.auto.AutoBuilder;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.simulation.BatterySim;
 import edu.wpi.first.wpilibj.simulation.RoboRioSim;
@@ -215,5 +218,80 @@ public class RobotContainer {
     public void displayFieldSimToAdvantageScope() {
 
         Logger.recordOutput("FieldSimulation/RobotPosition", m_swerveDriveSimulation.getSimulatedDriveTrainPose());
+    }
+
+    public void displayRobotComponentsInAdvantageScope() {
+
+        double backLinkZeroAngle = 27.570246;
+        double backLinkLength = 0.177500;
+
+        double frontLinkZeroAngle = 23.061811;
+        double frontLinkLength = 0.169969;
+
+        double intakeZeroAngle = 7.043217;
+        double intakeHoleDistance = 0.127000;
+
+        double backLinkAngle = Math.toRadians(backLinkZeroAngle + 103.5) - Rotations.of(m_intake.getPivotPosition()).in(Radians);
+
+        double backLinkIntakeX = backLinkLength * Math.cos(backLinkAngle);
+        double backLinkIntakeY = backLinkLength * Math.sin(backLinkAngle);
+
+        double dx = backLinkIntakeX - intakeHoleDistance;
+        double dy = backLinkIntakeY;
+
+        double d = Math.hypot(dx, dy);
+
+        double a = (Math.pow(frontLinkLength, 2) - Math.pow(intakeHoleDistance, 2) + Math.pow(d, 2)) / (2 * d);
+        double h = Math.sqrt(Math.pow(frontLinkLength, 2) - Math.pow(a, 2));
+
+        double Px = intakeHoleDistance + a * dx/d;
+        double Py = a * dy/d;
+
+        double frontLinkIntakeX = Px + h * dy/d;
+        double frontLinkIntakeY = Py - h * dx/d;
+
+        double frontLinkAngle = Math.atan2(frontLinkIntakeY, frontLinkIntakeX - intakeHoleDistance);
+        double intakeAngle = Math.atan2(frontLinkIntakeY - backLinkIntakeY, frontLinkIntakeX - backLinkIntakeX);
+
+        Pose3d intakePivotBack4Bar = new Pose3d(
+            new Translation3d(
+                0.050800,
+                0.0,
+                0.132733
+            ),
+            new Rotation3d(
+                0.0,
+                -backLinkAngle + Math.toRadians(backLinkZeroAngle),
+                0.0
+            )
+        );
+
+        Pose3d intakePivotFront4Bar = new Pose3d(
+            new Translation3d(
+                0.177800,
+                0.0,
+                0.132733
+            ),
+            new Rotation3d(
+                0.0,
+                -frontLinkAngle + Math.toRadians(frontLinkZeroAngle),
+                0.0
+            )
+        );
+
+        Pose3d intakePivot = new Pose3d(
+            new Translation3d(
+                (backLinkIntakeX + frontLinkIntakeX) / 2.0 + 0.050800,
+                0.0,
+                (backLinkIntakeY + frontLinkIntakeY) / 2.0 + 0.132733
+            ),
+            new Rotation3d(
+                0.0,
+                -intakeAngle - Math.toRadians(intakeZeroAngle),
+                0.0
+            )
+        );
+
+        Logger.recordOutput("FieldSimulation/RobotComponents", new Pose3d[] {intakePivotBack4Bar, intakePivotFront4Bar, intakePivot});
     }
 }

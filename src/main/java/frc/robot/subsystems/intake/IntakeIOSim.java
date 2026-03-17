@@ -32,10 +32,10 @@ public class IntakeIOSim extends IntakeIOHardware {
         1.0 / IntakeConstants.kPivotGearing,
         0.067,
         0.178,
-        0.0,
-        Degrees.of(103.5).in(Radians),
+        Degrees.of(27.570246).in(Radians),
+        Degrees.of(27.570246 + 103.5).in(Radians),
         true,
-        0.0
+        Degrees.of(27.570246 + 103.5).in(Radians)
     );
 
     private final SingleJointedArmSim m_rightPivotPhysicsSim = new SingleJointedArmSim(
@@ -43,10 +43,10 @@ public class IntakeIOSim extends IntakeIOHardware {
         1.0 / IntakeConstants.kPivotGearing,
         0.067,
         0.178,
-        0.0,
-        Degrees.of(103.5).in(Radians),
+        Degrees.of(27.570246).in(Radians),
+        Degrees.of(27.570246 + 103.5).in(Radians),
         true,
-        0.0
+        Degrees.of(27.570246 + 103.5).in(Radians)
     );
 
     @Override
@@ -63,7 +63,7 @@ public class IntakeIOSim extends IntakeIOHardware {
             0.02
         );
 
-        double leftPivotVoltage = m_leftPivotMotorSim.getAppliedOutput() * m_leftPivotMotorSim.getBusVoltage();
+        double leftPivotVoltage = -m_leftPivotMotorSim.getAppliedOutput() * m_leftPivotMotorSim.getBusVoltage();
         boolean leftPivotOvercomeFriction = Math.abs(leftPivotVoltage) > IntakeConstants.kLeftPivotFeedforwardS;
         m_leftPivotPhysicsSim.setInputVoltage(leftPivotOvercomeFriction ? leftPivotVoltage - Math.copySign(IntakeConstants.kLeftPivotFeedforwardS, leftPivotVoltage) : 0);
         m_leftPivotPhysicsSim.update(0.02);
@@ -74,7 +74,7 @@ public class IntakeIOSim extends IntakeIOHardware {
             0.02
         );
 
-        double rightPivotVoltage = m_rightPivotMotorSim.getAppliedOutput() * m_rightPivotMotorSim.getBusVoltage();
+        double rightPivotVoltage = -m_rightPivotMotorSim.getAppliedOutput() * m_rightPivotMotorSim.getBusVoltage();
         boolean rightPivotOvercomeFriction = Math.abs(rightPivotVoltage) > IntakeConstants.kRightPivotFeedforwardS;
         m_rightPivotPhysicsSim.setInputVoltage(rightPivotOvercomeFriction ? rightPivotVoltage - Math.copySign(IntakeConstants.kRightPivotFeedforwardS, rightPivotVoltage) : 0);
         m_rightPivotPhysicsSim.update(0.02);
