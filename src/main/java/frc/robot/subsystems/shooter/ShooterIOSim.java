@@ -1,7 +1,10 @@
 package frc.robot.subsystems.shooter;
 
 import static edu.wpi.first.units.Units.RPM;
-import static edu.wpi.first.units.Units.RadiansPerSecond;
+import static edu.wpi.first.units.Units.Second;
+import static edu.wpi.first.units.Units.Volts;
+import static edu.wpi.first.units.Units.VoltsPerRadianPerSecond;
+import static edu.wpi.first.units.Units.VoltsPerRadianPerSecondSquared;
 
 import com.revrobotics.sim.SparkFlexSim;
 
@@ -18,16 +21,16 @@ public class ShooterIOSim extends ShooterIOHardware {
 
     private final FlywheelSim m_flywheelPhysicsSim = new FlywheelSim(
         LinearSystemId.identifyVelocitySystem(
-            RPM.of(ShooterConstants.kFlywheelFeedforwardV).in(RadiansPerSecond),
-            RPM.of(ShooterConstants.kFlywheelFeedforwardA).in(RadiansPerSecond)
+            Volts.of(ShooterConstants.kFlywheelFeedforwardV).per(RPM).in(VoltsPerRadianPerSecond),
+            Volts.of(ShooterConstants.kFlywheelFeedforwardA).per(RPM.per(Second)).in(VoltsPerRadianPerSecondSquared)
         ),
-        DCMotor.getNeoVortex(1)
+        DCMotor.getNeoVortex(2)
     );
 
     private final FlywheelSim m_hoodPhysicsSim = new FlywheelSim(
         LinearSystemId.identifyVelocitySystem(
-            RPM.of(ShooterConstants.kHoodFeedforwardV).in(RadiansPerSecond),
-            RPM.of(ShooterConstants.kHoodFeedforwardA).in(RadiansPerSecond)
+            Volts.of(ShooterConstants.kHoodFeedforwardV).per(RPM).in(VoltsPerRadianPerSecond),
+            Volts.of(ShooterConstants.kHoodFeedforwardA).per(RPM.per(Second)).in(VoltsPerRadianPerSecondSquared)
         ),
         DCMotor.getNeoVortex(1)
     );
@@ -52,7 +55,7 @@ public class ShooterIOSim extends ShooterIOHardware {
             0.02
         );
 
-        double hoodVoltage = m_hoodSim.getAppliedOutput() * m_hoodSim.getBusVoltage();
+        double hoodVoltage = m_hoodSim.getAppliedOutput() * m_hoodSim.getBusVoltage() - ShooterConstants.kHoodFeedforwardG;
         boolean hoodOvercomeFriction = Math.abs(hoodVoltage) > ShooterConstants.kHoodFeedforwardS;
         m_hoodPhysicsSim.setInputVoltage(hoodOvercomeFriction ? hoodVoltage - Math.copySign(ShooterConstants.kHoodFeedforwardS, hoodVoltage) : 0);
         m_hoodPhysicsSim.update(0.02);

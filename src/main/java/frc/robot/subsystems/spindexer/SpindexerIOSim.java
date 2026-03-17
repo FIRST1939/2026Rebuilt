@@ -1,7 +1,10 @@
 package frc.robot.subsystems.spindexer;
 
 import static edu.wpi.first.units.Units.RPM;
-import static edu.wpi.first.units.Units.RadiansPerSecond;
+import static edu.wpi.first.units.Units.Second;
+import static edu.wpi.first.units.Units.Volts;
+import static edu.wpi.first.units.Units.VoltsPerRadianPerSecond;
+import static edu.wpi.first.units.Units.VoltsPerRadianPerSecondSquared;
 
 import com.revrobotics.sim.SparkFlexSim;
 
@@ -16,8 +19,8 @@ public class SpindexerIOSim extends SpindexerIOHardware {
 
     private final FlywheelSim m_physicsSim = new FlywheelSim(
         LinearSystemId.identifyVelocitySystem(
-            RPM.of(SpindexerConstants.kSpindexerFeedforwardV).in(RadiansPerSecond), 
-            RPM.of(SpindexerConstants.kSpindexerFeedforwardA).in(RadiansPerSecond)
+            Volts.of(SpindexerConstants.kSpindexerFeedforwardV).per(RPM).in(VoltsPerRadianPerSecond),
+            Volts.of(SpindexerConstants.kSpindexerFeedforwardA).per(RPM.per(Second)).in(VoltsPerRadianPerSecondSquared)
         ), 
         DCMotor.getNeoVortex(1)
     );

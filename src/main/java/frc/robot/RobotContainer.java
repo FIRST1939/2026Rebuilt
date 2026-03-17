@@ -11,6 +11,7 @@ import org.ironmaple.simulation.drivesims.COTS;
 import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
 import org.ironmaple.simulation.drivesims.configs.DriveTrainSimulationConfig;
 import org.ironmaple.simulation.drivesims.configs.SwerveModuleSimulationConfig;
+import org.ironmaple.simulation.motorsims.SimulatedBattery;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
@@ -146,6 +147,15 @@ public class RobotContainer {
             m_feeder = new Feeder(new FeederIOSim());
             m_shooter = new Shooter(new ShooterIOSim());
             m_climber = new Climber(new ClimberIOSim());
+
+            SimulatedBattery.addElectricalAppliances(() -> Amps.of(m_intake.getRollerCurrent()));
+            SimulatedBattery.addElectricalAppliances(() -> Amps.of(m_intake.getLeftPivotCurrent()));
+            SimulatedBattery.addElectricalAppliances(() -> Amps.of(m_intake.getRightPivotCurrent()));
+            SimulatedBattery.addElectricalAppliances(() -> Amps.of(m_spindexer.getSpindexerCurrent()));
+            SimulatedBattery.addElectricalAppliances(() -> Amps.of(m_feeder.getFeederCurrent()));
+            SimulatedBattery.addElectricalAppliances(() -> Amps.of(m_shooter.getFlywheelLeaderCurrent()));
+            SimulatedBattery.addElectricalAppliances(() -> Amps.of(m_shooter.getFlywheelFollowerCurrent()));
+            SimulatedBattery.addElectricalAppliances(() -> Amps.of(m_shooter.getHoodCurrent()));
         }
 
         m_intakeStateManager = new IntakeStateManager(m_intake);

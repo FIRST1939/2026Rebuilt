@@ -92,9 +92,24 @@ public class Shooter extends SubsystemBase {
         return (m_inputs.flywheelLeaderVelocity + m_inputs.flywheelFollowerVelocity) / 2.0;
     }
 
+    public double getFlywheelLeaderCurrent () {
+
+        return m_inputs.flywheelLeaderCurrent;
+    }
+
+    public double getFlywheelFollowerCurrent () {
+
+        return m_inputs.flywheelFollowerCurrent;
+    }
+
     public double getHoodPosition () {
 
         return m_inputs.hoodPosition;
+    }
+
+    public double getHoodCurrent () {
+
+        return m_inputs.hoodCurrent;
     }
 
     public void setFlywheelPercentage (double percent) {

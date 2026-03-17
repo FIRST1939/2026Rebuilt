@@ -1,7 +1,10 @@
 package frc.robot.subsystems.feeder;
 
 import static edu.wpi.first.units.Units.RPM;
-import static edu.wpi.first.units.Units.RadiansPerSecond;
+import static edu.wpi.first.units.Units.Second;
+import static edu.wpi.first.units.Units.Volts;
+import static edu.wpi.first.units.Units.VoltsPerRadianPerSecond;
+import static edu.wpi.first.units.Units.VoltsPerRadianPerSecondSquared;
 
 import com.revrobotics.sim.SparkFlexSim;
 
@@ -16,8 +19,8 @@ public class FeederIOSim extends FeederIOHardware {
 
     private final FlywheelSim m_physicsSim = new FlywheelSim(
         LinearSystemId.identifyVelocitySystem(
-            RPM.of(FeederConstants.kFeederFeedforwardV).in(RadiansPerSecond),
-            RPM.of(FeederConstants.kFeederFeedforwardA).in(RadiansPerSecond)
+            Volts.of(FeederConstants.kFeederFeedforwardV).per(RPM).in(VoltsPerRadianPerSecond),
+            Volts.of(FeederConstants.kFeederFeedforwardA).per(RPM.per(Second)).in(VoltsPerRadianPerSecondSquared)
         ),
         DCMotor.getNeoVortex(1)
     );

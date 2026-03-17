@@ -4,6 +4,10 @@ import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.RPM;
 import static edu.wpi.first.units.Units.Radians;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
+import static edu.wpi.first.units.Units.Second;
+import static edu.wpi.first.units.Units.Volts;
+import static edu.wpi.first.units.Units.VoltsPerRadianPerSecond;
+import static edu.wpi.first.units.Units.VoltsPerRadianPerSecondSquared;
 
 import com.revrobotics.sim.SparkFlexSim;
 
@@ -21,8 +25,8 @@ public class IntakeIOSim extends IntakeIOHardware {
 
     private final FlywheelSim m_rollerPhysicsSim = new FlywheelSim(
         LinearSystemId.identifyVelocitySystem(
-            RPM.of(IntakeConstants.kRollerFeedforwardV).in(RadiansPerSecond),
-            RPM.of(IntakeConstants.kRollerFeedforwardA).in(RadiansPerSecond)
+            Volts.of(IntakeConstants.kRollerFeedforwardV).per(RPM).in(VoltsPerRadianPerSecond),
+            Volts.of(IntakeConstants.kRollerFeedforwardA).per(RPM.per(Second)).in(VoltsPerRadianPerSecondSquared)
         ), 
         DCMotor.getNeoVortex(1)
     );
@@ -69,7 +73,7 @@ public class IntakeIOSim extends IntakeIOHardware {
         m_leftPivotPhysicsSim.update(0.02);
 
         m_leftPivotMotorSim.iterate(
-            RadiansPerSecond.of(m_leftPivotPhysicsSim.getVelocityRadPerSec()).in(RPM),
+            RadiansPerSecond.of(-m_leftPivotPhysicsSim.getVelocityRadPerSec()).in(RPM),
             RobotController.getBatteryVoltage(),
             0.02
         );
@@ -80,7 +84,7 @@ public class IntakeIOSim extends IntakeIOHardware {
         m_rightPivotPhysicsSim.update(0.02);
 
         m_rightPivotMotorSim.iterate(
-            RadiansPerSecond.of(m_rightPivotPhysicsSim.getVelocityRadPerSec()).in(RPM),
+            RadiansPerSecond.of(-m_rightPivotPhysicsSim.getVelocityRadPerSec()).in(RPM),
             RobotController.getBatteryVoltage(),
             0.02
         );
