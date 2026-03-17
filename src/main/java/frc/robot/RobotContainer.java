@@ -215,6 +215,7 @@ public class RobotContainer {
     public void displayFieldSimToAdvantageScope() {
 
         Logger.recordOutput("FieldSimulation/RobotPosition", m_swerveDriveSimulation.getSimulatedDriveTrainPose());
+        Logger.recordOutput("FieldSimulation/Fuel", SimulatedArena.getInstance().getGamePiecesArrayByType("Fuel"));
     }
 
     public void displayRobotComponentsInAdvantageScope() {

@@ -5,6 +5,7 @@
 package frc.robot;
 
 import org.ironmaple.simulation.SimulatedArena;
+import org.ironmaple.simulation.seasonspecific.rebuilt2026.Arena2026Rebuilt;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.NT4Publisher;
@@ -120,6 +121,11 @@ public class Robot extends LoggedRobot {
     @Override
     public void autonomousInit() {
 
+        if (isSimulation()) {
+
+            SimulatedArena.getInstance().resetFieldForAuto();
+        }
+
         m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
         if (m_autonomousCommand != null) {
@@ -147,6 +153,13 @@ public class Robot extends LoggedRobot {
 
     @Override
     public void teleopExit() {}
+
+    @Override
+    public void simulationInit() {
+
+        Arena2026Rebuilt arena = (Arena2026Rebuilt) SimulatedArena.getInstance();
+        arena.setEfficiencyMode(false);
+    }
 
     @Override
     public void simulationPeriodic() {
