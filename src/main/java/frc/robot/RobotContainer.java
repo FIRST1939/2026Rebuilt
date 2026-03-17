@@ -292,6 +292,19 @@ public class RobotContainer {
             )
         );
 
-        Logger.recordOutput("FieldSimulation/RobotComponents", new Pose3d[] {intakePivotBack4Bar, intakePivotFront4Bar, intakePivot});
+        Pose3d shooterHood = new Pose3d(
+            new Translation3d(
+                -0.209423,
+                0.142875,
+                0.413191
+            ),
+            new Rotation3d(
+                0.0,
+                Rotations.of(-m_shooter.getHoodPosition()).in(Radians),
+                0.0
+            )
+        );
+
+        Logger.recordOutput("FieldSimulation/RobotComponents", new Pose3d[] {intakePivotBack4Bar, intakePivotFront4Bar, intakePivot, shooterHood});
     }
 }
