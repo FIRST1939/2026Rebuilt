@@ -1,6 +1,8 @@
 package frc.robot.bindings;
 
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Constants;
+import frc.robot.commands.climber.SetClimberPercentage;
 import frc.robot.commands.feeder.RunFeederPercentage;
 import frc.robot.commands.intake.RunPivotPercentage;
 import frc.robot.commands.intake.RunRollerPercentage;
@@ -20,5 +22,7 @@ public class PercentBindings {
         modeTrigger.and(bindingParams.operatorController.rightTrigger()).whileTrue(new RunRollerPercentage(bindingParams.intake, 0.225));
         modeTrigger.and(bindingParams.operatorController.leftBumper()).whileTrue(new RunPivotPercentage(bindingParams.intake, -0.25));
         modeTrigger.and(bindingParams.operatorController.rightBumper()).whileTrue(new RunPivotPercentage(bindingParams.intake, 0.25));
+        modeTrigger.and(bindingParams.driverController.povUp()).whileTrue(new SetClimberPercentage(bindingParams.climber, Constants.kRaisingClimberPercentage));
+        modeTrigger.and(bindingParams.driverController.povDown()).whileTrue(new SetClimberPercentage(bindingParams.climber, Constants.kLoweringClimberPercentage));
     }
 }
