@@ -362,6 +362,8 @@ public class RobotContainer {
         percentMode.and(m_operatorController.rightTrigger()).whileTrue(new RunRollerPercentage(m_intake, 0.225));
         percentMode.and(m_operatorController.leftBumper()).whileTrue(new RunPivotPercentage(m_intake, -0.25));
         percentMode.and(m_operatorController.rightBumper()).whileTrue(new RunPivotPercentage(m_intake, 0.25));
+        percentMode.and(m_driverController.povUp()).whileTrue(new SetClimberPercentage(m_climber, Constants.kRaisingClimberPercentage));
+        percentMode.and(m_driverController.povDown()).whileTrue(new SetClimberPercentage(m_climber, Constants.kLoweringClimberPercentage));
     }
 
     public void configureIntakeCharacterizationBindings () {

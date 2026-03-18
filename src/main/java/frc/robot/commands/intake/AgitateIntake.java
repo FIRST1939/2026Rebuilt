@@ -18,7 +18,7 @@ public class AgitateIntake extends RepeatCommand {
                 Commands.waitUntil(() -> intake.isPivotAtSetpoint(Constants.kPivotLightSetpoint)),
                 //Commands.waitSeconds(0.5),
                 Commands.runOnce(() -> intakeStateManager.setGoalState(State.AGITATING_OUT)),
-                Commands.waitUntil(() -> intake.isPivotAtSetpoint(Constants.kPivotOutSetpoint))
+                Commands.waitUntil(() -> intake.isPivotAtSetpoint(Constants.kPivotAgitateOutSetpoint))
                 //Commands.waitSeconds(0.5)
             )
         );
