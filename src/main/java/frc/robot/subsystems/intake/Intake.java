@@ -162,9 +162,9 @@ public class Intake extends SubsystemBase {
         return ((m_inputs.rightPivotPosition + m_inputs.leftPivotPosition) / 2);
     }
 
-    public void zeroPivot () {
+    public void zeroPivot (double position) {
 
-        m_io.zeroPivot();
+        m_io.zeroPivot(position);
     }
 
     public void setRollerPercentage (double percentage) {

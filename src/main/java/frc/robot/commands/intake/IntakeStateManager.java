@@ -2,6 +2,7 @@ package frc.robot.commands.intake;
 
 import java.util.Optional;
 
+import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.intake.Intake;
@@ -9,8 +10,10 @@ import frc.robot.subsystems.intake.Intake;
 public class IntakeStateManager extends Command {
     
     private final Intake m_intake;
-    private State m_goalState = State.STOWED;
+    private State m_goalState = null;
     private Optional<State> m_overrideGoal = Optional.empty();
+
+    private Debouncer m_debouncer;
 
     public enum State {
         STOWED,
@@ -30,6 +33,11 @@ public class IntakeStateManager extends Command {
     }
 
     public void setGoalState (State goalState) {
+
+        if (goalState == State.INTAKING) {
+
+            m_debouncer = new Debouncer(0.25);
+        }
 
         m_goalState = goalState;
     }
@@ -51,6 +59,7 @@ public class IntakeStateManager extends Command {
 
         if (m_overrideGoal.isPresent()) { goalState = m_overrideGoal.get(); }
         else { goalState = m_goalState; }
+        if (goalState == null) { return; }
 
         if (goalState == State.STOWED) {
 
@@ -66,15 +75,22 @@ public class IntakeStateManager extends Command {
             m_intake.setRollerPercentage(0);
         } else if (goalState == State.INTAKING) {
 
+            boolean down = m_debouncer.calculate(
+                Math.abs(m_intake.getLeftPivotVelocity()) < 1.0 && m_intake.getLeftPivotCurrent() > 25 &&
+                Math.abs(m_intake.getRightPivotVelocity()) < 1.0 && m_intake.getLeftPivotCurrent() > 25);
+
+            if (down) { m_intake.zeroPivot(Constants.kPivotOutSetpoint); }
+
             m_intake.setPivotPercentage(0.25);
-            m_intake.setRollerVelocity(Constants.kBaseRollerIntakeVelocity);
+            m_intake.setRollerPercentage(1.0);
+            //m_intake.setRollerVelocity(Constants.kBaseRollerIntakeVelocity);
         } else if (goalState == State.AGITATING_IN) {
 
             m_intake.setPivotPosition(Constants.kPivotLightSetpoint);
             m_intake.setRollerVelocity(Constants.kRollerAgitateVelocity);
         } else if (goalState == State.AGITATING_OUT) {
 
-            m_intake.setPivotPosition(Constants.kPivotOutSetpoint);
+            m_intake.setPivotPosition(Constants.kPivotAgitateOutSetpoint);
             m_intake.setRollerVelocity(Constants.kRollerAgitateVelocity);
         } else if (goalState == State.DEEP_AGITATE_IN) {
 

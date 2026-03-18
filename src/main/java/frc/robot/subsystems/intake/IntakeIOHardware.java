@@ -174,10 +174,10 @@ public class IntakeIOHardware implements IntakeIO {
     }
 
     @Override
-    public void zeroPivot () {
+    public void zeroPivot (double position) {
 
-        m_leftPivotEncoder.setPosition(0.0);
-        m_rightPivotEncoder.setPosition(0.0);
+        m_leftPivotEncoder.setPosition(position);
+        m_rightPivotEncoder.setPosition(position);
     }
 
     @Override

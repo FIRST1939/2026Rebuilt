@@ -17,7 +17,7 @@ public class ZeroIntake extends SequentialCommandGroup {
             new RunPivotPercentage(intake, Constants.kPivotZeroPercentage).until(() -> m_debouncer.calculate(
                 intake.getLeftPivotVelocity() < 1.0 && intake.getLeftPivotCurrent() > 25 &&
                 intake.getRightPivotVelocity() < 1.0 && intake.getLeftPivotCurrent() > 25)),
-            new InstantCommand(() -> intake.zeroPivot())
+            new InstantCommand(() -> intake.zeroPivot(0.0))
         );
     }
 }
