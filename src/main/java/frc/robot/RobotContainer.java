@@ -223,7 +223,7 @@ public class RobotContainer {
 
     public void updateShotSolution() {
 
-        m_shotSolver.calculateShotSolution(m_drive.getPose(), m_drive.getChassisSpeeds());
+        m_shotSolver.calculateShotSolution(m_drive.getPose(), m_drive.getFieldRelativeChassisSpeeds());
     }
     
     public void checkHubAlignment() {

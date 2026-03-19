@@ -126,7 +126,7 @@ public class Drive extends SubsystemBase {
     AutoBuilder.configure(
         this::getPose,
         this::setPose,
-        this::getChassisSpeeds,
+        this::getRobotRelativeChassisSpeeds,
         this::runVelocity,
         new PPHolonomicDriveController(
             new PIDConstants(5.0, 0.0, 0.0), new PIDConstants(5.0, 0.0, 0.0)),
@@ -298,12 +298,16 @@ public class Drive extends SubsystemBase {
 
   /** Returns the measured chassis speeds of the robot. */
   @AutoLogOutput(key = "SwerveChassisSpeeds/Measured")
-  public ChassisSpeeds getChassisSpeeds() {
+  public ChassisSpeeds getRobotRelativeChassisSpeeds() {
     return kinematics.toChassisSpeeds(getModuleStates());
   }
 
+  public ChassisSpeeds getFieldRelativeChassisSpeeds() {
+    return ChassisSpeeds.fromRobotRelativeSpeeds(getRobotRelativeChassisSpeeds(), getRotation());
+  }
+
   public double getSpeed() {
-    ChassisSpeeds chassisSpeeds = getChassisSpeeds();
+    ChassisSpeeds chassisSpeeds = getFieldRelativeChassisSpeeds();
     return Math.hypot(chassisSpeeds.vxMetersPerSecond, chassisSpeeds.vyMetersPerSecond);
   }
 

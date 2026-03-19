@@ -127,7 +127,7 @@ public class DriveCommands {
         )
             .beforeStarting(() -> {
 
-                ChassisSpeeds chassisSpeeds = drive.getChassisSpeeds();
+                ChassisSpeeds chassisSpeeds = drive.getRobotRelativeChassisSpeeds();
                 double xPower = chassisSpeeds.vxMetersPerSecond / drive.getMaxLinearSpeedMetersPerSec();
                 double yPower = chassisSpeeds.vyMetersPerSecond / drive.getMaxLinearSpeedMetersPerSec();
 
