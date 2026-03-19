@@ -299,11 +299,6 @@ public class RobotContainer {
                 m_shotSolver.getShotSolution().aimHeading
             )
         );
-
-        Logger.recordOutput(
-            "Heading Error",
-            m_shotSolver.getShotSolution().aimHeading.minus(m_swerveDriveSimulation.getSimulatedDriveTrainPose().getRotation()).getRadians()
-        );
     }
 
     public void displayRobotComponentsInAdvantageScope() {

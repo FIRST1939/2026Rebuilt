@@ -68,8 +68,6 @@ public final class Constants {
     public static final double kRaisingClimberPercentage = 0.75;
     public static final double kLoweringClimberPercentage = -0.75;
 
-    public static final double kLookAheadTime = 0.1;
-
     public static boolean disableHAL = false;
 
     public static void disableHAL() {
