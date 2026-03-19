@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants;
 import frc.robot.commands.climber.LowerClimberToHeight;
 import frc.robot.commands.climber.RaiseClimberToHeight;
+import frc.robot.commands.drive.PPShootOnTheMoveRotation;
 import frc.robot.commands.feeder.RunFeederVelocity;
 import frc.robot.commands.intake.AgitateIntake;
 import frc.robot.commands.intake.IntakeStateManager.State;
@@ -42,6 +43,13 @@ public class PathPlannerBindings {
                 bindingParams.shooter,
                 () -> bindingParams.shotSolver.getShotSolution().flywheelRPM,
                 () -> bindingParams.shotSolver.getShotSolution().hoodPositionRotations
+            )
+        );
+
+        new EventTrigger("ShotHeading").whileTrue(
+            new PPShootOnTheMoveRotation(
+                bindingParams.drive,
+                bindingParams.shotSolver
             )
         );
 
