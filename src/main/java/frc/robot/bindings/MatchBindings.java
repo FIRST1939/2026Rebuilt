@@ -18,7 +18,7 @@ public class MatchBindings {
     
     public MatchBindings(BindingParams bindingParams, Trigger modeTrigger) {
 
-        Command defaultDriveCommand = DriveCommands.joystickDrive(
+        Command defaultDriveCommand = new JoystickDrive(
             bindingParams.drive,
             () -> -bindingParams.driverController.getLeftY(),
             () -> -bindingParams.driverController.getLeftX(),
@@ -45,7 +45,7 @@ public class MatchBindings {
         );
 
         modeTrigger.and(bindingParams.driverController.rightBumper()).onTrue(
-            DriveCommands.snakeDrive(
+            new SnakeDrive(
                 bindingParams.drive, 
                 () -> -bindingParams.driverController.getLeftY() * 0.6,
                 () -> -bindingParams.driverController.getLeftX() * 0.6,
@@ -54,7 +54,7 @@ public class MatchBindings {
         );
 
         modeTrigger.and(bindingParams.driverController.rightTrigger()).onTrue(
-            DriveCommands.joystickDriveAtAngle(
+            new JoystickDriveAtAngle(
                 bindingParams.drive,
                 () -> -bindingParams.driverController.getLeftY(),
                 () -> -bindingParams.driverController.getLeftX(),
@@ -64,7 +64,7 @@ public class MatchBindings {
         );
 
         modeTrigger.and(bindingParams.driverController.a()).onTrue(
-            DriveCommands.joystickDriveAtAngle(
+            new JoystickDriveAtAngle(
                 bindingParams.drive,
                 () -> -bindingParams.driverController.getLeftY(),
                 () -> -bindingParams.driverController.getLeftX(),
@@ -74,7 +74,7 @@ public class MatchBindings {
         );
 
         modeTrigger.and(bindingParams.driverController.y()).onTrue(
-            DriveCommands.joystickDriveAtAngle(
+            new JoystickDriveAtAngle(
                 bindingParams.drive,
                 () -> -bindingParams.driverController.getLeftY(),
                 () -> -bindingParams.driverController.getLeftX(),
@@ -84,7 +84,7 @@ public class MatchBindings {
         );
 
         modeTrigger.and(bindingParams.driverController.b()).onTrue(
-            DriveCommands.joystickDriveAtAngle(
+            new JoystickDriveAtAngle(
                 bindingParams.drive, 
                 () -> -bindingParams.driverController.getLeftY(),
                 () -> -bindingParams.driverController.getLeftX(),

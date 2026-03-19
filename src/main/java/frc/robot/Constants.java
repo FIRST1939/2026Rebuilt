@@ -25,6 +25,8 @@ public final class Constants {
         REPLAY
     }
 
+    public static final double kJoystickDeadband = 0.1;
+
     public static final double kFeederVelocity = 1500.0;
     public static final double kPivotOutSetpoint = 0.35;
     public static final double kPivotAgitateOutSetpoint = 0.3;
