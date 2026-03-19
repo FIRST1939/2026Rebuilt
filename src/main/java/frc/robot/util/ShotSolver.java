@@ -126,12 +126,14 @@ public class ShotSolver {
             double futureTimeOfFlight = futureShotSolution.timeOfFlight;
             Rotation2d futureAimHeading = getAimHeading(futurePose);
 
-            futurePose = originalRobotPose.plus(
-                new Transform2d(
-                    chassisSpeeds.vxMetersPerSecond * futureTimeOfFlight,
-                    chassisSpeeds.vyMetersPerSecond * futureTimeOfFlight,
-                    futureAimHeading.minus(originalRobotPose.getRotation())
-                )
+            futurePose = new Pose2d(
+                originalRobotPose.getTranslation().plus(
+                    new Translation2d(
+                        chassisSpeeds.vxMetersPerSecond * futureTimeOfFlight,
+                        chassisSpeeds.vyMetersPerSecond * futureTimeOfFlight
+                    )
+                ),
+                futureAimHeading
             );
         }
 
