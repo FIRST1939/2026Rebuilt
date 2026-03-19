@@ -103,7 +103,7 @@ public class ShotSolver {
         Logger.recordOutput("ShotSolver/Future/Pose", futureRobotPose);
 
 
-        m_shotSolution = futureShooterSolution;
+        m_shotSolution = staticShotSolution;
 
 
         //Virtual hub heading correction: offset the hub opposite to ball drift to compensate for it. 

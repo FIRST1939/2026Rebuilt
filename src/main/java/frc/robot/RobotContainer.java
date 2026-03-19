@@ -279,7 +279,7 @@ public class RobotContainer {
             chassisSpeeds, 
             robotPose.getRotation().plus(Rotation2d.fromRadians(Math.PI)), 
             Meters.of(0.413243), 
-            MetersPerSecond.of(m_shooter.getFlywheelVelocity() * (0.1016 * Math.PI) * (1.0 / 60.0) - 8.5),
+            MetersPerSecond.of(m_shooter.getFlywheelVelocity() * (0.1016 * Math.PI) * (1.0 / 60.0) * 0.5),
             Rotations.of(0.25 - m_shooter.getHoodPosition())
         );
 
@@ -291,6 +291,19 @@ public class RobotContainer {
 
         Logger.recordOutput("FieldSimulation/RobotPosition", m_swerveDriveSimulation.getSimulatedDriveTrainPose());
         Logger.recordOutput("FieldSimulation/Fuel", SimulatedArena.getInstance().getGamePiecesArrayByType("Fuel"));
+
+        Logger.recordOutput(
+            "FieldSimulation/TargetHeading", 
+            new Pose2d(
+                m_swerveDriveSimulation.getSimulatedDriveTrainPose().getTranslation(),
+                m_shotSolver.getShotSolution().aimHeading
+            )
+        );
+
+        Logger.recordOutput(
+            "Heading Error",
+            m_shotSolver.getShotSolution().aimHeading.minus(m_swerveDriveSimulation.getSimulatedDriveTrainPose().getRotation()).getRadians()
+        );
     }
 
     public void displayRobotComponentsInAdvantageScope() {
