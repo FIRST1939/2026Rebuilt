@@ -10,7 +10,7 @@ import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import frc.robot.Constants;
+import frc.robot.Constants.*;
 
 public class Util {
 
@@ -23,7 +23,7 @@ public class Util {
     public static Translation2d getLinearVelocityFromJoysticks(double x, double y) {
 
         // Apply deadband
-        double linearMagnitude = MathUtil.applyDeadband(Math.hypot(x, y), Constants.kJoystickDeadband);
+        double linearMagnitude = MathUtil.applyDeadband(Math.hypot(x, y), ControllerConstants.kJoystickDeadband);
         Rotation2d linearDirection = new Rotation2d(Math.atan2(y, x));
 
         // Square magnitude for more precise control

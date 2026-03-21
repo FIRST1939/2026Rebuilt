@@ -7,7 +7,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants;
+import frc.robot.Constants.*;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.util.Util;
 
@@ -39,7 +39,7 @@ public class JoystickDrive extends Command {
         Translation2d linearVelocity = Util.getLinearVelocityFromJoysticks(m_xSupplier.getAsDouble(), m_ySupplier.getAsDouble());
 
         // Apply rotation deadband
-        double omega = MathUtil.applyDeadband(m_omegaSupplier.getAsDouble(), Constants.kJoystickDeadband);
+        double omega = MathUtil.applyDeadband(m_omegaSupplier.getAsDouble(), ControllerConstants.kJoystickDeadband);
 
         // Square rotation value for more precise control
         omega = Math.copySign(omega * omega, omega);

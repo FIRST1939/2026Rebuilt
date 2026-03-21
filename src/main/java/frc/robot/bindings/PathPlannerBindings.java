@@ -4,7 +4,7 @@ import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.events.EventTrigger;
 
 import edu.wpi.first.wpilibj2.command.Commands;
-import frc.robot.Constants;
+import frc.robot.Constants.*;
 import frc.robot.commands.climber.LowerClimberToHeight;
 import frc.robot.commands.climber.RaiseClimberToHeight;
 import frc.robot.commands.drive.PPShootOnTheMoveRotation;
@@ -33,8 +33,8 @@ public class PathPlannerBindings {
             "FeedShooter",
             Commands.parallel(
                 new AgitateIntake(bindingParams.intake, bindingParams.intakeStateManager),
-                new RunSpindexerVelocity(bindingParams.spindexer, Constants.kSpindexerVelocity),
-                new RunFeederVelocity(bindingParams.feeder, Constants.kFeederVelocity)
+                new RunSpindexerVelocity(bindingParams.spindexer, SpindexerConstants.kSpindexerVelocity),
+                new RunFeederVelocity(bindingParams.feeder, FeederConstants.kFeederVelocity)
             )
         );
         
@@ -56,15 +56,15 @@ public class PathPlannerBindings {
         NamedCommands.registerCommand("ClimberUp",
             new RaiseClimberToHeight(
             bindingParams.climber, 
-            Constants.kRaisingClimberSetpoint, 
-            Constants.kRaisingClimberPercentage)
+            ClimberConstants.kRaisingClimberSetpoint, 
+            ClimberConstants.kRaisingClimberPercentage)
         );
 
         NamedCommands.registerCommand("ClimberDown",
             new LowerClimberToHeight(
             bindingParams.climber, 
-            Constants.kLoweringClimberSetpoint, 
-            Constants.kLoweringClimberPercentage)
+            ClimberConstants.kLoweringClimberSetpoint, 
+            ClimberConstants.kLoweringClimberPercentage)
         );
     }
 }

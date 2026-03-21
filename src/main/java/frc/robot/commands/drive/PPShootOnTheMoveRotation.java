@@ -8,6 +8,7 @@ import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.drive.Drive;
+import frc.robot.subsystems.drive.DriveConstants;
 import frc.robot.util.ShotSolver;
 
 public class PPShootOnTheMoveRotation extends Command {
@@ -22,10 +23,13 @@ public class PPShootOnTheMoveRotation extends Command {
         m_shotSolver = shotSolver;
 
         m_angleController = new ProfiledPIDController(
-            20.0,
-            0.0,
-            0.5,
-            new TrapezoidProfile.Constraints(8.0, 20.0)
+            DriveConstants.kAngleControllerP,
+            DriveConstants.kAngleControllerI,
+            DriveConstants.kAngleControllerD,
+            new TrapezoidProfile.Constraints(
+                DriveConstants.kAngleControllerMaxVelocity, 
+                DriveConstants.kAngleControllerMaxAcceleration
+            )
         );
 
         m_angleController.enableContinuousInput(-Math.PI, Math.PI);

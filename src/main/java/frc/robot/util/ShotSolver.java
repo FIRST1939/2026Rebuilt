@@ -120,7 +120,7 @@ public class ShotSolver {
 
         Pose2d futurePose = originalRobotPose;
 
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 5; i++) {
 
             ShotSolution futureShotSolution = calculateShotSolutionStatic(futurePose);
             double futureTimeOfFlight = futureShotSolution.timeOfFlight;

@@ -10,8 +10,9 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants;
+import frc.robot.Constants.*;
 import frc.robot.subsystems.drive.Drive;
+import frc.robot.subsystems.drive.DriveConstants;
 import frc.robot.util.Util;
 
 public class JoystickDriveAtAngle extends Command {
@@ -38,10 +39,13 @@ public class JoystickDriveAtAngle extends Command {
             m_rotationSupplier = rotationSupplier;
 
             m_angleController = new ProfiledPIDController(
-                20.0,
-                0.0,
-                0.5,
-                new TrapezoidProfile.Constraints(8.0, 20.0)
+                DriveConstants.kAngleControllerP,
+                DriveConstants.kAngleControllerI,
+                DriveConstants.kAngleControllerD,
+                new TrapezoidProfile.Constraints(
+                    DriveConstants.kAngleControllerMaxVelocity, 
+                    DriveConstants.kAngleControllerMaxAcceleration
+                )
             );
 
             m_angleController.enableContinuousInput(-Math.PI, Math.PI);
@@ -82,6 +86,6 @@ public class JoystickDriveAtAngle extends Command {
     @Override
     public boolean isFinished() {
 
-        return MathUtil.applyDeadband(m_omegaSupplier.getAsDouble(), Constants.kJoystickDeadband) != 0.0;
+        return MathUtil.applyDeadband(m_omegaSupplier.getAsDouble(), ControllerConstants.kJoystickDeadband) != 0.0;
     }
 }
