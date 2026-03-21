@@ -3,6 +3,7 @@ package frc.robot.bindings;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.*;
 import frc.robot.commands.climber.*;
@@ -121,18 +122,23 @@ public class MatchBindings {
             () -> ShooterConstants.kTrenchHoodSetpoint));
         //Static Shot Trench Command
 
-        modeTrigger.and(bindingParams.operatorController.leftTrigger()).whileTrue(
-            new RunFlywheelAndHood(bindingParams.shooter,
-                () -> bindingParams.shotSolver.getShotSolution().flywheelRPM,
-                () -> bindingParams.shotSolver.getShotSolution().hoodPositionRotations
+        modeTrigger.and(bindingParams.operatorController.rightTrigger()).whileTrue(
+            Commands.parallel(
+                new RunFlywheelAndHood(bindingParams.shooter,
+                    () -> bindingParams.shotSolver.getShotSolution().flywheelRPM,
+                    () -> bindingParams.shotSolver.getShotSolution().hoodPositionRotations
+                ),
+                Commands.sequence(
+                    Commands.waitSeconds(0.5), // TODO Remove Manual Speedup Waiting
+                    new RepeatCommand(
+                        Commands.parallel(
+                            new RunSpindexerVelocity(bindingParams.spindexer, SpindexerConstants.kSpindexerVelocity),
+                            new RunFeederVelocity(bindingParams.feeder, FeederConstants.kFeederVelocity)
+                        ).onlyWhile(() -> ShiftUtil.fuelWillScore(bindingParams.shotSolver.getShotSolution().timeOfFlight)) // TODO Additional Shot Conditions
+                    )
+                )
             )
         );
-
-        modeTrigger.and(bindingParams.operatorController.rightTrigger()).whileTrue((
-            new RunSpindexerVelocity(bindingParams.spindexer, SpindexerConstants.kSpindexerVelocity))
-            .alongWith(new RunFeederVelocity(bindingParams.feeder, FeederConstants.kFeederVelocity))
-            .alongWith(new AgitateIntake(bindingParams.intake, bindingParams.intakeStateManager)));
-        //Feed Into Shooter Command
 
         modeTrigger.and(bindingParams.operatorController.leftBumper()).onTrue(Commands.runOnce(() -> bindingParams.intakeStateManager.setGoalState(State.IDLE)));
         //Pivot Intake Idle
@@ -140,8 +146,8 @@ public class MatchBindings {
         modeTrigger.and(bindingParams.operatorController.start()).onTrue(Commands.runOnce(() -> bindingParams.intakeStateManager.setGoalState(State.STOWING)));
         //Pivot Intake Stow
 
-        modeTrigger.and(bindingParams.operatorController.a()).onTrue(new DeepAgitateIntake(bindingParams.intake, bindingParams.intakeStateManager));
-        //Pivot Deep Agitate
+        modeTrigger.and(bindingParams.operatorController.a()).whileTrue(new AgitateIntake(bindingParams.intake, bindingParams.intakeStateManager));
+        //Pivot Agitate
         
         modeTrigger.and(bindingParams.operatorController.rightBumper()).onTrue(Commands.runOnce(() -> bindingParams.intakeStateManager.setGoalState(State.INTAKING)));
         modeTrigger.and(bindingParams.operatorController.rightBumper()).onFalse(Commands.runOnce(() -> bindingParams.intakeStateManager.setGoalState(State.EXTENDED)));
