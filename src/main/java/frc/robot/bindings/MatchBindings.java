@@ -103,13 +103,6 @@ public class MatchBindings {
             () -> ShooterConstants.kOutpostHoodSetpoint));
         //Static Shot Outpost Command
 
-        modeTrigger.and(bindingParams.operatorController.leftTrigger()).whileTrue(
-            new RunFlywheelAndHood(bindingParams.shooter,
-                () -> bindingParams.shotSolver.getShotSolution().flywheelRPM,
-                () -> bindingParams.shotSolver.getShotSolution().hoodPositionRotations
-            )
-        );
-
         modeTrigger.and(bindingParams.operatorController.povUp()).whileTrue(
             new RunFlywheelAndHood(bindingParams.shooter, 
             () -> ShooterConstants.kHubFlywheelVelocity,
@@ -128,6 +121,13 @@ public class MatchBindings {
             () -> ShooterConstants.kTrenchHoodSetpoint));
         //Static Shot Trench Command
 
+        modeTrigger.and(bindingParams.operatorController.leftTrigger()).whileTrue(
+            new RunFlywheelAndHood(bindingParams.shooter,
+                () -> bindingParams.shotSolver.getShotSolution().flywheelRPM,
+                () -> bindingParams.shotSolver.getShotSolution().hoodPositionRotations
+            )
+        );
+
         modeTrigger.and(bindingParams.operatorController.rightTrigger()).whileTrue((
             new RunSpindexerVelocity(bindingParams.spindexer, SpindexerConstants.kSpindexerVelocity))
             .alongWith(new RunFeederVelocity(bindingParams.feeder, FeederConstants.kFeederVelocity))
@@ -135,16 +135,13 @@ public class MatchBindings {
         //Feed Into Shooter Command
 
         modeTrigger.and(bindingParams.operatorController.leftBumper()).onTrue(Commands.runOnce(() -> bindingParams.intakeStateManager.setGoalState(State.IDLE)));
-        //Pivot Intake In
+        //Pivot Intake Idle
 
         modeTrigger.and(bindingParams.operatorController.start()).onTrue(Commands.runOnce(() -> bindingParams.intakeStateManager.setGoalState(State.STOWING)));
         //Pivot Intake Stow
 
-        //modeTrigger.and(operatorController.a()).whileTrue(new AgitateIntake(intake, Constants.kAgitateIntakeInterval, Constants.kRollerAgitateVelocity));
-
-        //modeTrigger.and(operatorController.a()).whileTrue(new Agitate(intake, Constants.kAgitateIntakeInterval));
-
         modeTrigger.and(bindingParams.operatorController.a()).onTrue(new DeepAgitateIntake(bindingParams.intake, bindingParams.intakeStateManager));
+        //Pivot Deep Agitate
         
         modeTrigger.and(bindingParams.operatorController.rightBumper()).onTrue(Commands.runOnce(() -> bindingParams.intakeStateManager.setGoalState(State.INTAKING)));
         modeTrigger.and(bindingParams.operatorController.rightBumper()).onFalse(Commands.runOnce(() -> bindingParams.intakeStateManager.setGoalState(State.EXTENDED)));
