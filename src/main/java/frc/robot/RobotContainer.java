@@ -4,25 +4,37 @@
 
 package frc.robot;
 
-import java.util.function.DoubleSupplier;
+import static edu.wpi.first.units.Units.*;
 
+import org.ironmaple.simulation.IntakeSimulation;
+import org.ironmaple.simulation.SimulatedArena;
+import org.ironmaple.simulation.IntakeSimulation.IntakeSide;
+import org.ironmaple.simulation.drivesims.COTS;
+import org.ironmaple.simulation.drivesims.SwerveDriveSimulation;
+import org.ironmaple.simulation.drivesims.configs.DriveTrainSimulationConfig;
+import org.ironmaple.simulation.drivesims.configs.SwerveModuleSimulationConfig;
+import org.ironmaple.simulation.motorsims.SimulatedBattery;
+import org.ironmaple.simulation.seasonspecific.rebuilt2026.RebuiltFuelOnFly;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
-import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
 
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.auto.NamedCommands;
-import com.pathplanner.lib.events.EventTrigger;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.simulation.BatterySim;
-import edu.wpi.first.wpilibj.simulation.RoboRioSim;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.Constants.OperatorConstants;
-import frc.robot.bindings.QuickIntakeConfigBindings;
+import frc.robot.bindings.*;
+import frc.robot.bindings.characterization.*;
+import frc.robot.bindings.config.*;
 import frc.robot.subsystems.intake.*;
 import frc.robot.subsystems.spindexer.*;
 import frc.robot.subsystems.climber.Climber;
@@ -34,93 +46,118 @@ import frc.robot.subsystems.shooter.*;
 import frc.robot.subsystems.vision.*;
 import frc.robot.util.*;
 import frc.robot.generated.TunerConstants;
-import frc.robot.commands.drive.*;
-import frc.robot.commands.spindexer.*;
-import frc.robot.commands.climber.*;
-import frc.robot.commands.feeder.*;
-import frc.robot.commands.intake.*;
-import frc.robot.commands.shooter.*;
+import frc.robot.commands.intake.IntakeStateManager;
 import frc.robot.commands.intake.IntakeStateManager.State;
 
 public class RobotContainer {
 
-    private final Drive m_drive;
+    private final Drive m_drive;    
     private final Intake m_intake;
     private final Spindexer m_spindexer;
     private final Feeder m_feeder;
     private final Shooter m_shooter;
     private final Climber m_climber;
 
-    private final ShotSolver m_shotSolver;
-    private final LoggedDashboardChooser<Command> m_autoSelector;
+    private SwerveDriveSimulation m_swerveDriveSimulation = null;
+    private IntakeSimulation m_intakeSimulation = null;
+    private Timer m_simulatedShotTimer = new Timer();
+    
     private final IntakeStateManager m_intakeStateManager;
-
+    private final ShotSolver m_shotSolver;
+    
     private enum OpModes {
         MATCH,
         PERCENT,
-        QUICKSHOT,
-        EXAMPLE_MATCH_BINDINGS,
-        QUICK_INTAKE_CONFIG,
         INTAKE_CHARACTERIZATION,
         SPINDEXER_CHARACTERIZATION,
         FEEDER_CHARACTERIZATION,
         SHOOTER_CHARACTERIZATION,
-        CLIMBER_CHARACTERIZATION
+        SHOT_CONFIG
     }
-
+    
     private final LoggedDashboardChooser<OpModes> m_opModeSelector = new LoggedDashboardChooser<>("Op Mode Selector");
-
-    private final LoggedNetworkNumber m_controllerSetpoint = new LoggedNetworkNumber("/Tuning/Controller Setpoint", 0);
-    private final LoggedNetworkNumber m_updateFeedbackP = new LoggedNetworkNumber("/Tuning/Feedback P", 0);
-    private final LoggedNetworkNumber m_updateFeedbackD = new LoggedNetworkNumber("/Tuning/Feedback D", 0);
-    private final LoggedNetworkNumber m_updateFeedbackP2 = new LoggedNetworkNumber("/Tuning/Feedback P2", 0);
-    private final LoggedNetworkNumber m_updateFeedbackD2 = new LoggedNetworkNumber("/Tuning/Feedback D2", 0);
-    private final LoggedNetworkNumber m_updateProfileCruiseVelocity = new LoggedNetworkNumber("/Tuning/Profile Cruise Velocity", 0);
-    private final LoggedNetworkNumber m_updateProfileMaxAcceleration = new LoggedNetworkNumber("/Tuning/Profile Max Acceleration", 0);
-    private final LoggedNetworkNumber m_updateProfileAllowedError = new LoggedNetworkNumber("/Tuning/Profile Allowed Error", 0);
-    private DoubleSupplier m_controllerErrorSupplier = () -> 0.0;
-    private DoubleSupplier m_controllerErrorSupplier2 = () -> 0.0;
-
-    private final CommandXboxController m_driverController = new CommandXboxController(OperatorConstants.kDriverControllerPort);
-    private final CommandXboxController m_operatorController = new CommandXboxController(OperatorConstants.kOperatorControllerPort);
-
+    private final LoggedDashboardChooser<Command> m_autoSelector;
+    
+    private final CommandXboxController m_driverController = new CommandXboxController(0);
+    private final CommandXboxController m_operatorController = new CommandXboxController(1);
+    
     public RobotContainer(boolean isReal) {
-
+    
         if (isReal) {
-
+    
             m_drive = new Drive(
                 new GyroIOPigeon2(), 
                 new ModuleIOTalonFX(TunerConstants.FrontLeft),
                 new ModuleIOTalonFX(TunerConstants.FrontRight), 
                 new ModuleIOTalonFX(TunerConstants.BackLeft), 
-                new ModuleIOTalonFX(TunerConstants.BackRight)
+                new ModuleIOTalonFX(TunerConstants.BackRight),
+                (Pose2d pose) -> {}
             );
-
+    
             new Vision(
                 m_drive::addVisionMeasurement,
                 new VisionIOLimelight(VisionConstants.camera0Name, m_drive::getRotation),
                 new VisionIOLimelight(VisionConstants.camera1Name, m_drive::getRotation)
             );
-
+    
             m_intake = new Intake(new IntakeIOHardware());
             m_spindexer = new Spindexer(new SpindexerIOHardware());
             m_feeder = new Feeder(new FeederIOHardware());
             m_shooter = new Shooter(new ShooterIOHardware());
             m_climber = new Climber(new ClimberIOHardware());
         } else {
+    
+            @SuppressWarnings("unchecked")
+            DriveTrainSimulationConfig driveTrainSimulationConfig = new DriveTrainSimulationConfig(
+                Pounds.of(121.1),
+                Inches.of(34.25),
+                Inches.of(34.25),
+                Inches.of(21.75),
+                Inches.of(21.75),
+                COTS.ofPigeon2(),
+                new SwerveModuleSimulationConfig(
+                    DCMotor.getKrakenX60(1),
+                    DCMotor.getKrakenX60(1),
+                    TunerConstants.kDriveGearRatio,
+                    TunerConstants.kSteerGearRatio,
+                    TunerConstants.kDriveFrictionVoltage,
+                    TunerConstants.kSteerFrictionVoltage,
+                    TunerConstants.kWheelRadius,
+                    TunerConstants.kSteerInertia,
+                    1.2
+                )
+            );
+    
+            m_swerveDriveSimulation = new SwerveDriveSimulation(
+                driveTrainSimulationConfig, 
+                new Pose2d()
+            );
+
+            m_intakeSimulation = IntakeSimulation.OverTheBumperIntake(
+                "Fuel", 
+                m_swerveDriveSimulation, 
+                Inches.of(26.35), 
+                Inches.of(6.4715), 
+                IntakeSide.FRONT, 
+                39
+            );
+
+            SimulatedArena.getInstance().addDriveTrainSimulation(m_swerveDriveSimulation);
+            m_simulatedShotTimer.start();
 
             m_drive = new Drive(
-                new GyroIO() {}, 
-                new ModuleIOSim(TunerConstants.FrontLeft), 
-                new ModuleIOSim(TunerConstants.FrontRight),
-                new ModuleIOSim(TunerConstants.BackLeft),
-                new ModuleIOSim(TunerConstants.BackRight)
+                new GyroIOSim(m_swerveDriveSimulation.getGyroSimulation()), 
+                new ModuleIOSim(m_swerveDriveSimulation.getModules()[0]), 
+                new ModuleIOSim(m_swerveDriveSimulation.getModules()[1]),
+                new ModuleIOSim(m_swerveDriveSimulation.getModules()[2]),
+                new ModuleIOSim(m_swerveDriveSimulation.getModules()[3]),
+                (Pose2d pose) -> m_swerveDriveSimulation.setSimulationWorldPose(pose)
             );
 
             new Vision(
                 m_drive::addVisionMeasurement,
-                new VisionIOPhotonVisionSim(VisionConstants.camera0Name, VisionConstants.robotToCamera0, m_drive::getPose),
-                new VisionIOPhotonVisionSim(VisionConstants.camera1Name, VisionConstants.robotToCamera1, m_drive::getPose)
+                new VisionIOPhotonVisionSim(VisionConstants.camera0Name, VisionConstants.robotToCamera0, m_swerveDriveSimulation::getSimulatedDriveTrainPose),
+                new VisionIOPhotonVisionSim(VisionConstants.camera1Name, VisionConstants.robotToCamera1, m_swerveDriveSimulation::getSimulatedDriveTrainPose)
             );
 
             m_intake = new Intake(new IntakeIOSim());
@@ -128,472 +165,60 @@ public class RobotContainer {
             m_feeder = new Feeder(new FeederIOSim());
             m_shooter = new Shooter(new ShooterIOSim());
             m_climber = new Climber(new ClimberIOSim());
+
+            SimulatedBattery.addElectricalAppliances(() -> Amps.of(m_intake.getRollerCurrent()));
+            SimulatedBattery.addElectricalAppliances(() -> Amps.of(m_intake.getLeftPivotCurrent()));
+            SimulatedBattery.addElectricalAppliances(() -> Amps.of(m_intake.getRightPivotCurrent()));
+            SimulatedBattery.addElectricalAppliances(() -> Amps.of(m_spindexer.getSpindexerCurrent()));
+            SimulatedBattery.addElectricalAppliances(() -> Amps.of(m_feeder.getFeederCurrent()));
+            SimulatedBattery.addElectricalAppliances(() -> Amps.of(m_shooter.getFlywheelLeaderCurrent()));
+            SimulatedBattery.addElectricalAppliances(() -> Amps.of(m_shooter.getFlywheelFollowerCurrent()));
+            SimulatedBattery.addElectricalAppliances(() -> Amps.of(m_shooter.getHoodCurrent()));
         }
 
-        m_shotSolver = new ShotSolver();
         m_intakeStateManager = new IntakeStateManager(m_intake);
+        m_shotSolver = new ShotSolver();
 
-        configureNamedCommands();
-        m_autoSelector = new LoggedDashboardChooser<>("Auto Selector", AutoBuilder.buildAutoChooser());
-        
         m_opModeSelector.addDefaultOption("Match", OpModes.MATCH);
         m_opModeSelector.addOption("Percent", OpModes.PERCENT);
-        m_opModeSelector.addOption("QuickShot", OpModes.QUICKSHOT);
-        m_opModeSelector.addOption("Quick Intake Config", OpModes.QUICK_INTAKE_CONFIG);
 
         m_opModeSelector.addOption("Intake Characterization", OpModes.INTAKE_CHARACTERIZATION);
         m_opModeSelector.addOption("Spindexer Characterization", OpModes.SPINDEXER_CHARACTERIZATION);
         m_opModeSelector.addOption("Feeder Characterization", OpModes.FEEDER_CHARACTERIZATION);
         m_opModeSelector.addOption("Shooter Characterization", OpModes.SHOOTER_CHARACTERIZATION);
-        m_opModeSelector.addOption("Climber Characterization", OpModes.CLIMBER_CHARACTERIZATION);
 
-        Trigger intakeConfigMode = new Trigger(() -> m_opModeSelector.get() == OpModes.QUICK_INTAKE_CONFIG);
-        QuickIntakeConfigBindings.configure(intakeConfigMode, m_operatorController, m_intake);
+        m_opModeSelector.addOption("Shot Config", OpModes.SHOT_CONFIG);
 
-        configureMatchBindings();
-        configurePercentBindings();
-        configureIntakeCharacterizationBindings();
-        configureSpindexerCharacterizationBindings();
-        configureFeederCharacterizationBindings();
-        configureShooterCharacterizationBindings();
-        configureClimberCharacterizationBindings();
-    }
-
-    private void configureMatchBindings () {
-
-        Trigger matchMode = new Trigger(() -> m_opModeSelector.get() == OpModes.MATCH);
-
-        Command defaultDriveCommand = DriveCommands.joystickDrive(
-            m_drive,
-            () -> -m_driverController.getLeftY(),
-            () -> -m_driverController.getLeftX(),
-            () -> -m_driverController.getRightX()
-        ).onlyWhile(matchMode);
-
-        Command defaultIntakeCommand = m_intakeStateManager.onlyWhile(matchMode);
-        
-        m_drive.setDefaultCommand(defaultDriveCommand); 
-        m_intake.setDefaultCommand(defaultIntakeCommand);
-
-        matchMode.onTrue(
-            Commands.runOnce(() -> {
-                m_drive.setDefaultCommand(defaultDriveCommand);
-                m_intake.setDefaultCommand(defaultIntakeCommand);
-            })
-        );
-
-        matchMode.onFalse(
-            Commands.runOnce(() -> {
-                m_drive.removeDefaultCommand();
-                m_intake.removeDefaultCommand();
-            })
-        );
-
-        matchMode.and(m_driverController.rightBumper()).onTrue(
-            DriveCommands.snakeDrive(
-                m_drive, 
-                () -> -m_driverController.getLeftY() * 0.6,
-                () -> -m_driverController.getLeftX() * 0.6,
-                () -> -m_driverController.getRightX()
-            )
-        );
-
-        matchMode.and(m_driverController.rightTrigger()).onTrue(
-            DriveCommands.joystickDriveAtAngle(
-                m_drive,
-                () -> -m_driverController.getLeftY(),
-                () -> -m_driverController.getLeftX(),
-                () -> -m_driverController.getRightX(),
-                () -> m_shotSolver.getShotSolution().aimHeading
-            )
-        );
-
-        matchMode.and(m_driverController.a()).onTrue(
-            DriveCommands.joystickDriveAtAngle(
-                m_drive,
-                () -> -m_driverController.getLeftY(),
-                () -> -m_driverController.getLeftX(),
-                () -> -m_driverController.getRightX(),
-                () -> Util.isRedAlliance() ? new Rotation2d() : new Rotation2d(Math.PI)
-            )
-        );
-
-        matchMode.and(m_driverController.y()).onTrue(
-            DriveCommands.joystickDriveAtAngle(
-                m_drive,
-                () -> -m_driverController.getLeftY(),
-                () -> -m_driverController.getLeftX(),
-                () -> -m_driverController.getRightX(),
-                () -> Util.isRedAlliance() ? new Rotation2d(Math.PI) : new Rotation2d()
-            )
-        );
-
-        matchMode.and(m_driverController.b()).onTrue(
-            DriveCommands.joystickDriveAtAngle(
-                m_drive, 
-                () -> -m_driverController.getLeftY(),
-                () -> -m_driverController.getLeftX(),
-                () -> -m_driverController.getRightX(),
-                () -> (m_drive.getPose().getY() > FieldConstants.Tower.centerPoint.getY()) ? new Rotation2d(Math.PI / 2.0) : new Rotation2d(-Math.PI / 2.0)
-            )
-        );
-
-        matchMode.and(m_driverController.x()).onTrue(Commands.runOnce(m_drive::stopWithX, m_drive));
-        matchMode.and(m_driverController.povUp()).toggleOnTrue(new RaiseClimberToHeight(m_climber, Constants.kRaisingClimberSetpoint, Constants.kRaisingClimberPercentage));
-        matchMode.and(m_driverController.povDown()).toggleOnTrue(new LowerClimberToHeight(m_climber, Constants.kLoweringClimberSetpoint, Constants.kLoweringClimberPercentage));
-
-        matchMode.and(m_operatorController.povRight()).whileTrue(
-            new RunFlywheelAndHood(m_shooter, 
-            () -> Constants.kOutpostFlywheelVelocity,
-            () -> Constants.kOutpostHoodSetpoint));
-        //Static Shot Outpost Command
-
-        matchMode.and(m_operatorController.leftTrigger()).whileTrue(
-            new RunFlywheelAndHood(m_shooter,
-                () -> m_shotSolver.getShotSolution().flywheelRPM,
-                () -> m_shotSolver.getShotSolution().hoodPositionRotations
-            )
-        );
-
-        matchMode.and(m_operatorController.povUp()).whileTrue(
-            new RunFlywheelAndHood(m_shooter, 
-            () -> Constants.kHubFlywheelVelocity,
-            () -> Constants.kHubHoodSetpoint));
-        //Static Shot Hub Command
-
-        matchMode.and(m_operatorController.povDown()).whileTrue(
-            new RunFlywheelAndHood(m_shooter, 
-            () -> Constants.kTowerFlywheelVelocity,
-            () -> Constants.kTowerHoodSetpoint));
-        //Static Shot Tower Command
-
-        matchMode.and(m_operatorController.povLeft()).whileTrue(
-            new RunFlywheelAndHood(m_shooter, 
-            () -> Constants.kTrenchFlywheelVelocity,
-            () -> Constants.kTrenchHoodSetpoint));
-        //Static Shot Trench Command
-
-        (m_operatorController.rightTrigger()).whileTrue((
-            new RunSpindexerVelocity(m_spindexer, Constants.kSpindexerVelocity))
-            .alongWith(new RunFeederVelocity(m_feeder, Constants.kFeederVelocity))
-            .alongWith(new AgitateIntake(m_intake, m_intakeStateManager)));
-        //Feed Into Shooter Command
-
-        matchMode.and(m_operatorController.leftBumper()).onTrue(Commands.runOnce(() -> m_intakeStateManager.setGoalState(State.IDLE)));
-        //Pivot Intake In
-
-        matchMode.and(m_operatorController.start()).onTrue(new ZeroAndIdleIntake(m_intake, m_intakeStateManager)); 
-        //Pivot Intake Stow
-
-        //matchMode.and(m_operatorController.a()).whileTrue(new AgitateIntake(m_intake, Constants.kAgitateIntakeInterval, Constants.kRollerAgitateVelocity));
-
-        //matchMode.and(m_operatorController.a()).whileTrue(new Agitate(m_intake, Constants.kAgitateIntakeInterval));
-
-        matchMode.and(m_operatorController.a()).onTrue(new DeepAgitateIntake(m_intake, m_intakeStateManager));
-        
-        matchMode.and(m_operatorController.rightBumper()).onTrue(Commands.runOnce(() -> m_intakeStateManager.setGoalState(State.INTAKING)));
-        matchMode.and(m_operatorController.rightBumper()).onFalse(Commands.runOnce(() -> m_intakeStateManager.setGoalState(State.EXTENDED)));
-        //Deploy+Roller
-
-        matchMode.and(m_operatorController.b()).whileTrue(new RunSpindexerVelocity(m_spindexer, Constants.kSpindexerReverseVelocity));
-        //Spindexer Reverse
-
-        matchMode.and(m_operatorController.y()).whileTrue(new RunFeederVelocity(m_feeder, Constants.kFeederReverseVelocity));
-        //Feeder Reverse
-
-        matchMode.and(m_operatorController.x()).whileTrue(new RunRollerVelocity(m_intake, () -> Constants.kRollerReverseVelocity));
-        //Roller Reverse
-    }
-
-    public void configureNamedCommands () {
-        
-        new EventTrigger("Intake").onTrue(
-            Commands.runOnce(() -> 
-                m_intakeStateManager.setGoalState(State.INTAKING)
-            )
-        );
-
-        NamedCommands.registerCommand(
-            "IdleIntake",
-            Commands.runOnce(() -> m_intakeStateManager.setGoalState(State.IDLE))
-        );
-
-        NamedCommands.registerCommand(
-            "FeedShooter",
-            Commands.parallel(
-                new AgitateIntake(m_intake, m_intakeStateManager),
-                new RunSpindexerVelocity(m_spindexer, Constants.kSpindexerVelocity),
-                new RunFeederVelocity(m_feeder, Constants.kFeederVelocity)
-            )
-        );
-        
-        NamedCommands.registerCommand("RegressionShot", 
-            new RunFlywheelAndHood(
-                m_shooter,
-                () -> m_shotSolver.getShotSolution().flywheelRPM,
-                () -> m_shotSolver.getShotSolution().hoodPositionRotations
-            )
-        );
-
-        NamedCommands.registerCommand("ClimberUp",
-            new RaiseClimberToHeight(
+        BindingParams bindingParams = new BindingParams(
+            m_drive, 
+            m_intake, 
+            m_spindexer, 
+            m_feeder, 
+            m_shooter, 
             m_climber, 
-            Constants.kRaisingClimberSetpoint, 
-            Constants.kRaisingClimberPercentage)
+            m_intakeStateManager, 
+            m_shotSolver, 
+            m_driverController, 
+            m_operatorController
         );
 
-        NamedCommands.registerCommand("ClimberDown",
-            new LowerClimberToHeight(
-            m_climber, 
-            Constants.kLoweringClimberSetpoint, 
-            Constants.kLoweringClimberPercentage)
-        );
-    }
-       
-    private void configurePercentBindings() {
+        new MatchBindings(bindingParams, new Trigger(() -> m_opModeSelector.get() == OpModes.MATCH));
+        new PercentBindings(bindingParams, new Trigger(() -> m_opModeSelector.get() == OpModes.PERCENT));
+        new PathPlannerBindings(bindingParams);
 
-        Trigger percentMode = new Trigger(() -> m_opModeSelector.get() == OpModes.PERCENT);
+        new IntakeCharacterizationBindings(bindingParams, new Trigger(() -> m_opModeSelector.get() == OpModes.INTAKE_CHARACTERIZATION));
+        new SpindexerCharacterizationBindings(bindingParams, new Trigger(() -> m_opModeSelector.get() == OpModes.SPINDEXER_CHARACTERIZATION));
+        new FeederCharacterizationBindings(bindingParams, new Trigger(() -> m_opModeSelector.get() == OpModes.FEEDER_CHARACTERIZATION));
+        new ShooterCharacterizationBindings(bindingParams, new Trigger(() -> m_opModeSelector.get() == OpModes.SHOOTER_CHARACTERIZATION));
 
-        percentMode.and(m_operatorController.a()).whileTrue(new RunSpindexerPercentage(m_spindexer, 0.8));
-        percentMode.and(m_operatorController.x()).whileTrue(new RunFeederPercentage(m_feeder, 0.8));
-        percentMode.and(m_operatorController.y()).whileTrue(new RunFlywheelPercentage(m_shooter, 0.3));
-        percentMode.and(m_operatorController.b()).whileTrue(new RunHoodPercentage(m_shooter, -0.2));
-        percentMode.and(m_operatorController.leftTrigger()).whileTrue(new RunFlywheelPercentage(m_shooter, 0.55));
-        percentMode.and(m_operatorController.rightTrigger()).whileTrue(new RunRollerPercentage(m_intake, 0.225));
-        percentMode.and(m_operatorController.leftBumper()).whileTrue(new RunPivotPercentage(m_intake, -0.25));
-        percentMode.and(m_operatorController.rightBumper()).whileTrue(new RunPivotPercentage(m_intake, 0.25));
-        percentMode.and(m_driverController.povUp()).whileTrue(new SetClimberPercentage(m_climber, Constants.kRaisingClimberPercentage));
-        percentMode.and(m_driverController.povDown()).whileTrue(new SetClimberPercentage(m_climber, Constants.kLoweringClimberPercentage));
-    }
+        new ShotConfigBindings(bindingParams, new Trigger(() -> m_opModeSelector.get() == OpModes.SHOT_CONFIG));
 
-    public void configureIntakeCharacterizationBindings () {
-
-        Trigger intakeCharacterizationMode = new Trigger(() -> m_opModeSelector.get() == OpModes.INTAKE_CHARACTERIZATION);
-
-        intakeCharacterizationMode.and(m_operatorController.leftBumper()).whileTrue(m_intake.rollerSysIdQuasistaticForward());
-        intakeCharacterizationMode.and(m_operatorController.rightBumper()).whileTrue(m_intake.rollerSysIdQuasistaticReverse());
-        intakeCharacterizationMode.and(m_operatorController.leftTrigger()).whileTrue(m_intake.rollerSysIdDynamicForward());
-        intakeCharacterizationMode.and(m_operatorController.rightTrigger()).whileTrue(m_intake.rollerSysIdDynamicReverse());
-
-        intakeCharacterizationMode.and(m_operatorController.povUp()).whileTrue(m_intake.leftPivotSysIdQuasistaticForward());
-        intakeCharacterizationMode.and(m_operatorController.povRight()).whileTrue(m_intake.leftPivotSysIdQuasistaticReverse());
-        intakeCharacterizationMode.and(m_operatorController.povDown()).whileTrue(m_intake.leftPivotSysIdDynamicForward());
-        intakeCharacterizationMode.and(m_operatorController.povLeft()).whileTrue(m_intake.leftPivotSysIdDynamicReverse());
-
-        intakeCharacterizationMode.and(m_operatorController.y()).whileTrue(m_intake.rightPivotSysIdQuasistaticForward());
-        intakeCharacterizationMode.and(m_operatorController.b()).whileTrue(m_intake.rightPivotSysIdQuasistaticReverse());
-        intakeCharacterizationMode.and(m_operatorController.a()).whileTrue(m_intake.rightPivotSysIdDynamicForward());
-        intakeCharacterizationMode.and(m_operatorController.x()).whileTrue(m_intake.rightPivotSysIdDynamicReverse());
-
-
-        intakeCharacterizationMode.and(m_operatorController.leftStick()).onFalse(Commands.runOnce(() -> {
-
-            m_intake.setRollerPercentage(0);
-        }, m_intake));
-
-        intakeCharacterizationMode.and(m_operatorController.rightStick()).onTrue(Commands.runOnce(() -> {
-
-            m_intake.updateLeftPivotControllerFeedback(
-                m_updateFeedbackP.getAsDouble(),
-                m_updateFeedbackD.getAsDouble()
-            );
-
-            m_intake.updateRightPivotControllerFeedback(
-                m_updateFeedbackP2.getAsDouble(),
-                m_updateFeedbackD2.getAsDouble()
-            );
-
-            m_intake.updatePivotControllerProfile(
-                m_updateProfileCruiseVelocity.getAsDouble(),
-                m_updateProfileMaxAcceleration.getAsDouble(),
-                m_updateProfileAllowedError.getAsDouble()
-            );
-
-            double setpoint = m_controllerSetpoint.getAsDouble();
-            m_controllerErrorSupplier = () -> setpoint - m_intake.getLeftPivotPosition();
-            m_controllerErrorSupplier2 = () -> setpoint - m_intake.getRightPivotPosition();
-            m_intake.setPivotPosition(setpoint);
-        }, m_intake));
-
-        intakeCharacterizationMode.and(m_operatorController.rightStick()).onFalse(Commands.runOnce(() -> {
-
-            m_intake.setPivotPercentage(0);
-        }, m_intake));
-    }
-
-    public void configureSpindexerCharacterizationBindings () {
-
-        // was here 
-        Trigger spindexerCharacterizationMode = new Trigger(() -> m_opModeSelector.get() == OpModes.SPINDEXER_CHARACTERIZATION);
-
-        spindexerCharacterizationMode.and(m_operatorController.leftBumper()).whileTrue(m_spindexer.sysIdQuasistaticForward());
-        spindexerCharacterizationMode.and(m_operatorController.rightBumper()).whileTrue(m_spindexer.sysIdQuasistaticReverse());
-        spindexerCharacterizationMode.and(m_operatorController.leftTrigger()).whileTrue(m_spindexer.sysIdDynamicForward());
-        spindexerCharacterizationMode.and(m_operatorController.rightTrigger()).whileTrue(m_spindexer.sysIdDynamicReverse());
-    }
-
-    public void configureFeederCharacterizationBindings () {
-
-        Trigger feederCharacterizationMode = new Trigger(() -> m_opModeSelector.get() == OpModes.FEEDER_CHARACTERIZATION);
-
-        feederCharacterizationMode.and(m_operatorController.leftBumper()).whileTrue(m_feeder.sysIdQuasistaticForward());
-        feederCharacterizationMode.and(m_operatorController.rightBumper()).whileTrue(m_feeder.sysIdQuasistaticReverse());
-        feederCharacterizationMode.and(m_operatorController.leftTrigger()).whileTrue(m_feeder.sysIdDynamicForward());
-        feederCharacterizationMode.and(m_operatorController.rightTrigger()).whileTrue(m_feeder.sysIdDynamicReverse());
-
-        feederCharacterizationMode.and(m_operatorController.povUp()).onTrue(Commands.runOnce(() -> {
-
-            m_feeder.updateControllerFeedback(
-                m_updateFeedbackP.getAsDouble(),
-                m_updateFeedbackD.getAsDouble()
-            );
-
-            double setpoint = m_controllerSetpoint.getAsDouble();
-            m_controllerErrorSupplier = () -> setpoint - m_feeder.getFeederVelocity();
-            m_feeder.setFeederVelocity(setpoint);
-        }, m_feeder));
-
-        feederCharacterizationMode.and(m_operatorController.povUp()).onFalse(Commands.runOnce(() -> {
-
-            m_feeder.setFeederPercentage(0);
-        }, m_feeder));
-    }
-
-    public void configureShooterCharacterizationBindings () {
-
-        Trigger shooterCharacterizationMode = new Trigger(() -> m_opModeSelector.get() == OpModes.SHOOTER_CHARACTERIZATION);
-
-        shooterCharacterizationMode.and(m_operatorController.leftBumper()).whileTrue(m_shooter.flywheelSysIdQuasistaticForward());
-        shooterCharacterizationMode.and(m_operatorController.rightBumper()).whileTrue(m_shooter.flywheelSysIdQuasistaticReverse());
-        shooterCharacterizationMode.and(m_operatorController.leftTrigger()).whileTrue(m_shooter.flywheelSysIdDynamicForward());
-        shooterCharacterizationMode.and(m_operatorController.rightTrigger()).whileTrue(m_shooter.flywheelSysIdDynamicReverse());
-
-        shooterCharacterizationMode.and(m_operatorController.y()).whileTrue(m_shooter.hoodSysIdQuasistaticForward());
-        shooterCharacterizationMode.and(m_operatorController.b()).whileTrue(m_shooter.hoodSysIdQuasistaticReverse());
-        shooterCharacterizationMode.and(m_operatorController.a()).whileTrue(m_shooter.hoodSysIdDynamicForward());
-        shooterCharacterizationMode.and(m_operatorController.x()).whileTrue(m_shooter.hoodSysIdDynamicReverse());
-
-        shooterCharacterizationMode.and(m_operatorController.povRight()).whileTrue(Commands.parallel(
-            new RunSpindexerPercentage(m_spindexer, 0.8),
-            new RunFeederPercentage(m_feeder, 0.8)
-        ));
-
-        shooterCharacterizationMode.and(m_operatorController.povLeft()).onTrue(Commands.runOnce(() -> {
-
-            m_shooter.updateFlywheelControllerFeedback(
-                m_updateFeedbackP.getAsDouble(),
-                m_updateFeedbackD.getAsDouble()
-            );
-
-            double setpoint = m_controllerSetpoint.getAsDouble();
-            m_controllerErrorSupplier = () -> setpoint - m_shooter.getFlywheelVelocity();
-            m_shooter.setFlywheelVelocity(setpoint);
-        }, m_shooter));
-
-        shooterCharacterizationMode.and(m_operatorController.povLeft()).onFalse(Commands.runOnce(() -> {
-
-            m_shooter.setFlywheelPercentage(0);
-        }, m_shooter));
-
-        shooterCharacterizationMode.and(m_operatorController.povRight()).onTrue(Commands.runOnce(() -> {
-
-            m_shooter.updateHoodControllerFeedback(
-                m_updateFeedbackP.getAsDouble(),
-                m_updateFeedbackD.getAsDouble()
-            );
-
-            double setpoint = m_controllerSetpoint.getAsDouble();
-            m_controllerErrorSupplier = () -> setpoint - m_shooter.getHoodPosition();
-            m_shooter.setHoodPosition(setpoint);
-        }, m_intake));
-
-        shooterCharacterizationMode.and(m_operatorController.povRight()).onFalse(Commands.runOnce(() -> {
-
-            m_shooter.setHoodPercentage(0);
-        }, m_shooter));
-    }
-
-    private void configureClimberCharacterizationBindings () {
-
-        Trigger climberCharacterizationMode = new Trigger(() -> m_opModeSelector.get() == OpModes.CLIMBER_CHARACTERIZATION);
-
-        climberCharacterizationMode.and(m_operatorController.leftBumper()).whileTrue(m_climber.raisingSysIdQuasistaticForward());
-        climberCharacterizationMode.and(m_operatorController.rightBumper()).whileTrue(m_climber.raisingSysIdQuasistaticReverse());
-        climberCharacterizationMode.and(m_operatorController.leftTrigger()).whileTrue(m_climber.raisingSysIdDynamicForward());
-        climberCharacterizationMode.and(m_operatorController.rightTrigger()).whileTrue(m_climber.raisingSysIdDynamicReverse());
-
-        climberCharacterizationMode.and(m_operatorController.y()).whileTrue(m_climber.climbingSysIdQuasistaticForward());
-        climberCharacterizationMode.and(m_operatorController.b()).whileTrue(m_climber.climbingSysIdQuasistaticReverse());
-        climberCharacterizationMode.and(m_operatorController.a()).whileTrue(m_climber.climbingSysIdDynamicForward());
-        climberCharacterizationMode.and(m_operatorController.x()).whileTrue(m_climber.climbingSysIdDynamicReverse());
-
-        climberCharacterizationMode.and(m_operatorController.povUp()).onTrue(Commands.runOnce(() -> {
-
-            m_climber.updateRaisingControllerFeedback(
-                m_updateFeedbackP.getAsDouble(),
-                m_updateFeedbackD.getAsDouble()
-            );
-
-            m_climber.updateControllerProfile(
-                m_updateProfileCruiseVelocity.getAsDouble(),
-                m_updateProfileMaxAcceleration.getAsDouble(),
-                m_updateProfileAllowedError.getAsDouble()
-            );
-
-            double setpoint = m_controllerSetpoint.getAsDouble();
-            m_controllerErrorSupplier = () -> m_climber.getControllerSetpoint() - m_climber.getClimberPosition();
-            m_climber.setRaisingPosition(setpoint);
-        }, m_climber));
-
-        climberCharacterizationMode.and(m_operatorController.povUp()).onFalse(Commands.runOnce(() -> {
-
-            m_climber.setClimberPercentage(0);
-        }, m_climber));
-
-        climberCharacterizationMode.and(m_operatorController.povDown()).onTrue(Commands.runOnce(() -> {
-
-            m_climber.updateClimbingControllerFeedback(
-                m_updateFeedbackP.getAsDouble(),
-                m_updateFeedbackD.getAsDouble()
-            );
-
-            m_climber.updateControllerProfile(
-                m_updateProfileCruiseVelocity.getAsDouble(),
-                m_updateProfileMaxAcceleration.getAsDouble(),
-                m_updateProfileAllowedError.getAsDouble()
-            );
-
-            double setpoint = m_controllerSetpoint.getAsDouble();
-            m_controllerErrorSupplier = () -> m_climber.getControllerSetpoint() - m_climber.getClimberPosition();
-            m_climber.setClimbingPosition(setpoint);
-        }, m_climber));
-
-        climberCharacterizationMode.and(m_operatorController.povDown()).onFalse(Commands.runOnce(() -> {
-
-            m_climber.setClimberPercentage(0);
-        }, m_climber));
-    }
-
-    public void logControllerError () {
-
-        Logger.recordOutput("Controller Error", m_controllerErrorSupplier.getAsDouble());
-        Logger.recordOutput("Controller Error 2", m_controllerErrorSupplier2.getAsDouble());
+        m_autoSelector = new LoggedDashboardChooser<>("Auto Selector", AutoBuilder.buildAutoChooser());
     }
 
     public Command getAutonomousCommand() {
       
         return m_autoSelector.get();
-    }
-
-    public void simulateBatteryLoad() {
-
-        RoboRioSim.setVInVoltage(
-            BatterySim.calculateDefaultBatteryLoadedVoltage(
-                m_intake.getRollerCurrent(),
-                m_spindexer.getSpindexerCurrent(),
-                m_feeder.getFeederCurrent()
-            )
-        );
     }
 
     public void updateShotSolution() {
@@ -605,5 +230,154 @@ public class RobotContainer {
 
         double error = Math.abs(m_drive.getRotation().getDegrees() - m_shotSolver.getShotSolution().aimHeading.getDegrees());
         Logger.recordOutput("Hub Aligned", error < 1.5);
+    }
+
+    public void simulateAutoPreload() {
+
+        m_intakeSimulation.setGamePiecesCount(8);
+    }
+
+    public void simulateIntakeBody() {
+
+        State intakeGoalState = m_intakeStateManager.getGoalState();
+
+        if (intakeGoalState == State.INTAKING) {
+
+            if (!m_intakeSimulation.isRunning()) {
+
+                m_swerveDriveSimulation.removeFixture(m_intakeSimulation);
+            }
+
+            m_intakeSimulation.startIntake();
+            return;
+        }
+
+        m_intakeSimulation.stopIntake();
+        if (intakeGoalState == State.STOWED) { return; }
+        if (intakeGoalState == State.IDLE) { return; }
+
+        if (!m_swerveDriveSimulation.containsFixture(m_intakeSimulation)) {
+
+            m_swerveDriveSimulation.addFixture(m_intakeSimulation);
+        }
+    }
+
+    public void simulateShooting() {
+
+        if (m_spindexer.getSpindexerVelocity() < 60.0) { return; }
+        if (m_feeder.getFeederVelocity() < 60.0) { return; }
+        if (m_simulatedShotTimer.get() < 0.25) { return; }
+
+        if (!m_intakeSimulation.obtainGamePieceFromIntake()) { return; }
+
+        Pose2d robotPose = m_swerveDriveSimulation.getSimulatedDriveTrainPose();
+        ChassisSpeeds chassisSpeeds = m_swerveDriveSimulation.getDriveTrainSimulatedChassisSpeedsFieldRelative();
+
+        RebuiltFuelOnFly fuelOnFly = new RebuiltFuelOnFly(
+            robotPose.getTranslation(), 
+            new Translation2d(0.145923, -0.142875), 
+            chassisSpeeds, 
+            robotPose.getRotation().plus(Rotation2d.fromRadians(Math.PI)), 
+            Meters.of(0.413243), 
+            MetersPerSecond.of(m_shooter.getFlywheelVelocity() * (0.1016 * Math.PI) * (1.0 / 60.0) - 8.5),
+            Rotations.of(0.25 - m_shooter.getHoodPosition())
+        );
+
+        SimulatedArena.getInstance().addGamePieceProjectile(fuelOnFly);
+        m_simulatedShotTimer.restart();
+    }
+
+    public void displayFieldSimToAdvantageScope() {
+
+        Logger.recordOutput("FieldSimulation/RobotPosition", m_swerveDriveSimulation.getSimulatedDriveTrainPose());
+        Logger.recordOutput("FieldSimulation/Fuel", SimulatedArena.getInstance().getGamePiecesArrayByType("Fuel"));
+    }
+
+    public void displayRobotComponentsInAdvantageScope() {
+
+        double backLinkZeroAngle = 27.570246;
+        double backLinkLength = 0.177500;
+
+        double frontLinkZeroAngle = 23.061811;
+        double frontLinkLength = 0.169969;
+
+        double intakeZeroAngle = 7.043217;
+        double intakeHoleDistance = 0.127000;
+
+        double backLinkAngle = Math.toRadians(backLinkZeroAngle + 103.5) - Rotations.of(m_intake.getPivotPosition()).in(Radians);
+
+        double backLinkIntakeX = backLinkLength * Math.cos(backLinkAngle);
+        double backLinkIntakeY = backLinkLength * Math.sin(backLinkAngle);
+
+        double dx = backLinkIntakeX - intakeHoleDistance;
+        double dy = backLinkIntakeY;
+
+        double d = Math.hypot(dx, dy);
+
+        double a = (Math.pow(frontLinkLength, 2) - Math.pow(intakeHoleDistance, 2) + Math.pow(d, 2)) / (2 * d);
+        double h = Math.sqrt(Math.pow(frontLinkLength, 2) - Math.pow(a, 2));
+
+        double Px = intakeHoleDistance + a * dx/d;
+        double Py = a * dy/d;
+
+        double frontLinkIntakeX = Px + h * dy/d;
+        double frontLinkIntakeY = Py - h * dx/d;
+
+        double frontLinkAngle = Math.atan2(frontLinkIntakeY, frontLinkIntakeX - intakeHoleDistance);
+        double intakeAngle = Math.atan2(frontLinkIntakeY - backLinkIntakeY, frontLinkIntakeX - backLinkIntakeX);
+
+        Pose3d intakePivotBack4Bar = new Pose3d(
+            new Translation3d(
+                0.050800,
+                0.0,
+                0.132733
+            ),
+            new Rotation3d(
+                0.0,
+                -backLinkAngle + Math.toRadians(backLinkZeroAngle),
+                0.0
+            )
+        );
+
+        Pose3d intakePivotFront4Bar = new Pose3d(
+            new Translation3d(
+                0.177800,
+                0.0,
+                0.132733
+            ),
+            new Rotation3d(
+                0.0,
+                -frontLinkAngle + Math.toRadians(frontLinkZeroAngle),
+                0.0
+            )
+        );
+
+        Pose3d intakePivot = new Pose3d(
+            new Translation3d(
+                (backLinkIntakeX + frontLinkIntakeX) / 2.0 + 0.050800,
+                0.0,
+                (backLinkIntakeY + frontLinkIntakeY) / 2.0 + 0.132733
+            ),
+            new Rotation3d(
+                0.0,
+                -intakeAngle - Math.toRadians(intakeZeroAngle),
+                0.0
+            )
+        );
+
+        Pose3d shooterHood = new Pose3d(
+            new Translation3d(
+                -0.209423,
+                0.142875,
+                0.413191
+            ),
+            new Rotation3d(
+                0.0,
+                Rotations.of(-m_shooter.getHoodPosition()).in(Radians),
+                0.0
+            )
+        );
+
+        Logger.recordOutput("FieldSimulation/RobotComponents", new Pose3d[] {intakePivotBack4Bar, intakePivotFront4Bar, intakePivot, shooterHood});
     }
 }

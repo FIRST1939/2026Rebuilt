@@ -1,5 +1,11 @@
 package frc.robot.subsystems.spindexer;
 
+import static edu.wpi.first.units.Units.RPM;
+import static edu.wpi.first.units.Units.Second;
+import static edu.wpi.first.units.Units.Volts;
+import static edu.wpi.first.units.Units.VoltsPerRadianPerSecond;
+import static edu.wpi.first.units.Units.VoltsPerRadianPerSecondSquared;
+
 import com.revrobotics.sim.SparkFlexSim;
 
 import edu.wpi.first.math.system.plant.DCMotor;
@@ -8,14 +14,13 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 
 public class SpindexerIOSim extends SpindexerIOHardware {
-    private static final double RPM_TO_RAD_S = 2.0 * Math.PI / 60.0;
 
     private final SparkFlexSim m_motorSim = new SparkFlexSim(m_motor, DCMotor.getNeoVortex(1));
 
     private final FlywheelSim m_physicsSim = new FlywheelSim(
         LinearSystemId.identifyVelocitySystem(
-            SpindexerConstants.kSpindexerFeedforwardV / RPM_TO_RAD_S, 
-            SpindexerConstants.kSpindexerFeedforwardA / RPM_TO_RAD_S
+            Volts.of(SpindexerConstants.kSpindexerFeedforwardV).per(RPM).in(VoltsPerRadianPerSecond),
+            Volts.of(SpindexerConstants.kSpindexerFeedforwardA).per(RPM.per(Second)).in(VoltsPerRadianPerSecondSquared)
         ), 
         DCMotor.getNeoVortex(1)
     );
@@ -24,7 +29,8 @@ public class SpindexerIOSim extends SpindexerIOHardware {
     public void updateInputs(SpindexerIOInputs inputs) {
 
         double voltage = m_motorSim.getAppliedOutput() * m_motorSim.getBusVoltage();
-        m_physicsSim.setInputVoltage(voltage - Math.copySign(SpindexerConstants.kSpindexerFeedforwardS, voltage));
+        boolean overcomeFriction = Math.abs(voltage) > SpindexerConstants.kSpindexerFeedforwardS;
+        m_physicsSim.setInputVoltage(overcomeFriction ? voltage - Math.copySign(SpindexerConstants.kSpindexerFeedforwardS, voltage) : 0);
         m_physicsSim.update(0.02);
 
         m_motorSim.iterate(

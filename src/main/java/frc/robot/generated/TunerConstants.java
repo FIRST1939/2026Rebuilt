@@ -92,9 +92,9 @@ public class TunerConstants {
   // This may need to be tuned to your individual robot
   private static final double kCoupleRatio = 3.125;
 
-  private static final double kDriveGearRatio = 7.125;
-  private static final double kSteerGearRatio = 21.428571428571427;
-  private static final Distance kWheelRadius = Inches.of(1.65);
+  public static final double kDriveGearRatio = 7.125;
+  public static final double kSteerGearRatio = 21.428571428571427;
+  public static final Distance kWheelRadius = Inches.of(1.65);
 
   private static final boolean kInvertLeftSide = false;
   private static final boolean kInvertRightSide = true;
@@ -102,11 +102,11 @@ public class TunerConstants {
   private static final int kPigeonId = 0;
 
   // These are only used for simulation
-  private static final MomentOfInertia kSteerInertia = KilogramSquareMeters.of(0.01);
-  private static final MomentOfInertia kDriveInertia = KilogramSquareMeters.of(0.01);
+  public static final MomentOfInertia kSteerInertia = KilogramSquareMeters.of(0.03);
+  private static final MomentOfInertia kDriveInertia = KilogramSquareMeters.of(0.025);
   // Simulated voltage necessary to overcome friction
-  private static final Voltage kSteerFrictionVoltage = Volts.of(0.2);
-  private static final Voltage kDriveFrictionVoltage = Volts.of(0.2);
+  public static final Voltage kSteerFrictionVoltage = Volts.of(0.2);
+  public static final Voltage kDriveFrictionVoltage = Volts.of(0.1);
 
   public static final SwerveDrivetrainConstants DrivetrainConstants =
       new SwerveDrivetrainConstants()

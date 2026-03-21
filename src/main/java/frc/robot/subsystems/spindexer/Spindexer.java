@@ -62,6 +62,11 @@ public class Spindexer extends SubsystemBase {
         return m_isClogged;
     }
 
+    public double getSpindexerVelocity() {
+
+        return m_inputs.spindexerVelocity;
+    }
+
     public double getSpindexerCurrent() {
 
         return m_inputs.spindexerCurrent;
