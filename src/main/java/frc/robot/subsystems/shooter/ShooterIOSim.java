@@ -1,5 +1,11 @@
 package frc.robot.subsystems.shooter;
 
+import static edu.wpi.first.units.Units.RPM;
+import static edu.wpi.first.units.Units.Second;
+import static edu.wpi.first.units.Units.Volts;
+import static edu.wpi.first.units.Units.VoltsPerRadianPerSecond;
+import static edu.wpi.first.units.Units.VoltsPerRadianPerSecondSquared;
+
 import com.revrobotics.sim.SparkFlexSim;
 
 import edu.wpi.first.math.system.plant.DCMotor;
@@ -9,24 +15,22 @@ import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 
 public class ShooterIOSim extends ShooterIOHardware {
 
-    private static final double RPM_TO_RAD_S = 2.0 * Math.PI / 60.0;
-
     private final SparkFlexSim m_flywheelLeaderSim = new SparkFlexSim(m_flywheelLeader, DCMotor.getNeoVortex(1));
     private final SparkFlexSim m_flywheelFollowerSim = new SparkFlexSim(m_flywheelFollower, DCMotor.getNeoVortex(1));
     private final SparkFlexSim m_hoodSim = new SparkFlexSim(m_hood, DCMotor.getNeoVortex(1));
 
     private final FlywheelSim m_flywheelPhysicsSim = new FlywheelSim(
         LinearSystemId.identifyVelocitySystem(
-            ShooterConstants.kFlywheelFeedforwardV / RPM_TO_RAD_S,
-            ShooterConstants.kFlywheelFeedforwardA / RPM_TO_RAD_S
+            Volts.of(ShooterConstants.kFlywheelFeedforwardV).per(RPM).in(VoltsPerRadianPerSecond),
+            Volts.of(ShooterConstants.kFlywheelFeedforwardA).per(RPM.per(Second)).in(VoltsPerRadianPerSecondSquared)
         ),
-        DCMotor.getNeoVortex(1)
+        DCMotor.getNeoVortex(2)
     );
 
     private final FlywheelSim m_hoodPhysicsSim = new FlywheelSim(
         LinearSystemId.identifyVelocitySystem(
-            ShooterConstants.kHoodFeedforwardV / RPM_TO_RAD_S,
-            ShooterConstants.kHoodFeedforwardA / RPM_TO_RAD_S
+            Volts.of(ShooterConstants.kHoodFeedforwardV).per(RPM).in(VoltsPerRadianPerSecond),
+            Volts.of(ShooterConstants.kHoodFeedforwardA).per(RPM.per(Second)).in(VoltsPerRadianPerSecondSquared)
         ),
         DCMotor.getNeoVortex(1)
     );
@@ -35,7 +39,8 @@ public class ShooterIOSim extends ShooterIOHardware {
     public void updateInputs(ShooterIOInputs inputs) {
 
         double flywheelVoltage = m_flywheelLeaderSim.getAppliedOutput() * m_flywheelLeaderSim.getBusVoltage();
-        m_flywheelPhysicsSim.setInputVoltage(flywheelVoltage - Math.copySign(ShooterConstants.kFlywheelFeedforwardS, flywheelVoltage));
+        boolean flywheelOvercomeFriction = Math.abs(flywheelVoltage) > ShooterConstants.kFlywheelFeedforwardS;
+        m_flywheelPhysicsSim.setInputVoltage(flywheelOvercomeFriction ? flywheelVoltage - Math.copySign(ShooterConstants.kFlywheelFeedforwardS, flywheelVoltage) : 0);
         m_flywheelPhysicsSim.update(0.02);
 
         m_flywheelLeaderSim.iterate(
@@ -50,8 +55,9 @@ public class ShooterIOSim extends ShooterIOHardware {
             0.02
         );
 
-        double hoodVoltage = m_hoodSim.getAppliedOutput() * m_hoodSim.getBusVoltage();
-        m_hoodPhysicsSim.setInputVoltage(hoodVoltage - Math.copySign(ShooterConstants.kHoodFeedforwardS, hoodVoltage));
+        double hoodVoltage = m_hoodSim.getAppliedOutput() * m_hoodSim.getBusVoltage() - ShooterConstants.kHoodFeedforwardG;
+        boolean hoodOvercomeFriction = Math.abs(hoodVoltage) > ShooterConstants.kHoodFeedforwardS;
+        m_hoodPhysicsSim.setInputVoltage(hoodOvercomeFriction ? hoodVoltage - Math.copySign(ShooterConstants.kHoodFeedforwardS, hoodVoltage) : 0);
         m_hoodPhysicsSim.update(0.02);
 
         m_hoodSim.iterate(

@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import org.ironmaple.simulation.SimulatedArena;
+import org.ironmaple.simulation.seasonspecific.rebuilt2026.Arena2026Rebuilt;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.NT4Publisher;
@@ -30,7 +32,7 @@ public class Robot extends LoggedRobot {
         } else {
 
             // TODO Replay
-            setUseTiming(false);
+            //setUseTiming(false);
             Logger.addDataReceiver(new NT4Publisher());
             //Logger.setReplaySource(new WPILOGReader(logPath));
             //Logger.addDataReceiver(new WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_sim")));
@@ -47,13 +49,7 @@ public class Robot extends LoggedRobot {
         CommandScheduler.getInstance().run();
 
         m_robotContainer.updateShotSolution();
-        m_robotContainer.logControllerError();
         m_robotContainer.checkHubAlignment();
-
-        if (isSimulation()) {
-
-            m_robotContainer.simulateBatteryLoad();
-        }
 
         updateActiveDisplay();
     }
@@ -61,8 +57,15 @@ public class Robot extends LoggedRobot {
     public void updateActiveDisplay () {
 
         double matchTime = DriverStation.getMatchTime();
-        boolean redActiveFirst;
 
+        if (isAutonomous()) {
+
+            Logger.recordOutput("Shift Timer", matchTime);
+            Logger.recordOutput("Current Shift", "Autonomous (Active)");
+            return;
+        }
+
+        boolean redActiveFirst;
         String gameData = DriverStation.getGameSpecificMessage();
 
         if (gameData.isEmpty()) {
@@ -79,11 +82,7 @@ public class Robot extends LoggedRobot {
 
         boolean firstActiveShift = Util.isRedAlliance() ? redActiveFirst : !redActiveFirst;
 
-        if (matchTime > 140) {
-
-            Logger.recordOutput("Shift Timer", matchTime - 140);
-            Logger.recordOutput("Current Shift", "Autonomous (Active)");
-        } else if (matchTime > 130) { // Transition Shift
+        if (matchTime > 130) { // Transition Shift
 
             Logger.recordOutput("Shift Timer", matchTime - 130);
             Logger.recordOutput("Current Shift", "Transition (Active)");
@@ -122,6 +121,12 @@ public class Robot extends LoggedRobot {
     @Override
     public void autonomousInit() {
 
+        if (isSimulation()) {
+
+            SimulatedArena.getInstance().resetFieldForAuto();
+            m_robotContainer.simulateAutoPreload();
+        }
+
         m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
         if (m_autonomousCommand != null) {
@@ -149,6 +154,24 @@ public class Robot extends LoggedRobot {
 
     @Override
     public void teleopExit() {}
+
+    @Override
+    public void simulationInit() {
+
+        Arena2026Rebuilt arena = (Arena2026Rebuilt) SimulatedArena.getInstance();
+        arena.setEfficiencyMode(false);
+    }
+
+    @Override
+    public void simulationPeriodic() {
+
+        SimulatedArena.getInstance().simulationPeriodic();
+        m_robotContainer.simulateIntakeBody();
+        m_robotContainer.simulateShooting();
+
+        m_robotContainer.displayFieldSimToAdvantageScope();
+        m_robotContainer.displayRobotComponentsInAdvantageScope();
+    }
 
     @Override
     public void testInit() {
