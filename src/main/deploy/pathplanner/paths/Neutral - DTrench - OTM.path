@@ -3,45 +3,65 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.7165691868758919,
-        "y": 1.7383880171184036
+        "x": 6.5,
+        "y": 5.839942938659058
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.0951763271191135,
-        "y": 1.9169771294451117
+        "x": 6.760472266500395,
+        "y": 7.31715456817737
+      },
+      "isLocked": false,
+      "linkedName": "Middle-Exit"
+    },
+    {
+      "anchor": {
+        "x": 4.595420827389443,
+        "y": 7.4572753209700435
+      },
+      "prevControl": {
+        "x": 6.595420827389443,
+        "y": 7.4572753209700435
+      },
+      "nextControl": {
+        "x": 3.595420827389443,
+        "y": 7.4572753209700435
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 1.0955135520684742,
-        "y": 2.9028673323823115
+        "x": 2.874579172610556,
+        "y": 7.25
       },
       "prevControl": {
-        "x": 0.10818318079177547,
-        "y": 2.744189236998556
+        "x": 3.874579172610556,
+        "y": 7.25
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "DTrench-Shot"
     }
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.3276452850877194,
-      "rotationDegrees": -90.0
+      "waypointRelativePos": 0.5,
+      "rotationDegrees": 180.0
+    },
+    {
+      "waypointRelativePos": 1.1,
+      "rotationDegrees": 180.0
     }
   ],
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.33317376735280024,
+      "minWaypointRelativePos": 0.6536124240378093,
       "maxWaypointRelativePos": 1.0,
       "constraints": {
-        "maxVelocity": 0.5,
-        "maxAcceleration": 3.0,
+        "maxVelocity": 1.5,
+        "maxAcceleration": 7.0,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,
         "nominalVoltage": 12.0,
@@ -60,14 +80,14 @@
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 0,
-    "rotation": -90.0
+    "velocity": 1.0,
+    "rotation": 125.00000000000001
   },
   "reversed": false,
-  "folder": "OTrench-Outpost-Tower",
+  "folder": "DTrench-Middle",
   "idealStartingState": {
-    "velocity": 0,
-    "rotation": -140.0
+    "velocity": 3.0,
+    "rotation": 90.0
   },
   "useDefaultConstraints": true
 }

@@ -223,13 +223,24 @@ public class RobotContainer {
 
     public void updateShotSolution() {
 
-        m_shotSolver.calculateShotSolution(m_drive.getPose(), m_drive.getChassisSpeeds());
+        m_shotSolver.calculateShotSolution(m_drive.getPose(), m_drive.getFieldRelativeChassisSpeeds());
     }
     
     public void checkHubAlignment() {
 
         double error = Math.abs(m_drive.getRotation().getDegrees() - m_shotSolver.getShotSolution().aimHeading.getDegrees());
         Logger.recordOutput("Hub Aligned", error < 1.5);
+    }
+
+    public void displayTargetHeading() {
+
+        Logger.recordOutput(
+            "TargetHeading", 
+            new Pose2d(
+                m_drive.getPose().getTranslation(),
+                m_shotSolver.getShotSolution().aimHeading
+            )
+        );
     }
 
     public void simulateAutoPreload() {
@@ -279,7 +290,7 @@ public class RobotContainer {
             chassisSpeeds, 
             robotPose.getRotation().plus(Rotation2d.fromRadians(Math.PI)), 
             Meters.of(0.413243), 
-            MetersPerSecond.of(m_shooter.getFlywheelVelocity() * (0.1016 * Math.PI) * (1.0 / 60.0) - 8.5),
+            MetersPerSecond.of(m_shooter.getFlywheelVelocity() * (0.1016 * Math.PI) * (1.0 / 60.0) * 0.5),
             Rotations.of(0.25 - m_shooter.getHoodPosition())
         );
 

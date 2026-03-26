@@ -3,38 +3,45 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.5,
-        "y": 0.725
+        "x": 0.66,
+        "y": 5.945
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.25,
-        "y": 0.725
+        "x": 1.4294000000000002,
+        "y": 5.106888888888888
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 0.46,
-        "y": 0.7
+        "x": 2.384355555555556,
+        "y": 5.0776555555555545
       },
       "prevControl": {
-        "x": 0.96,
-        "y": 0.6999999999999998
+        "x": 1.2345111111111113,
+        "y": 5.379733333333333
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Outpost1"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "ShotHeading",
+      "waypointRelativePos": 0.0,
+      "endWaypointRelativePos": 1.0,
+      "command": null
+    }
+  ],
   "globalConstraints": {
-    "maxVelocity": 3.5,
-    "maxAcceleration": 25.0,
+    "maxVelocity": 3.0,
+    "maxAcceleration": 7.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
@@ -42,12 +49,12 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 180.0
+    "rotation": -150.0
   },
   "reversed": false,
-  "folder": "OTrench-Outpost-Tower",
+  "folder": "DTrench-Middle",
   "idealStartingState": {
-    "velocity": 0.0,
+    "velocity": 0,
     "rotation": 180.0
   },
   "useDefaultConstraints": true
