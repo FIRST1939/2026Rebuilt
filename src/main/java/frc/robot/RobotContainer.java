@@ -232,6 +232,17 @@ public class RobotContainer {
         Logger.recordOutput("Hub Aligned", error < 1.5);
     }
 
+    public void displayTargetHeading() {
+
+        Logger.recordOutput(
+            "TargetHeading", 
+            new Pose2d(
+                m_drive.getPose().getTranslation(),
+                m_shotSolver.getShotSolution().aimHeading
+            )
+        );
+    }
+
     public void simulateAutoPreload() {
 
         m_intakeSimulation.setGamePiecesCount(8);
@@ -291,14 +302,6 @@ public class RobotContainer {
 
         Logger.recordOutput("FieldSimulation/RobotPosition", m_swerveDriveSimulation.getSimulatedDriveTrainPose());
         Logger.recordOutput("FieldSimulation/Fuel", SimulatedArena.getInstance().getGamePiecesArrayByType("Fuel"));
-
-        Logger.recordOutput(
-            "FieldSimulation/TargetHeading", 
-            new Pose2d(
-                m_swerveDriveSimulation.getSimulatedDriveTrainPose().getTranslation(),
-                m_shotSolver.getShotSolution().aimHeading
-            )
-        );
     }
 
     public void displayRobotComponentsInAdvantageScope() {
