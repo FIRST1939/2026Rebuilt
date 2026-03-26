@@ -4,12 +4,12 @@
     {
       "anchor": {
         "x": 2.874579172610556,
-        "y": 7.314950071326677
+        "y": 7.25
       },
       "prevControl": null,
       "nextControl": {
         "x": 2.7130122593189356,
-        "y": 6.881012826621747
+        "y": 6.8160627552950706
       },
       "isLocked": false,
       "linkedName": "DTrench-Shot"
@@ -88,8 +88,8 @@
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 3.0,
-    "maxAcceleration": 7.0,
+    "maxVelocity": 3.5,
+    "maxAcceleration": 25.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,

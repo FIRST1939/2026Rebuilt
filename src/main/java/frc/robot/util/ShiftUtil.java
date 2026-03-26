@@ -78,6 +78,7 @@ public class ShiftUtil {
         // 95% of Fuel Gets Processed in <= 2.00s
         double timeToProcess = 1.875;
 
-        return timeOfFlight + timeToProcess <= timeLeftToScore;
+        return true;
+        //return timeOfFlight + timeToProcess <= timeLeftToScore;
     }
 }

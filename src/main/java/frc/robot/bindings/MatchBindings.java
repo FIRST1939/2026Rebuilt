@@ -104,17 +104,8 @@ public class MatchBindings {
             () -> ShooterConstants.kOutpostHoodSetpoint));
         //Static Shot Outpost Command
 
-        modeTrigger.and(bindingParams.operatorController.povUp()).whileTrue(
-            new RunFlywheelAndHood(bindingParams.shooter, 
-            () -> ShooterConstants.kHubFlywheelVelocity,
-            () -> ShooterConstants.kHubHoodSetpoint));
-        //Static Shot Hub Command
-
-        modeTrigger.and(bindingParams.operatorController.povDown()).whileTrue(
-            new RunFlywheelAndHood(bindingParams.shooter, 
-            () -> ShooterConstants.kTowerFlywheelVelocity,
-            () -> ShooterConstants.kTowerHoodSetpoint));
-        //Static Shot Tower Command
+        modeTrigger.and(bindingParams.operatorController.povUp()).toggleOnTrue(new RaiseClimberToHeight(bindingParams.climber, ClimberConstants.kRaisingClimberSetpoint, ClimberConstants.kRaisingClimberPercentage));
+        modeTrigger.and(bindingParams.operatorController.povDown()).toggleOnTrue(new LowerClimberToHeight(bindingParams.climber, ClimberConstants.kLoweringClimberSetpoint, ClimberConstants.kLoweringClimberPercentage));
 
         modeTrigger.and(bindingParams.operatorController.povLeft()).whileTrue(
             new RunFlywheelAndHood(bindingParams.shooter, 
