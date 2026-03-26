@@ -51,7 +51,7 @@
     {
       "name": "ShotHeading",
       "waypointRelativePos": 0,
-      "endWaypointRelativePos": 1.0,
+      "endWaypointRelativePos": 2.0,
       "command": null
     }
   ],
@@ -68,7 +68,7 @@
     "rotation": -90.0
   },
   "reversed": false,
-  "folder": null,
+  "folder": "DTrench-Middle",
   "idealStartingState": {
     "velocity": 0,
     "rotation": 125.00000000000001
