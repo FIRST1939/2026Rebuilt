@@ -67,6 +67,8 @@ public class ShotSolver {
         kShooterMap.put(4.0, new ShooterParams(3400, 0.05694, 1.45));
         kShooterMap.put(4.5, new ShooterParams(3500, 0.0597, 1.5));
         kShooterMap.put(5.0, new ShooterParams(3600, 0.0625, 1.55));
+        kShooterMap.put(5.5, new ShooterParams(3700, 0.0654, 1.6));
+        kShooterMap.put(6.0, new ShooterParams(3800, 0.0683, 1.65));
     }
 
     private ShotSolution m_shotSolution = new ShotSolution(0, 0, new Rotation2d(), 0);
