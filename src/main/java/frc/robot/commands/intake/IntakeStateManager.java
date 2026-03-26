@@ -50,6 +50,11 @@ public class IntakeStateManager extends Command {
 
     public void setOverrideGoal (State goalState) {
     
+        if (goalState == State.INTAKING || goalState == State.STOWING) {
+
+            m_debouncer = new Debouncer(0.25);
+        }
+
         m_overrideGoal = Optional.of(goalState);
     }
 

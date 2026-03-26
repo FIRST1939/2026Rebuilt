@@ -37,7 +37,7 @@
       },
       "prevControl": {
         "x": 8.504129317444198,
-        "y": 4.347150535694193
+        "y": 4.347150535694194
       },
       "nextControl": {
         "x": 7.646223529435237,
@@ -69,12 +69,6 @@
   "constraintZones": [],
   "pointTowardsZones": [],
   "eventMarkers": [
-    {
-      "name": "ClimberUp",
-      "waypointRelativePos": 0.1101736972704874,
-      "endWaypointRelativePos": null,
-      "command": null
-    },
     {
       "name": "Intake",
       "waypointRelativePos": 0.8188585607940388,

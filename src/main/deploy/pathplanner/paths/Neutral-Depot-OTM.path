@@ -48,6 +48,10 @@
     {
       "waypointRelativePos": 0.5369294605809141,
       "rotationDegrees": 135.0
+    },
+    {
+      "waypointRelativePos": 1.3560767590618215,
+      "rotationDegrees": 160.0
     }
   ],
   "constraintZones": [
@@ -68,14 +72,8 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "ClimberUp",
-      "waypointRelativePos": 0.0,
-      "endWaypointRelativePos": null,
-      "command": null
-    },
-    {
       "name": "ShotHeading",
-      "waypointRelativePos": 0.6203473945409452,
+      "waypointRelativePos": 0.4699527346387612,
       "endWaypointRelativePos": 2.0,
       "command": null
     },
@@ -96,7 +94,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -145.0
+    "rotation": 140.0
   },
   "reversed": false,
   "folder": "DTrench-Middle",

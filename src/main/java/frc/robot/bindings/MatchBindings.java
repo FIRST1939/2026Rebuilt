@@ -124,7 +124,8 @@ public class MatchBindings {
                     new RepeatCommand(
                         Commands.parallel(
                             new RunSpindexerVelocity(bindingParams.spindexer, SpindexerConstants.kSpindexerVelocity),
-                            new RunFeederVelocity(bindingParams.feeder, FeederConstants.kFeederVelocity)
+                            new RunFeederVelocity(bindingParams.feeder, FeederConstants.kFeederVelocity),
+                            new AgitateIntake(bindingParams.intake, bindingParams.intakeStateManager)
                         ).onlyWhile(() -> ShiftUtil.fuelWillScore(bindingParams.shotSolver.getShotSolution().timeOfFlight) &&
                         bindingParams.drive.atTargetRotation(bindingParams.shotSolver.getShotSolution().aimHeading))
                     ) // TODO Additional Shot Conditions
@@ -138,11 +139,14 @@ public class MatchBindings {
         modeTrigger.and(bindingParams.operatorController.start()).onTrue(Commands.runOnce(() -> bindingParams.intakeStateManager.setGoalState(State.STOWING)));
         //Pivot Intake Stow
 
-        modeTrigger.and(bindingParams.operatorController.a()).whileTrue(new AgitateIntake(bindingParams.intake, bindingParams.intakeStateManager));
+        modeTrigger.and(bindingParams.operatorController.a()).onTrue(new DeepAgitateIntake(bindingParams.intake, bindingParams.intakeStateManager));
         //Pivot Agitate
         
-        modeTrigger.and(bindingParams.operatorController.rightBumper()).onTrue(Commands.runOnce(() -> bindingParams.intakeStateManager.setGoalState(State.INTAKING)));
-        modeTrigger.and(bindingParams.operatorController.rightBumper()).onFalse(Commands.runOnce(() -> bindingParams.intakeStateManager.setGoalState(State.EXTENDED)));
+        modeTrigger.and(bindingParams.operatorController.rightBumper()).onTrue(Commands.runOnce(() -> bindingParams.intakeStateManager.setOverrideGoal(State.INTAKING)));
+        modeTrigger.and(bindingParams.operatorController.rightBumper()).onFalse(Commands.runOnce(() -> {
+            bindingParams.intakeStateManager.setGoalState(State.EXTENDED);
+            bindingParams.intakeStateManager.clearOverrideGoal();
+        }));
         //Deploy+Roller
 
         modeTrigger.and(bindingParams.operatorController.b()).whileTrue(new RunSpindexerVelocity(bindingParams.spindexer, SpindexerConstants.kSpindexerReverseVelocity));

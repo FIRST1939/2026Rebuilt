@@ -5,21 +5,47 @@
     "data": {
       "commands": [
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "DTrench-Neutral-Intaking"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Neutral-Depot-OTM"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "DTrench-Neutral-Intaking"
+                }
+              },
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 1.0
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "ClimberUp"
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
           }
         },
         {
           "type": "parallel",
           "data": {
             "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Neutral-Depot-OTM"
+                }
+              },
               {
                 "type": "race",
                 "data": {
@@ -37,7 +63,7 @@
                           {
                             "type": "wait",
                             "data": {
-                              "waitTime": 0.5
+                              "waitTime": 2.5
                             }
                           },
                           {
