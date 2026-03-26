@@ -340,6 +340,12 @@ public class Drive extends SubsystemBase {
     return getPose().getRotation();
   }
 
+  public boolean atTargetRotation(Rotation2d target) {
+
+    Logger.recordOutput("Angle Error", Math.abs(target.minus(getRotation()).getRadians()));
+    return Math.abs(target.minus(getRotation()).getRadians()) <= DriveConstants.kAngleTolerance;
+  }
+
   /** Resets the current odometry pose. */
   public void setPose(Pose2d pose) {
     poseEstimator.resetPosition(rawGyroRotation, getModulePositions(), pose);

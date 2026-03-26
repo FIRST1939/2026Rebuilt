@@ -10,4 +10,6 @@ public class DriveConstants {
 
     public static final double kAngleControllerMaxVelocity = 8.0;
     public static final double kAngleControllerMaxAcceleration = 20.0;
+
+    public static final double kAngleTolerance = 3.0 * (Math.PI / 180.0);
 }

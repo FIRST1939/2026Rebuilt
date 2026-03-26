@@ -120,13 +120,14 @@ public class MatchBindings {
                     () -> bindingParams.shotSolver.getShotSolution().hoodPositionRotations
                 ),
                 Commands.sequence(
-                    Commands.waitSeconds(0.5), // TODO Remove Manual Speedup Waiting
+                    Commands.waitUntil(() -> bindingParams.shooter.isAtGoal()),
                     new RepeatCommand(
                         Commands.parallel(
                             new RunSpindexerVelocity(bindingParams.spindexer, SpindexerConstants.kSpindexerVelocity),
                             new RunFeederVelocity(bindingParams.feeder, FeederConstants.kFeederVelocity)
-                        ).onlyWhile(() -> ShiftUtil.fuelWillScore(bindingParams.shotSolver.getShotSolution().timeOfFlight)) // TODO Additional Shot Conditions
-                    )
+                        ).onlyWhile(() -> ShiftUtil.fuelWillScore(bindingParams.shotSolver.getShotSolution().timeOfFlight) &&
+                        bindingParams.drive.atTargetRotation(bindingParams.shotSolver.getShotSolution().aimHeading))
+                    ) // TODO Additional Shot Conditions
                 )
             )
         );
