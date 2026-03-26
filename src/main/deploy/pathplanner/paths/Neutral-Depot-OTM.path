@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.307688888888889,
-        "y": 5.028933333333333
+        "x": 5.151777777777778,
+        "y": 5.438199999999999
       },
       "isLocked": false,
       "linkedName": null
@@ -53,10 +53,10 @@
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.9905707196029818,
+      "minWaypointRelativePos": 0.5339950372208397,
       "maxWaypointRelativePos": 2.0,
       "constraints": {
-        "maxVelocity": 2.0,
+        "maxVelocity": 1.0,
         "maxAcceleration": 5.0,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,
@@ -70,7 +70,7 @@
     {
       "name": "ClimberUp",
       "waypointRelativePos": 0.0,
-      "endWaypointRelativePos": 1.9791563275434243,
+      "endWaypointRelativePos": null,
       "command": null
     },
     {

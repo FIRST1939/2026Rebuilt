@@ -72,7 +72,7 @@
     {
       "name": "ClimberUp",
       "waypointRelativePos": 0.1101736972704874,
-      "endWaypointRelativePos": 3.0,
+      "endWaypointRelativePos": null,
       "command": null
     },
     {
