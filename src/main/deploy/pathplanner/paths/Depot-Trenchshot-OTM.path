@@ -3,41 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.874579172610556,
-        "y": 7.25
+        "x": 0.66,
+        "y": 5.945
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.8745791726105558,
-        "y": 7.25
-      },
-      "isLocked": false,
-      "linkedName": "DTrench-Shot"
-    },
-    {
-      "anchor": {
-        "x": 1.2562422360248453,
-        "y": 2.119596273291926
-      },
-      "prevControl": {
-        "x": 2.8632112602411963,
-        "y": 4.034707381089369
-      },
-      "nextControl": {
-        "x": -0.19002988576986835,
-        "y": 0.3959962762742255
+        "x": 1.4294000000000002,
+        "y": 5.106888888888888
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 4.206809006211181,
-        "y": 0.7041692546583851
+        "x": 2.384355555555556,
+        "y": 5.0776555555555545
       },
       "prevControl": {
-        "x": 2.2068090062111807,
-        "y": 0.7041692546583853
+        "x": 1.2345111111111113,
+        "y": 5.379733333333333
       },
       "nextControl": null,
       "isLocked": false,
@@ -50,13 +34,13 @@
   "eventMarkers": [
     {
       "name": "ShotHeading",
-      "waypointRelativePos": 0,
-      "endWaypointRelativePos": 2.0,
+      "waypointRelativePos": 0.0,
+      "endWaypointRelativePos": 1.0,
       "command": null
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 1.0,
+    "maxVelocity": 3.0,
     "maxAcceleration": 7.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
@@ -64,14 +48,14 @@
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 1.0,
-    "rotation": -90.0
+    "velocity": 0,
+    "rotation": -150.0
   },
   "reversed": false,
   "folder": "DTrench-Middle",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 125.00000000000001
+    "rotation": 180.0
   },
-  "useDefaultConstraints": false
+  "useDefaultConstraints": true
 }
