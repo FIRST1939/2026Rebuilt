@@ -36,6 +36,10 @@ public class Robot extends LoggedRobot {
             Logger.addDataReceiver(new NT4Publisher());
             //Logger.setReplaySource(new WPILOGReader(logPath));
             //Logger.addDataReceiver(new WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_sim")));
+
+            Arena2026Rebuilt arena = new Arena2026Rebuilt(false);
+            arena.setEfficiencyMode(false);
+            SimulatedArena.overrideInstance(arena);
         }
 
         Logger.start();
@@ -110,20 +114,14 @@ public class Robot extends LoggedRobot {
     public void teleopExit() {}
 
     @Override
-    public void simulationInit() {
-
-        Arena2026Rebuilt arena = (Arena2026Rebuilt) SimulatedArena.getInstance();
-        arena.setEfficiencyMode(false);
-    }
-
-    @Override
     public void simulationPeriodic() {
 
         SimulatedArena.getInstance().simulationPeriodic();
+        m_robotContainer.simulateBump();
         m_robotContainer.simulateIntakeBody();
         m_robotContainer.simulateShooting();
 
-        m_robotContainer.displayFieldSimToAdvantageScope();
+        m_robotContainer.displayFuelSimToAdvantageScope();
         m_robotContainer.displayRobotComponentsInAdvantageScope();
     }
 

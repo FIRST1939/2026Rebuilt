@@ -59,6 +59,7 @@ public class RobotContainer {
     private final Climber m_climber;
 
     private SwerveDriveSimulation m_swerveDriveSimulation = null;
+    private RobotBumpSim m_robotBumpSim = null;
     private IntakeSimulation m_intakeSimulation = null;
     private Timer m_simulatedShotTimer = new Timer();
     
@@ -132,6 +133,8 @@ public class RobotContainer {
                 driveTrainSimulationConfig, 
                 new Pose2d()
             );
+
+            m_robotBumpSim = new RobotBumpSim(Drive.getModuleTranslations());
 
             m_intakeSimulation = IntakeSimulation.OverTheBumperIntake(
                 "Fuel", 
@@ -249,6 +252,20 @@ public class RobotContainer {
         m_intakeSimulation.setGamePiecesCount(8);
     }
 
+    public void simulateBump() {
+
+        Pose2d simPose = m_swerveDriveSimulation.getSimulatedDriveTrainPose();
+        ChassisSpeeds fieldRelativeSpeeds = m_swerveDriveSimulation.getDriveTrainSimulatedChassisSpeedsFieldRelative();
+        Pose3d simPose3d = m_robotBumpSim.update(simPose, fieldRelativeSpeeds, 5);
+
+        if (m_robotBumpSim.isOnRamp()) {
+            
+            m_swerveDriveSimulation.setSimulationWorldPose(m_robotBumpSim.getSimWorldPose(simPose));
+        }
+
+        Logger.recordOutput("FieldSimulation/RobotPosition", simPose3d);
+    }
+
     public void simulateIntakeBody() {
 
         State intakeGoalState = m_intakeStateManager.getGoalState();
@@ -299,9 +316,8 @@ public class RobotContainer {
         m_simulatedShotTimer.restart();
     }
 
-    public void displayFieldSimToAdvantageScope() {
+    public void displayFuelSimToAdvantageScope() {
 
-        Logger.recordOutput("FieldSimulation/RobotPosition", m_swerveDriveSimulation.getSimulatedDriveTrainPose());
         Logger.recordOutput("FieldSimulation/Fuel", SimulatedArena.getInstance().getGamePiecesArrayByType("Fuel"));
     }
 
