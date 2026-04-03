@@ -66,8 +66,8 @@ public final class Constants {
 
     public static class SpindexerConstants {
 
-        public static final double kSpindexerVelocity = 300.0;
-        public static final double kSpindexerReverseVelocity = -180.0;
+        public static final double kSpindexerPercentage = 0.8;
+        public static final double kSpindexerReversePercentage = -0.5;
     }
 
     public static class FeederConstants {

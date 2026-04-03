@@ -2,6 +2,8 @@ package frc.robot.commands.intake;
 
 import java.util.Optional;
 
+import org.littletonrobotics.junction.Logger;
+
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.IntakeConstants;
@@ -12,6 +14,7 @@ public class IntakeStateManager extends Command {
     private final Intake m_intake;
     private State m_goalState = null;
     private Optional<State> m_overrideGoal = Optional.empty();
+    private Optional<State> m_megaOverrideGoal = Optional.empty();
 
     private Debouncer m_debouncer;
 
@@ -63,14 +66,31 @@ public class IntakeStateManager extends Command {
         m_overrideGoal = Optional.empty();
     }
 
+    public void setMegaOverrideGoal (State goalState) {
+
+        if (goalState == State.INTAKING || goalState == State.STOWING) {
+
+            m_debouncer = new Debouncer(0.25);
+        }
+
+        m_megaOverrideGoal = Optional.of(goalState);
+    }
+
+    public void clearMegaOverrideGoal () {
+
+        m_megaOverrideGoal = Optional.empty();
+    }
+
     @Override
     public void execute () {
 
-        State goalState;
+        State goalState = m_goalState;
 
         if (m_overrideGoal.isPresent()) { goalState = m_overrideGoal.get(); }
-        else { goalState = m_goalState; }
+        if (m_megaOverrideGoal.isPresent()) { goalState = m_megaOverrideGoal.get(); }
         if (goalState == null) { return; }
+
+        Logger.recordOutput("Intake State", goalState.toString());
 
         if (goalState == State.STOWED) {
 

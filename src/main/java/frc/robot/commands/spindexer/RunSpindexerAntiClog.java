@@ -10,8 +10,8 @@ public class RunSpindexerAntiClog extends RepeatCommand {
     public RunSpindexerAntiClog (Spindexer spindexer) {
 
         super(Commands.sequence(
-            new RunSpindexerVelocity(spindexer, SpindexerConstants.kSpindexerVelocity).until(() -> spindexer.isClogged()),
-            new RunSpindexerVelocity(spindexer, SpindexerConstants.kSpindexerReverseVelocity).withTimeout(0.5)
+            new RunSpindexerPercentage(spindexer, SpindexerConstants.kSpindexerPercentage).until(() -> spindexer.isClogged()),
+            new RunSpindexerPercentage(spindexer, SpindexerConstants.kSpindexerReversePercentage).withTimeout(0.5)
         ));
     }
 }

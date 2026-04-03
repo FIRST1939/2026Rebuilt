@@ -1,5 +1,7 @@
 package frc.robot.util;
 
+import org.littletonrobotics.junction.Logger;
+
 import edu.wpi.first.wpilibj.DriverStation;
 
 public class ShiftUtil {
@@ -64,13 +66,23 @@ public class ShiftUtil {
 
     public static boolean fuelWillScore(double timeOfFlight) {
 
+        // TODO Simulate in Practice Mode
+        if (!DriverStation.isFMSAttached()) { return true; }
+
         Shift currentShift = getCurrentShift();
-        double timeLeftToScore = currentShift.getSecondsRemaining() + 3;
+        double timeLeftInShift = currentShift.getSecondsRemaining();
+        if (currentShift.isActive()) { timeLeftInShift += 3; }
 
         if (currentShift.getName().equals("Transition") && activeFirst()) {
 
             // The First Shift is Also Active
-            timeLeftToScore += 25;
+            timeLeftInShift += 25;
+        }
+
+        if (currentShift.getName().equals("Shift 4") && !activeFirst()) {
+
+            // Endgame is Also Active
+            timeLeftInShift += 30;
         }
 
         // 85% of Fuel Gets Processed in <= 1.75s
@@ -78,7 +90,14 @@ public class ShiftUtil {
         // 95% of Fuel Gets Processed in <= 2.00s
         double timeToProcess = 1.875;
 
-        return true;
-        //return timeOfFlight + timeToProcess <= timeLeftToScore;
+        Logger.recordOutput("Time Left in Shift", timeLeftInShift);
+        Logger.recordOutput("Total Time to Score", timeOfFlight + timeToProcess);
+
+        if (currentShift.isActive()) {
+
+            return timeOfFlight + timeToProcess <= timeLeftInShift;
+        }
+
+        return timeOfFlight + timeToProcess >= timeLeftInShift;
     }
 }

@@ -49,7 +49,7 @@ public class Robot extends LoggedRobot {
         CommandScheduler.getInstance().run();
 
         m_robotContainer.updateShotSolution();
-        m_robotContainer.checkHubAlignment();
+        m_robotContainer.displayShotConditions();
         m_robotContainer.displayTargetHeading();
 
         updateActiveDisplay();

@@ -123,7 +123,7 @@ public class MatchBindings {
                     Commands.waitUntil(() -> bindingParams.shooter.isAtGoal()),
                     new RepeatCommand(
                         Commands.parallel(
-                            new RunSpindexerVelocity(bindingParams.spindexer, SpindexerConstants.kSpindexerVelocity),
+                            new RunSpindexerPercentage(bindingParams.spindexer, SpindexerConstants.kSpindexerPercentage),
                             new RunFeederVelocity(bindingParams.feeder, FeederConstants.kFeederVelocity),
                             new AgitateIntake(bindingParams.intake, bindingParams.intakeStateManager)
                         ).onlyWhile(() -> ShiftUtil.fuelWillScore(bindingParams.shotSolver.getShotSolution().timeOfFlight) &&
@@ -142,14 +142,14 @@ public class MatchBindings {
         modeTrigger.and(bindingParams.operatorController.a()).onTrue(new DeepAgitateIntake(bindingParams.intake, bindingParams.intakeStateManager));
         //Pivot Agitate
         
-        modeTrigger.and(bindingParams.operatorController.rightBumper()).onTrue(Commands.runOnce(() -> bindingParams.intakeStateManager.setOverrideGoal(State.INTAKING)));
+        modeTrigger.and(bindingParams.operatorController.rightBumper()).onTrue(Commands.runOnce(() -> bindingParams.intakeStateManager.setMegaOverrideGoal(State.INTAKING)));
         modeTrigger.and(bindingParams.operatorController.rightBumper()).onFalse(Commands.runOnce(() -> {
             bindingParams.intakeStateManager.setGoalState(State.EXTENDED);
-            bindingParams.intakeStateManager.clearOverrideGoal();
+            bindingParams.intakeStateManager.clearMegaOverrideGoal();
         }));
         //Deploy+Roller
 
-        modeTrigger.and(bindingParams.operatorController.b()).whileTrue(new RunSpindexerVelocity(bindingParams.spindexer, SpindexerConstants.kSpindexerReverseVelocity));
+        modeTrigger.and(bindingParams.operatorController.b()).whileTrue(new RunSpindexerPercentage(bindingParams.spindexer, SpindexerConstants.kSpindexerReversePercentage));
         //Spindexer Reverse
 
         modeTrigger.and(bindingParams.operatorController.y()).whileTrue(new RunFeederVelocity(bindingParams.feeder, FeederConstants.kFeederReverseVelocity));

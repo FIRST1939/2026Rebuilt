@@ -226,10 +226,11 @@ public class RobotContainer {
         m_shotSolver.calculateShotSolution(m_drive.getPose(), m_drive.getFieldRelativeChassisSpeeds());
     }
     
-    public void checkHubAlignment() {
+    public void displayShotConditions() {
 
-        double error = Math.abs(m_drive.getRotation().getDegrees() - m_shotSolver.getShotSolution().aimHeading.getDegrees());
-        Logger.recordOutput("Hub Aligned", error < 1.5);
+        Logger.recordOutput("Shooter Spun Up", m_shooter.isAtGoal());
+        Logger.recordOutput("Fuel Will Score", ShiftUtil.fuelWillScore(m_shotSolver.getShotSolution().timeOfFlight));
+        Logger.recordOutput("Hub Aligned", m_drive.atTargetRotation(m_shotSolver.getShotSolution().aimHeading));
     }
 
     public void displayTargetHeading() {

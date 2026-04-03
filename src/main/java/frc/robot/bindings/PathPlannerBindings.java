@@ -33,7 +33,7 @@ public class PathPlannerBindings {
             "FeedShooter",
             Commands.parallel(
                 new AgitateIntake(bindingParams.intake, bindingParams.intakeStateManager),
-                new RunSpindexerVelocity(bindingParams.spindexer, SpindexerConstants.kSpindexerVelocity),
+                new RunSpindexerVelocity(bindingParams.spindexer, SpindexerConstants.kSpindexerPercentage),
                 new RunFeederVelocity(bindingParams.feeder, FeederConstants.kFeederVelocity)
             )
         );
