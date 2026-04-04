@@ -12,7 +12,7 @@ import frc.robot.commands.feeder.RunFeederVelocity;
 import frc.robot.commands.intake.AgitateIntake;
 import frc.robot.commands.intake.IntakeStateManager.State;
 import frc.robot.commands.shooter.RunFlywheelAndHood;
-import frc.robot.commands.spindexer.RunSpindexerVelocity;
+import frc.robot.commands.spindexer.RunSpindexerPercentage;
 
 public class PathPlannerBindings {
     
@@ -33,7 +33,7 @@ public class PathPlannerBindings {
             "FeedShooter",
             Commands.parallel(
                 new AgitateIntake(bindingParams.intake, bindingParams.intakeStateManager),
-                new RunSpindexerVelocity(bindingParams.spindexer, SpindexerConstants.kSpindexerPercentage),
+                new RunSpindexerPercentage(bindingParams.spindexer, SpindexerConstants.kSpindexerPercentage),
                 new RunFeederVelocity(bindingParams.feeder, FeederConstants.kFeederVelocity)
             )
         );

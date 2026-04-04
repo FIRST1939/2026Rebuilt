@@ -1,5 +1,7 @@
 package frc.robot.bindings;
 
+import edu.wpi.first.math.filter.Debouncer;
+import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -17,6 +19,8 @@ import frc.robot.util.*;
 
 public class MatchBindings {
     
+    private final Debouncer m_hubAlignedDebouncer = new Debouncer(0.5, DebounceType.kFalling);
+
     public MatchBindings(BindingParams bindingParams, Trigger modeTrigger) {
 
         Command defaultDriveCommand = new JoystickDrive(
@@ -127,7 +131,7 @@ public class MatchBindings {
                             new RunFeederVelocity(bindingParams.feeder, FeederConstants.kFeederVelocity),
                             new AgitateIntake(bindingParams.intake, bindingParams.intakeStateManager)
                         ).onlyWhile(() -> ShiftUtil.fuelWillScore(bindingParams.shotSolver.getShotSolution().timeOfFlight) &&
-                        bindingParams.drive.atTargetRotation(bindingParams.shotSolver.getShotSolution().aimHeading))
+                        m_hubAlignedDebouncer.calculate(bindingParams.drive.atTargetRotation(bindingParams.shotSolver.getShotSolution().aimHeading)))
                     ) // TODO Additional Shot Conditions
                 )
             )

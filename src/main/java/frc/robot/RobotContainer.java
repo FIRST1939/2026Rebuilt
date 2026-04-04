@@ -6,6 +6,8 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.*;
 
+import java.util.Optional;
+
 import org.ironmaple.simulation.IntakeSimulation;
 import org.ironmaple.simulation.SimulatedArena;
 import org.ironmaple.simulation.IntakeSimulation.IntakeSide;
@@ -29,6 +31,7 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -234,6 +237,15 @@ public class RobotContainer {
         Logger.recordOutput("Shooter Spun Up", m_shooter.isAtGoal());
         Logger.recordOutput("Fuel Will Score", ShiftUtil.fuelWillScore(m_shotSolver.getShotSolution().timeOfFlight));
         Logger.recordOutput("Hub Aligned", m_drive.atTargetRotation(m_shotSolver.getShotSolution().aimHeading));
+
+        Optional<Boolean> activeFirst = ShiftUtil.activeFirst();
+        Color autoDashboardColor;
+
+        if (activeFirst.isEmpty()) { autoDashboardColor = new Color(253, 245, 60); } // Yelow
+        else if (activeFirst.get()) { autoDashboardColor = new Color(244, 67, 54); } // Red
+        else { autoDashboardColor = new Color(76, 175, 80); } // Green
+
+        Logger.recordOutput("Did We Win Auto", autoDashboardColor.toHexString());
     }
 
     public void displayTargetHeading() {

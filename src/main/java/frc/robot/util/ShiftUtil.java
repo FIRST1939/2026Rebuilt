@@ -1,5 +1,7 @@
 package frc.robot.util;
 
+import java.util.Optional;
+
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.wpilibj.DriverStation;
@@ -24,24 +26,25 @@ public class ShiftUtil {
         public double getSecondsRemaining() { return m_secondsRemaining; }
     }
 
-    public static boolean activeFirst() {
+    public static Optional<Boolean> activeFirst() {
 
-        boolean redActiveFirst;
+        Optional<Boolean> redActiveFirst;
         String gameData = DriverStation.getGameSpecificMessage();
 
-        if (gameData.isEmpty()) {
+        if (gameData.isEmpty() || DriverStation.isAutonomous() || DriverStation.isDisabled()) {
 
-            redActiveFirst = false;
+            redActiveFirst = Optional.empty();
         } else {
 
             switch (gameData.charAt(0)) { // Who Won Auto
-                case 'R' -> redActiveFirst = false;
-                case 'B' -> redActiveFirst = true;
-                default -> redActiveFirst = false;
+                case 'R' -> redActiveFirst = Optional.of(false);
+                case 'B' -> redActiveFirst = Optional.of(true);
+                default -> redActiveFirst = Optional.empty();
             }
         }
 
-        return Util.isRedAlliance() ? redActiveFirst : !redActiveFirst;
+        if (redActiveFirst.isEmpty()) { return redActiveFirst; }
+        return Util.isRedAlliance() ? redActiveFirst : Optional.of(!redActiveFirst.get());
     }
 
     public static Shift getCurrentShift() {
@@ -53,7 +56,8 @@ public class ShiftUtil {
             return new Shift("Autonomous", true, matchTime);
         }
 
-        boolean allianceActiveFirst = activeFirst();
+        Optional<Boolean> optionalActiveFirst = activeFirst();
+        boolean allianceActiveFirst = activeFirst().isEmpty() ? Util.isRedAlliance() : optionalActiveFirst.get();
 
         if (matchTime > 130) { return new Shift("Transition", true, matchTime - 130); } 
         if (matchTime > 105) { return new Shift("Shift 1", allianceActiveFirst, matchTime - 105); }
@@ -66,20 +70,22 @@ public class ShiftUtil {
 
     public static boolean fuelWillScore(double timeOfFlight) {
 
-        // TODO Simulate in Practice Mode
-        if (!DriverStation.isFMSAttached()) { return true; }
+        if (DriverStation.getMatchTime() < 0) { return true; }
+
+        Optional<Boolean> optionalActiveFirst = activeFirst();
+        boolean allianceActiveFirst = activeFirst().isEmpty() ? Util.isRedAlliance() : optionalActiveFirst.get();
 
         Shift currentShift = getCurrentShift();
         double timeLeftInShift = currentShift.getSecondsRemaining();
         if (currentShift.isActive()) { timeLeftInShift += 3; }
 
-        if (currentShift.getName().equals("Transition") && activeFirst()) {
+        if (currentShift.getName().equals("Transition") && allianceActiveFirst) {
 
             // The First Shift is Also Active
             timeLeftInShift += 25;
         }
 
-        if (currentShift.getName().equals("Shift 4") && !activeFirst()) {
+        if (currentShift.getName().equals("Shift 4") && !allianceActiveFirst) {
 
             // Endgame is Also Active
             timeLeftInShift += 30;

@@ -66,7 +66,7 @@ public final class Constants {
 
     public static class SpindexerConstants {
 
-        public static final double kSpindexerPercentage = 0.8;
+        public static final double kSpindexerPercentage = 1.0;
         public static final double kSpindexerReversePercentage = -0.5;
     }
 

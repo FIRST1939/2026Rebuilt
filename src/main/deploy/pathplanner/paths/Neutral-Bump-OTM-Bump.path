@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.66,
-        "y": 5.945
+        "x": 6.214,
+        "y": 5.536
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.4294000000000002,
-        "y": 5.106888888888888
+        "x": 5.151777777777778,
+        "y": 5.4381999999999975
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.384355555555556,
-        "y": 5.0776555555555545
+        "x": 2.1395542168674693,
+        "y": 5.12777108433735
       },
       "prevControl": {
-        "x": 1.2345111111111116,
-        "y": 5.379733333333333
+        "x": 3.1886144578313225,
+        "y": 5.247975903614458
       },
       "nextControl": null,
       "isLocked": false,
@@ -34,8 +34,8 @@
   "eventMarkers": [
     {
       "name": "ShotHeading",
-      "waypointRelativePos": 0.0,
-      "endWaypointRelativePos": 1.0,
+      "waypointRelativePos": 0.705707196029775,
+      "endWaypointRelativePos": 0.9141439205955314,
       "command": null
     }
   ],
@@ -48,14 +48,14 @@
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 0,
-    "rotation": -150.0
+    "velocity": 0.0,
+    "rotation": 154.167
   },
   "reversed": false,
   "folder": "DTrench-Middle",
   "idealStartingState": {
-    "velocity": 0,
-    "rotation": 180.0
+    "velocity": 3.0,
+    "rotation": 135.0
   },
   "useDefaultConstraints": true
 }
