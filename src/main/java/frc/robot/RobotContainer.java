@@ -68,6 +68,7 @@ public class RobotContainer {
     
     private final IntakeStateManager m_intakeStateManager;
     private final ShotSolver m_shotSolver;
+    private final FerrySolver m_ferrySolver;
     
     private enum OpModes {
         MATCH,
@@ -184,6 +185,7 @@ public class RobotContainer {
 
         m_intakeStateManager = new IntakeStateManager(m_intake);
         m_shotSolver = new ShotSolver();
+        m_ferrySolver = new FerrySolver();
 
         m_opModeSelector.addDefaultOption("Match", OpModes.MATCH);
         m_opModeSelector.addOption("Percent", OpModes.PERCENT);
@@ -204,6 +206,7 @@ public class RobotContainer {
             m_climber, 
             m_intakeStateManager, 
             m_shotSolver, 
+            m_ferrySolver,
             m_driverController, 
             m_operatorController
         );

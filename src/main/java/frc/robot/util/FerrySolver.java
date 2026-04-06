@@ -1,5 +1,8 @@
 package frc.robot.util;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -13,39 +16,42 @@ import frc.robot.subsystems.shooter.ShooterConstants;
 import frc.robot.util.MapUtil.ShooterParams;
 import frc.robot.util.MapUtil.ShotSolution;
 
-public class ShotSolver {
-
-    private static final InterpolatingTreeMap<Double, ShooterParams> kShooterMap = new InterpolatingTreeMap<>(
+public class FerrySolver {
+    
+    private static final InterpolatingTreeMap<Double, ShooterParams> kFerryMap = new InterpolatingTreeMap<>(
         InverseInterpolator.forDouble(), 
         ShooterParams.kInterpolator
     );
 
+    private static final List<Translation2d> kBlueFerryTargets = Arrays.asList(
+        new Translation2d(FieldConstants.LinesVertical.allianceZone, FieldConstants.LinesHorizontal.leftBumpMiddle),
+        new Translation2d(FieldConstants.LinesVertical.allianceZone, FieldConstants.LinesHorizontal.rightBumpMiddle)
+    );
+
+    private static final List<Translation2d> kRedFerryTargets = Arrays.asList(
+        new Translation2d(FieldConstants.LinesVertical.oppAllianceZone, FieldConstants.LinesHorizontal.leftBumpMiddle),
+        new Translation2d(FieldConstants.LinesVertical.oppAllianceZone, FieldConstants.LinesHorizontal.rightBumpMiddle)
+    );
+
     static {
 
-        kShooterMap.put(1.09, new ShooterParams(2750, 0.0125, 1.18));
-        kShooterMap.put(1.5, new ShooterParams(2850, 0.0264, 1.33));
-        kShooterMap.put(2.0, new ShooterParams(2650, 0.0458, 1.145));
-        kShooterMap.put(2.5, new ShooterParams(2850, 0.0458, 1.175));
-        kShooterMap.put(3.0, new ShooterParams(3000, 0.04861, 1.3));
-        kShooterMap.put(3.5, new ShooterParams(3300, 0.05277, 1.36));
-        kShooterMap.put(4.0, new ShooterParams(3400, 0.05694, 1.45));
-        kShooterMap.put(4.5, new ShooterParams(3500, 0.0597, 1.5));
-        kShooterMap.put(5.0, new ShooterParams(3600, 0.0625, 1.55));
-        kShooterMap.put(5.5, new ShooterParams(3700, 0.0654, 1.6));
-        kShooterMap.put(6.0, new ShooterParams(3800, 0.0683, 1.65));
-        kShooterMap.put(7.0, new ShooterParams(4000, 0.071, 1.7));
+        kFerryMap.put(0.0, new ShooterParams(2750, 0.071, 0.0));
+        kFerryMap.put(7.0, new ShooterParams(2750, 0.071, 0.0));
     }
 
-    private ShotSolution m_shotSolution = new ShotSolution(0, 0, new Rotation2d(), 0);
+    private ShotSolution m_ferrySolution = new ShotSolution(0, 0, new Rotation2d(), 0);
 
-    public void calculateShotSolution(Pose2d measuredRobotPose, ChassisSpeeds robotSpeeds) {
+    public void calculateFerrySolution(Pose2d measuredRobotPose, ChassisSpeeds robotSpeeds) {
 
-        ShotSolution staticShotSolution = calculateShotSolutionStatic(measuredRobotPose);
-        Logger.recordOutput("ShotSolver/Static/FlywheelRPM", staticShotSolution.flywheelRPM);
-        Logger.recordOutput("ShotSolver/Static/HoodPosition", staticShotSolution.hoodPositionRotations);
-        Logger.recordOutput("ShotSolver/Static/AimHeading", staticShotSolution.aimHeading.getDegrees());
-        Logger.recordOutput("ShotSolver/Static/TimeOfFlight", staticShotSolution.timeOfFlight);
+        ShotSolution staticFerrySolution = calculateFerrySolutionStatic(measuredRobotPose);
+        Logger.recordOutput("FerrySolver/Static/FlywheelRPM", staticFerrySolution.flywheelRPM);
+        Logger.recordOutput("FerrySolver/Static/HoodPosition", staticFerrySolution.hoodPositionRotations);
+        Logger.recordOutput("FerrySolver/Static/AimHeading", staticFerrySolution.aimHeading.getDegrees());
+        Logger.recordOutput("FerrySolver/Static/TimeOfFlight", staticFerrySolution.timeOfFlight);
 
+        m_ferrySolution = staticFerrySolution;
+
+        /*
         Pose2d futureRobotPose = findFuturePose(measuredRobotPose, robotSpeeds);
         ShotSolution futureShooterSolution = calculateShotSolutionStatic(futureRobotPose);
         Logger.recordOutput("ShotSolver/Future/RobotPose", futureRobotPose);
@@ -54,12 +60,13 @@ public class ShotSolver {
         Logger.recordOutput("ShotSolver/Future/AimHeading", futureShooterSolution.aimHeading.getDegrees());
         Logger.recordOutput("ShotSolver/Future/TimeOfFlight", futureShooterSolution.timeOfFlight);
 
-        m_shotSolution = futureShooterSolution;        
+        m_ferrySolution = futureShooterSolution;
+        */ 
     }
 
-    public ShotSolution getShotSolution () {
+    public ShotSolution getFerrySolution () {
 
-        return m_shotSolution;
+        return m_ferrySolution;
     }
 
     /**
@@ -67,12 +74,14 @@ public class ShotSolver {
      * Distance/RPM/hood are based on the shooter position (where the ball leaves).
      * Aim heading is based on the robot center (what the robot actually rotates around).
      */
-    public ShotSolution calculateShotSolutionStatic(Pose2d robotPose) {
+    public ShotSolution calculateFerrySolutionStatic(Pose2d robotPose) {
 
-        // Distance from shooter to hub — used for RPM, hood, and time of flight lookup
-        Translation2d shooterToTarget = Util.getHubPosition().minus(getShooterPose(robotPose).getTranslation());
+        List<Translation2d> ferryTargets = Util.isRedAlliance() ? kRedFerryTargets : kBlueFerryTargets;
+        Translation2d ferryTarget = robotPose.getTranslation().nearest(ferryTargets);
+
+        Translation2d shooterToTarget = ferryTarget.minus(getShooterPose(robotPose).getTranslation());
         double distanceToTarget = shooterToTarget.getNorm();
-        ShooterParams params = kShooterMap.get(distanceToTarget);
+        ShooterParams params = kFerryMap.get(distanceToTarget);
 
         return new ShotSolution(
             params.kFlywheelRPM,
@@ -88,7 +97,7 @@ public class ShotSolver {
 
         for (int i = 0; i < 5; i++) {
 
-            ShotSolution futureShotSolution = calculateShotSolutionStatic(futurePose);
+            ShotSolution futureShotSolution = calculateFerrySolutionStatic(futurePose);
             double futureTimeOfFlight = futureShotSolution.timeOfFlight;
             Rotation2d futureAimHeading = getAimHeading(futurePose);
 
@@ -108,7 +117,10 @@ public class ShotSolver {
 
     public static Rotation2d getAimHeading(Pose2d robotPose) {
 
-        Translation2d shooterToTarget = Util.getHubPosition().minus(getShooterPose(robotPose).getTranslation());
+        List<Translation2d> ferryTargets = Util.isRedAlliance() ? kRedFerryTargets : kBlueFerryTargets;
+        Translation2d ferryTarget = robotPose.getTranslation().nearest(ferryTargets);
+
+        Translation2d shooterToTarget = ferryTarget.minus(getShooterPose(robotPose).getTranslation());
         return shooterToTarget.getAngle().plus(new Rotation2d(Math.PI));
     }
  

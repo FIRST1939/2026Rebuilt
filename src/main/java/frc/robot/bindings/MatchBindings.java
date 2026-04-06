@@ -52,8 +52,8 @@ public class MatchBindings {
         modeTrigger.and(bindingParams.driverController.rightBumper()).onTrue(
             new SnakeDrive(
                 bindingParams.drive, 
-                () -> -bindingParams.driverController.getLeftY() * 0.6,
-                () -> -bindingParams.driverController.getLeftX() * 0.6,
+                () -> -bindingParams.driverController.getLeftY(),
+                () -> -bindingParams.driverController.getLeftX(),
                 () -> -bindingParams.driverController.getRightX()
             )
         );
@@ -65,6 +65,16 @@ public class MatchBindings {
                 () -> -bindingParams.driverController.getLeftX(),
                 () -> -bindingParams.driverController.getRightX(),
                 () -> bindingParams.shotSolver.getShotSolution().aimHeading
+            )
+        );
+
+        modeTrigger.and(bindingParams.driverController.leftTrigger()).onTrue(
+            new JoystickDriveAtAngle(
+                bindingParams.drive,
+                () -> -bindingParams.driverController.getLeftY(),
+                () -> -bindingParams.driverController.getLeftX(),
+                () -> -bindingParams.driverController.getRightX(),
+                () -> bindingParams.ferrySolver.getFerrySolution().aimHeading
             )
         );
 
@@ -133,6 +143,25 @@ public class MatchBindings {
                         ).onlyWhile(() -> ShiftUtil.fuelWillScore(bindingParams.shotSolver.getShotSolution().timeOfFlight) &&
                         m_hubAlignedDebouncer.calculate(bindingParams.drive.atTargetRotation(bindingParams.shotSolver.getShotSolution().aimHeading)))
                     ) // TODO Additional Shot Conditions
+                )
+            )
+        );
+
+        modeTrigger.and(bindingParams.operatorController.leftTrigger()).whileTrue(
+            Commands.parallel(
+                new RunFlywheelAndHood(bindingParams.shooter,
+                    () -> bindingParams.ferrySolver.getFerrySolution().flywheelRPM,
+                    () -> bindingParams.ferrySolver.getFerrySolution().hoodPositionRotations
+                ),
+                Commands.sequence(
+                    Commands.waitUntil(() -> bindingParams.shooter.isAtGoal()),
+                    new RepeatCommand(
+                        Commands.parallel(
+                            new RunSpindexerPercentage(bindingParams.spindexer, SpindexerConstants.kSpindexerPercentage),
+                            new RunFeederVelocity(bindingParams.feeder, FeederConstants.kFeederVelocity),
+                            new AgitateIntake(bindingParams.intake, bindingParams.intakeStateManager)
+                        )
+                    )
                 )
             )
         );

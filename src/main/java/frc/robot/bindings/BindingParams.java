@@ -8,6 +8,7 @@ import frc.robot.subsystems.feeder.Feeder;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.spindexer.Spindexer;
+import frc.robot.util.FerrySolver;
 import frc.robot.util.ShotSolver;
 
 public class BindingParams {
@@ -21,6 +22,7 @@ public class BindingParams {
 
     public final IntakeStateManager intakeStateManager;
     public final ShotSolver shotSolver;
+    public final FerrySolver ferrySolver;
 
     public final CommandXboxController driverController;
     public final CommandXboxController operatorController;
@@ -34,6 +36,7 @@ public class BindingParams {
         Climber climber,
         IntakeStateManager intakeStateManager,
         ShotSolver shotSolver,
+        FerrySolver ferrySolver,
         CommandXboxController driverController,
         CommandXboxController operatorController
     ) {
@@ -47,6 +50,7 @@ public class BindingParams {
 
         this.intakeStateManager = intakeStateManager;
         this.shotSolver = shotSolver;
+        this.ferrySolver = ferrySolver;
 
         this.driverController = driverController;
         this.operatorController = operatorController;
