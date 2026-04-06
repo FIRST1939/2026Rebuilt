@@ -77,7 +77,7 @@
   "eventMarkers": [
     {
       "name": "ShotHeading",
-      "waypointRelativePos": 0.47620006443298973,
+      "waypointRelativePos": 0.4756289308176101,
       "endWaypointRelativePos": 2.0,
       "command": null
     }
@@ -95,7 +95,7 @@
     "rotation": 140.0
   },
   "reversed": false,
-  "folder": "DTrench-Middle",
+  "folder": "DBump Starting",
   "idealStartingState": {
     "velocity": 0,
     "rotation": 135.0
