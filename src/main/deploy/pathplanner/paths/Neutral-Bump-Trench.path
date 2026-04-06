@@ -95,7 +95,7 @@
     "rotation": 180.0
   },
   "reversed": false,
-  "folder": "DBump Starting",
+  "folder": "Neutral Starting",
   "idealStartingState": {
     "velocity": 0,
     "rotation": 135.0
