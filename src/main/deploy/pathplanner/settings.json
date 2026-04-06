@@ -12,10 +12,10 @@
     "OTrench Starting"
   ],
   "autoFolders": [
-    "DTench + Climb",
-    "DTrench",
-    "DTrench + Depot",
-    "OTrench"
+    "DTench Starting + Climb",
+    "DTrench Starting",
+    "DTrench Starting + Depot",
+    "OTrench Starting"
   ],
   "defaultMaxVel": 3.5,
   "defaultMaxAccel": 15.0,

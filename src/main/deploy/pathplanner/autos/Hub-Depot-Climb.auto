@@ -77,6 +77,6 @@
     }
   },
   "resetOdom": true,
-  "folder": "DTench + Climb",
+  "folder": "DTench Starting + Climb",
   "choreoAuto": false
 }

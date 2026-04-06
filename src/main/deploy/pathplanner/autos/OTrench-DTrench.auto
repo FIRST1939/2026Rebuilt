@@ -66,6 +66,6 @@
     }
   },
   "resetOdom": true,
-  "folder": "OTrench",
+  "folder": "OTrench Starting",
   "choreoAuto": false
 }
