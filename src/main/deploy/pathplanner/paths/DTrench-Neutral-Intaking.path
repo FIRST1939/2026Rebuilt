@@ -66,7 +66,21 @@
       "rotationDegrees": -90.0
     }
   ],
-  "constraintZones": [],
+  "constraintZones": [
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 0.6532901095360827,
+      "maxWaypointRelativePos": 2.5159975032216493,
+      "constraints": {
+        "maxVelocity": 2.0,
+        "maxAcceleration": 25.0,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    }
+  ],
   "pointTowardsZones": [],
   "eventMarkers": [
     {
@@ -89,7 +103,7 @@
     "rotation": 135.0
   },
   "reversed": false,
-  "folder": "DTrench-Middle",
+  "folder": "DTrench Starting",
   "idealStartingState": {
     "velocity": 0,
     "rotation": -90.0

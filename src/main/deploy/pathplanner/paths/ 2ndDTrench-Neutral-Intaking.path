@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.839,
+        "x": 4.388,
         "y": 7.431
       },
       "prevControl": null,
       "nextControl": {
-        "x": 9.783144444444483,
+        "x": 9.332144444444483,
         "y": 7.435811111111212
       },
       "isLocked": false,
-      "linkedName": "2nd-trench"
+      "linkedName": "2trench"
     },
     {
       "anchor": {
@@ -89,7 +89,7 @@
     "rotation": 135.0
   },
   "reversed": false,
-  "folder": "DTrench-Middle",
+  "folder": "DTrench Starting",
   "idealStartingState": {
     "velocity": 3.0,
     "rotation": 180.0

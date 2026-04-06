@@ -52,7 +52,7 @@
     "rotation": -150.0
   },
   "reversed": false,
-  "folder": "DTrench-Middle",
+  "folder": "Depot Starting",
   "idealStartingState": {
     "velocity": 0,
     "rotation": 180.0

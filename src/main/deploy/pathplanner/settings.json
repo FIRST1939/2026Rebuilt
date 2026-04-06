@@ -3,11 +3,13 @@
   "robotLength": 0.855,
   "holonomicMode": true,
   "pathFolders": [
-    "DTrench-Middle",
-    "DTrench-Middle-Climb",
-    "Hub-Outpost-Depot-Climb",
-    "Mess-Up-Neutral",
-    "OTrench-Outpost-Tower"
+    "DBump Starting",
+    "DTrench Starting",
+    "Depot Starting",
+    "Hub Starting",
+    "Neutral Starting",
+    "OBump Starting",
+    "OTrench Starting"
   ],
   "autoFolders": [
     "DTench + Climb",
