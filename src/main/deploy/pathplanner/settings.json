@@ -9,7 +9,12 @@
     "Mess-Up-Neutral",
     "OTrench-Outpost-Tower"
   ],
-  "autoFolders": [],
+  "autoFolders": [
+    "DTench + Climb",
+    "DTrench",
+    "DTrench + Depot",
+    "OTrench"
+  ],
   "defaultMaxVel": 3.5,
   "defaultMaxAccel": 15.0,
   "defaultMaxAngVel": 540.0,
