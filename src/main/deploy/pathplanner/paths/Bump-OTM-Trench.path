@@ -32,16 +32,16 @@
     },
     {
       "anchor": {
-        "x": 4.839,
+        "x": 4.388,
         "y": 7.431
       },
       "prevControl": {
-        "x": 3.9098433734939757,
+        "x": 3.458843373493975,
         "y": 7.4993132530120485
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "2nd-trench"
+      "linkedName": "2trench"
     }
   ],
   "rotationTargets": [
