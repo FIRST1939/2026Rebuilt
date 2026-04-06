@@ -11,10 +11,10 @@ import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.NT4Publisher;
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.util.Util;
+import frc.robot.util.ShiftUtil;
+import frc.robot.util.ShiftUtil.Shift;
 
 public class Robot extends LoggedRobot {
 
@@ -36,6 +36,10 @@ public class Robot extends LoggedRobot {
             Logger.addDataReceiver(new NT4Publisher());
             //Logger.setReplaySource(new WPILOGReader(logPath));
             //Logger.addDataReceiver(new WPILOGWriter(LogFileUtil.addPathSuffix(logPath, "_sim")));
+
+            Arena2026Rebuilt arena = new Arena2026Rebuilt(false);
+            arena.setEfficiencyMode(false);
+            SimulatedArena.overrideInstance(arena);
         }
 
         Logger.start();
@@ -49,64 +53,18 @@ public class Robot extends LoggedRobot {
         CommandScheduler.getInstance().run();
 
         m_robotContainer.updateShotSolution();
-        m_robotContainer.checkHubAlignment();
+        m_robotContainer.displayShotConditions();
+        m_robotContainer.displayTargetHeading();
 
         updateActiveDisplay();
     }
 
     public void updateActiveDisplay () {
 
-        double matchTime = DriverStation.getMatchTime();
-
-        if (isAutonomous()) {
-
-            Logger.recordOutput("Shift Timer", matchTime);
-            Logger.recordOutput("Current Shift", "Autonomous (Active)");
-            return;
-        }
-
-        boolean redActiveFirst;
-        String gameData = DriverStation.getGameSpecificMessage();
-
-        if (gameData.isEmpty()) {
-
-            redActiveFirst = false;
-        } else {
-
-            switch (gameData.charAt(0)) { // Who Won Auto
-                case 'R' -> redActiveFirst = false;
-                case 'B' -> redActiveFirst = true;
-                default -> redActiveFirst = false;
-            }
-        }
-
-        boolean firstActiveShift = Util.isRedAlliance() ? redActiveFirst : !redActiveFirst;
-
-        if (matchTime > 130) { // Transition Shift
-
-            Logger.recordOutput("Shift Timer", matchTime - 130);
-            Logger.recordOutput("Current Shift", "Transition (Active)");
-        } else if (matchTime > 105) { // Shift 1
-
-            Logger.recordOutput("Shift Timer", matchTime - 105);
-            Logger.recordOutput("Current Shift", "Shift 1 " + (firstActiveShift ? "(Active)" : "(Inactive)"));
-        } else if (matchTime > 80) { // Shift 2
-
-            Logger.recordOutput("Shift Timer", matchTime - 80);
-            Logger.recordOutput("Current Shift", "Shift 2 " + (firstActiveShift ? "(Inactive)" : "(Active)"));
-        } else if (matchTime > 55) { // Shift 3
-
-            Logger.recordOutput("Shift Timer", matchTime - 55);
-            Logger.recordOutput("Current Shift", "Shift 3 " + (firstActiveShift ? "(Active)" : "(Inactive)"));
-        } else if (matchTime > 30) { // Shift 4
-
-            Logger.recordOutput("Shift Timer", matchTime - 30);
-            Logger.recordOutput("Current Shift", "Shift 4 " + (firstActiveShift ? "(Inactive)" : "(Active)"));
-        } else { // Endgame
-
-            Logger.recordOutput("Shift Timer", matchTime);
-            Logger.recordOutput("Current Shift", "Endgame (Active)");
-        }
+        Shift currentShift = ShiftUtil.getCurrentShift();
+        String activeText = currentShift.isActive() ? " (Active)" : " (Inactive)";
+        Logger.recordOutput("Current Shift", currentShift.getName() + activeText);
+        Logger.recordOutput("Shift Timer", currentShift.getSecondsRemaining());
     }
 
     @Override
@@ -156,20 +114,14 @@ public class Robot extends LoggedRobot {
     public void teleopExit() {}
 
     @Override
-    public void simulationInit() {
-
-        Arena2026Rebuilt arena = (Arena2026Rebuilt) SimulatedArena.getInstance();
-        arena.setEfficiencyMode(false);
-    }
-
-    @Override
     public void simulationPeriodic() {
 
         SimulatedArena.getInstance().simulationPeriodic();
+        m_robotContainer.simulateBump();
         m_robotContainer.simulateIntakeBody();
         m_robotContainer.simulateShooting();
 
-        m_robotContainer.displayFieldSimToAdvantageScope();
+        m_robotContainer.displayFuelSimToAdvantageScope();
         m_robotContainer.displayRobotComponentsInAdvantageScope();
     }
 

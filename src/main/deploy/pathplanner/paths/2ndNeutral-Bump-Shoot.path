@@ -3,57 +3,41 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.874579172610556,
-        "y": 7.25
+        "x": 6.214,
+        "y": 5.536
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.7130122593189356,
-        "y": 6.8160627552950706
-      },
-      "isLocked": false,
-      "linkedName": "DTrench-Shot"
-    },
-    {
-      "anchor": {
-        "x": 2.1429610535983112,
-        "y": 5.745044531686709
-      },
-      "prevControl": {
-        "x": 2.436935891535168,
-        "y": 6.532713739502726
-      },
-      "nextControl": {
-        "x": 1.8787785325531199,
-        "y": 5.037200151089755
+        "x": 5.151777777777778,
+        "y": 5.4381999999999975
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 1.5,
-        "y": 4.65
+        "x": 2.0739879518072284,
+        "y": 5.969204819277109
       },
       "prevControl": {
-        "x": 2.0,
-        "y": 4.65
+        "x": 1.9406088064892315,
+        "y": 4.80880625501054
       },
       "nextControl": {
-        "x": 1.25,
-        "y": 4.65
+        "x": 2.183265060240964,
+        "y": 6.919915662650602
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 1.07,
-        "y": 4.5
+        "x": 4.839,
+        "y": 5.431
       },
       "prevControl": {
-        "x": 1.07,
-        "y": 4.75
+        "x": 3.9098433734939757,
+        "y": 5.4993132530120485
       },
       "nextControl": null,
       "isLocked": false,
@@ -62,22 +46,26 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.9446614583333327,
+      "waypointRelativePos": 0.25,
+      "rotationDegrees": 135.0
+    },
+    {
+      "waypointRelativePos": 0.9510373443983356,
       "rotationDegrees": 140.0
     },
     {
-      "waypointRelativePos": 1.9,
-      "rotationDegrees": 90.0
+      "waypointRelativePos": 1.5817427385892118,
+      "rotationDegrees": 180.0
     }
   ],
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 1.75,
-      "maxWaypointRelativePos": 3.0,
+      "minWaypointRelativePos": 0.4982630272952834,
+      "maxWaypointRelativePos": 1.4431761786600519,
       "constraints": {
-        "maxVelocity": 0.375,
-        "maxAcceleration": 3.0,
+        "maxVelocity": 0.875,
+        "maxAcceleration": 5.0,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,
         "nominalVoltage": 12.0,
@@ -86,7 +74,14 @@
     }
   ],
   "pointTowardsZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "ShotHeading",
+      "waypointRelativePos": 0.2,
+      "endWaypointRelativePos": 1.4114143920595543,
+      "command": null
+    }
+  ],
   "globalConstraints": {
     "maxVelocity": 3.5,
     "maxAcceleration": 15.0,
@@ -96,14 +91,14 @@
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 0,
-    "rotation": 90.0
+    "velocity": 3.0,
+    "rotation": 180.0
   },
   "reversed": false,
-  "folder": "DTrench Starting",
+  "folder": "Neutral Starting",
   "idealStartingState": {
-    "velocity": 0,
-    "rotation": 125.00000000000001
+    "velocity": 3.0,
+    "rotation": 135.0
   },
   "useDefaultConstraints": true
 }

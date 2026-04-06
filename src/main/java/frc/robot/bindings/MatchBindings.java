@@ -1,10 +1,13 @@
 package frc.robot.bindings;
 
+import edu.wpi.first.math.filter.Debouncer;
+import edu.wpi.first.math.filter.Debouncer.DebounceType;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.Constants;
+import frc.robot.Constants.*;
 import frc.robot.commands.climber.*;
 import frc.robot.commands.drive.*;
 import frc.robot.commands.feeder.*;
@@ -16,9 +19,11 @@ import frc.robot.util.*;
 
 public class MatchBindings {
     
+    private final Debouncer m_hubAlignedDebouncer = new Debouncer(0.5, DebounceType.kFalling);
+
     public MatchBindings(BindingParams bindingParams, Trigger modeTrigger) {
 
-        Command defaultDriveCommand = DriveCommands.joystickDrive(
+        Command defaultDriveCommand = new JoystickDrive(
             bindingParams.drive,
             () -> -bindingParams.driverController.getLeftY(),
             () -> -bindingParams.driverController.getLeftX(),
@@ -45,7 +50,7 @@ public class MatchBindings {
         );
 
         modeTrigger.and(bindingParams.driverController.rightBumper()).onTrue(
-            DriveCommands.snakeDrive(
+            new SnakeDrive(
                 bindingParams.drive, 
                 () -> -bindingParams.driverController.getLeftY() * 0.6,
                 () -> -bindingParams.driverController.getLeftX() * 0.6,
@@ -54,7 +59,7 @@ public class MatchBindings {
         );
 
         modeTrigger.and(bindingParams.driverController.rightTrigger()).onTrue(
-            DriveCommands.joystickDriveAtAngle(
+            new JoystickDriveAtAngle(
                 bindingParams.drive,
                 () -> -bindingParams.driverController.getLeftY(),
                 () -> -bindingParams.driverController.getLeftX(),
@@ -64,7 +69,7 @@ public class MatchBindings {
         );
 
         modeTrigger.and(bindingParams.driverController.a()).onTrue(
-            DriveCommands.joystickDriveAtAngle(
+            new JoystickDriveAtAngle(
                 bindingParams.drive,
                 () -> -bindingParams.driverController.getLeftY(),
                 () -> -bindingParams.driverController.getLeftX(),
@@ -74,7 +79,7 @@ public class MatchBindings {
         );
 
         modeTrigger.and(bindingParams.driverController.y()).onTrue(
-            DriveCommands.joystickDriveAtAngle(
+            new JoystickDriveAtAngle(
                 bindingParams.drive,
                 () -> -bindingParams.driverController.getLeftY(),
                 () -> -bindingParams.driverController.getLeftX(),
@@ -84,7 +89,7 @@ public class MatchBindings {
         );
 
         modeTrigger.and(bindingParams.driverController.b()).onTrue(
-            DriveCommands.joystickDriveAtAngle(
+            new JoystickDriveAtAngle(
                 bindingParams.drive, 
                 () -> -bindingParams.driverController.getLeftY(),
                 () -> -bindingParams.driverController.getLeftX(),
@@ -94,69 +99,68 @@ public class MatchBindings {
         );
 
         modeTrigger.and(bindingParams.driverController.x()).onTrue(Commands.runOnce(bindingParams.drive::stopWithX, bindingParams.drive));
-        modeTrigger.and(bindingParams.driverController.povUp()).toggleOnTrue(new RaiseClimberToHeight(bindingParams.climber, Constants.kRaisingClimberSetpoint, Constants.kRaisingClimberPercentage));
-        modeTrigger.and(bindingParams.driverController.povDown()).toggleOnTrue(new LowerClimberToHeight(bindingParams.climber, Constants.kLoweringClimberSetpoint, Constants.kLoweringClimberPercentage));
+        modeTrigger.and(bindingParams.driverController.povUp()).toggleOnTrue(new RaiseClimberToHeight(bindingParams.climber, ClimberConstants.kRaisingClimberSetpoint, ClimberConstants.kRaisingClimberPercentage));
+        modeTrigger.and(bindingParams.driverController.povDown()).toggleOnTrue(new LowerClimberToHeight(bindingParams.climber, ClimberConstants.kLoweringClimberSetpoint, ClimberConstants.kLoweringClimberPercentage));
 
         modeTrigger.and(bindingParams.operatorController.povRight()).whileTrue(
             new RunFlywheelAndHood(bindingParams.shooter, 
-            () -> Constants.kOutpostFlywheelVelocity,
-            () -> Constants.kOutpostHoodSetpoint));
+            () -> ShooterConstants.kOutpostFlywheelVelocity,
+            () -> ShooterConstants.kOutpostHoodSetpoint));
         //Static Shot Outpost Command
 
-        modeTrigger.and(bindingParams.operatorController.leftTrigger()).whileTrue(
-            new RunFlywheelAndHood(bindingParams.shooter,
-                () -> bindingParams.shotSolver.getShotSolution().flywheelRPM,
-                () -> bindingParams.shotSolver.getShotSolution().hoodPositionRotations
-            )
-        );
-
-        modeTrigger.and(bindingParams.operatorController.povUp()).whileTrue(
-            new RunFlywheelAndHood(bindingParams.shooter, 
-            () -> Constants.kHubFlywheelVelocity,
-            () -> Constants.kHubHoodSetpoint));
-        //Static Shot Hub Command
-
-        modeTrigger.and(bindingParams.operatorController.povDown()).whileTrue(
-            new RunFlywheelAndHood(bindingParams.shooter, 
-            () -> Constants.kTowerFlywheelVelocity,
-            () -> Constants.kTowerHoodSetpoint));
-        //Static Shot Tower Command
+        modeTrigger.and(bindingParams.operatorController.povUp()).toggleOnTrue(new RaiseClimberToHeight(bindingParams.climber, ClimberConstants.kRaisingClimberSetpoint, ClimberConstants.kRaisingClimberPercentage));
+        modeTrigger.and(bindingParams.operatorController.povDown()).toggleOnTrue(new LowerClimberToHeight(bindingParams.climber, ClimberConstants.kLoweringClimberSetpoint, ClimberConstants.kLoweringClimberPercentage));
 
         modeTrigger.and(bindingParams.operatorController.povLeft()).whileTrue(
             new RunFlywheelAndHood(bindingParams.shooter, 
-            () -> Constants.kTrenchFlywheelVelocity,
-            () -> Constants.kTrenchHoodSetpoint));
+            () -> ShooterConstants.kTrenchFlywheelVelocity,
+            () -> ShooterConstants.kTrenchHoodSetpoint));
         //Static Shot Trench Command
 
-        modeTrigger.and(bindingParams.operatorController.rightTrigger()).whileTrue((
-            new RunSpindexerVelocity(bindingParams.spindexer, Constants.kSpindexerVelocity))
-            .alongWith(new RunFeederVelocity(bindingParams.feeder, Constants.kFeederVelocity))
-            .alongWith(new AgitateIntake(bindingParams.intake, bindingParams.intakeStateManager)));
-        //Feed Into Shooter Command
+        modeTrigger.and(bindingParams.operatorController.rightTrigger()).whileTrue(
+            Commands.parallel(
+                new RunFlywheelAndHood(bindingParams.shooter,
+                    () -> bindingParams.shotSolver.getShotSolution().flywheelRPM,
+                    () -> bindingParams.shotSolver.getShotSolution().hoodPositionRotations
+                ),
+                Commands.sequence(
+                    Commands.waitUntil(() -> bindingParams.shooter.isAtGoal()),
+                    new RepeatCommand(
+                        Commands.parallel(
+                            new RunSpindexerPercentage(bindingParams.spindexer, SpindexerConstants.kSpindexerPercentage),
+                            new RunFeederVelocity(bindingParams.feeder, FeederConstants.kFeederVelocity),
+                            new AgitateIntake(bindingParams.intake, bindingParams.intakeStateManager)
+                        ).onlyWhile(() -> ShiftUtil.fuelWillScore(bindingParams.shotSolver.getShotSolution().timeOfFlight) &&
+                        m_hubAlignedDebouncer.calculate(bindingParams.drive.atTargetRotation(bindingParams.shotSolver.getShotSolution().aimHeading)))
+                    ) // TODO Additional Shot Conditions
+                )
+            )
+        );
 
         modeTrigger.and(bindingParams.operatorController.leftBumper()).onTrue(Commands.runOnce(() -> bindingParams.intakeStateManager.setGoalState(State.IDLE)));
-        //Pivot Intake In
+        //Pivot Intake Idle
 
-        modeTrigger.and(bindingParams.operatorController.start()).onTrue(new ZeroAndIdleIntake(bindingParams.intake, bindingParams.intakeStateManager)); 
+        modeTrigger.and(bindingParams.operatorController.start()).onTrue(Commands.runOnce(() -> bindingParams.intakeStateManager.setGoalState(State.STOWING)));
         //Pivot Intake Stow
 
-        //modeTrigger.and(operatorController.a()).whileTrue(new AgitateIntake(intake, Constants.kAgitateIntakeInterval, Constants.kRollerAgitateVelocity));
-
-        //modeTrigger.and(operatorController.a()).whileTrue(new Agitate(intake, Constants.kAgitateIntakeInterval));
-
         modeTrigger.and(bindingParams.operatorController.a()).onTrue(new DeepAgitateIntake(bindingParams.intake, bindingParams.intakeStateManager));
+        //Pivot Agitate
         
-        modeTrigger.and(bindingParams.operatorController.rightBumper()).onTrue(Commands.runOnce(() -> bindingParams.intakeStateManager.setGoalState(State.INTAKING)));
-        modeTrigger.and(bindingParams.operatorController.rightBumper()).onFalse(Commands.runOnce(() -> bindingParams.intakeStateManager.setGoalState(State.EXTENDED)));
+        modeTrigger.and(bindingParams.operatorController.rightBumper()).onTrue(Commands.runOnce(() -> bindingParams.intakeStateManager.setMegaOverrideGoal(State.INTAKING)));
+        modeTrigger.and(bindingParams.operatorController.rightBumper()).onFalse(Commands.runOnce(() -> {
+            bindingParams.intakeStateManager.setGoalState(State.EXTENDED);
+            bindingParams.intakeStateManager.clearMegaOverrideGoal();
+        }));
         //Deploy+Roller
 
-        modeTrigger.and(bindingParams.operatorController.b()).whileTrue(new RunSpindexerVelocity(bindingParams.spindexer, Constants.kSpindexerReverseVelocity));
+        modeTrigger.and(bindingParams.operatorController.b()).whileTrue(new RunSpindexerPercentage(bindingParams.spindexer, SpindexerConstants.kSpindexerReversePercentage));
         //Spindexer Reverse
 
-        modeTrigger.and(bindingParams.operatorController.y()).whileTrue(new RunFeederVelocity(bindingParams.feeder, Constants.kFeederReverseVelocity));
+        modeTrigger.and(bindingParams.operatorController.y()).whileTrue(new RunFeederVelocity(bindingParams.feeder, FeederConstants.kFeederReverseVelocity));
         //Feeder Reverse
 
-        modeTrigger.and(bindingParams.operatorController.x()).whileTrue(new RunRollerVelocity(bindingParams.intake, () -> Constants.kRollerReverseVelocity));
+        modeTrigger.and(bindingParams.operatorController.x()).onTrue(Commands.runOnce(() -> bindingParams.intakeStateManager.setOverrideGoal(State.REVERSING)));
+        modeTrigger.and(bindingParams.operatorController.x()).onFalse(Commands.runOnce(() -> bindingParams.intakeStateManager.clearOverrideGoal()));
         //Roller Reverse
     }
 }

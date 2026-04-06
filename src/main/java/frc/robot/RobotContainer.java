@@ -6,6 +6,8 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.*;
 
+import java.util.Optional;
+
 import org.ironmaple.simulation.IntakeSimulation;
 import org.ironmaple.simulation.SimulatedArena;
 import org.ironmaple.simulation.IntakeSimulation.IntakeSide;
@@ -29,6 +31,7 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -59,6 +62,7 @@ public class RobotContainer {
     private final Climber m_climber;
 
     private SwerveDriveSimulation m_swerveDriveSimulation = null;
+    private RobotBumpSim m_robotBumpSim = null;
     private IntakeSimulation m_intakeSimulation = null;
     private Timer m_simulatedShotTimer = new Timer();
     
@@ -132,6 +136,8 @@ public class RobotContainer {
                 driveTrainSimulationConfig, 
                 new Pose2d()
             );
+
+            m_robotBumpSim = new RobotBumpSim(Drive.getModuleTranslations());
 
             m_intakeSimulation = IntakeSimulation.OverTheBumperIntake(
                 "Fuel", 
@@ -223,18 +229,53 @@ public class RobotContainer {
 
     public void updateShotSolution() {
 
-        m_shotSolver.calculateShotSolution(m_drive.getPose(), m_drive.getChassisSpeeds());
+        m_shotSolver.calculateShotSolution(m_drive.getPose(), m_drive.getFieldRelativeChassisSpeeds());
     }
     
-    public void checkHubAlignment() {
+    public void displayShotConditions() {
 
-        double error = Math.abs(m_drive.getRotation().getDegrees() - m_shotSolver.getShotSolution().aimHeading.getDegrees());
-        Logger.recordOutput("Hub Aligned", error < 1.5);
+        Logger.recordOutput("Shooter Spun Up", m_shooter.isAtGoal());
+        Logger.recordOutput("Fuel Will Score", ShiftUtil.fuelWillScore(m_shotSolver.getShotSolution().timeOfFlight));
+        Logger.recordOutput("Hub Aligned", m_drive.atTargetRotation(m_shotSolver.getShotSolution().aimHeading));
+
+        Optional<Boolean> activeFirst = ShiftUtil.activeFirst();
+        Color autoDashboardColor;
+
+        if (activeFirst.isEmpty()) { autoDashboardColor = new Color(253, 245, 60); } // Yelow
+        else if (activeFirst.get()) { autoDashboardColor = new Color(244, 67, 54); } // Red
+        else { autoDashboardColor = new Color(76, 175, 80); } // Green
+
+        Logger.recordOutput("Did We Win Auto", autoDashboardColor.toHexString());
+    }
+
+    public void displayTargetHeading() {
+
+        Logger.recordOutput(
+            "TargetHeading", 
+            new Pose2d(
+                m_drive.getPose().getTranslation(),
+                m_shotSolver.getShotSolution().aimHeading
+            )
+        );
     }
 
     public void simulateAutoPreload() {
 
         m_intakeSimulation.setGamePiecesCount(8);
+    }
+
+    public void simulateBump() {
+
+        Pose2d simPose = m_swerveDriveSimulation.getSimulatedDriveTrainPose();
+        ChassisSpeeds fieldRelativeSpeeds = m_swerveDriveSimulation.getDriveTrainSimulatedChassisSpeedsFieldRelative();
+        Pose3d simPose3d = m_robotBumpSim.update(simPose, fieldRelativeSpeeds, 5);
+
+        if (m_robotBumpSim.isOnRamp()) {
+            
+            m_swerveDriveSimulation.setSimulationWorldPose(m_robotBumpSim.getSimWorldPose(simPose));
+        }
+
+        Logger.recordOutput("FieldSimulation/RobotPosition", simPose3d);
     }
 
     public void simulateIntakeBody() {
@@ -279,7 +320,7 @@ public class RobotContainer {
             chassisSpeeds, 
             robotPose.getRotation().plus(Rotation2d.fromRadians(Math.PI)), 
             Meters.of(0.413243), 
-            MetersPerSecond.of(m_shooter.getFlywheelVelocity() * (0.1016 * Math.PI) * (1.0 / 60.0) - 8.5),
+            MetersPerSecond.of(m_shooter.getFlywheelVelocity() * (0.1016 * Math.PI) * (1.0 / 60.0) * 0.5),
             Rotations.of(0.25 - m_shooter.getHoodPosition())
         );
 
@@ -287,9 +328,8 @@ public class RobotContainer {
         m_simulatedShotTimer.restart();
     }
 
-    public void displayFieldSimToAdvantageScope() {
+    public void displayFuelSimToAdvantageScope() {
 
-        Logger.recordOutput("FieldSimulation/RobotPosition", m_swerveDriveSimulation.getSimulatedDriveTrainPose());
         Logger.recordOutput("FieldSimulation/Fuel", SimulatedArena.getInstance().getGamePiecesArrayByType("Fuel"));
     }
 

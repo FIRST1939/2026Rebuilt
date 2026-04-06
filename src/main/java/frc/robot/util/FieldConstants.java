@@ -14,7 +14,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Filesystem;
-import frc.robot.Constants;
+import frc.robot.Constants.FieldUtilConstants;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -343,7 +343,7 @@ public class FieldConstants {
           if (layout == null) {
             try {
               Path p =
-                  Constants.disableHAL
+                  FieldUtilConstants.disableHAL
                       ? Path.of(
                           "src",
                           "main",

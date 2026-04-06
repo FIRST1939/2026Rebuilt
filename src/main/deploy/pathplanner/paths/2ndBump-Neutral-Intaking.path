@@ -3,59 +3,67 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.388402282458444,
-        "y": 7.431398002848417
+        "x": 4.839,
+        "y": 5.431
       },
       "prevControl": null,
       "nextControl": {
-        "x": 8.388402282458443,
-        "y": 7.431398002848417
+        "x": 5.838999526545587,
+        "y": 5.431973092288754
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 8.608759036144578,
-        "y": 5.073132530120482
+        "x": 8.433915662650602,
+        "y": 5.674156626506024
       },
       "prevControl": {
-        "x": 8.608759036144578,
-        "y": 7.823132530120482
+        "x": 8.424519544846012,
+        "y": 5.994543507362684
       },
       "nextControl": {
-        "x": 8.608759036144578,
-        "y": 3.073132530120482
+        "x": 8.44124436443578,
+        "y": 5.424264069333655
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 6.5,
-        "y": 5.839942938659058
+        "x": 7.02424096385542,
+        "y": 2.6581084337349408
       },
       "prevControl": {
-        "x": 6.5,
-        "y": 4.170942938659058
+        "x": 7.219810999992419,
+        "y": 2.8138401291773674
+      },
+      "nextControl": {
+        "x": 6.434144578313253,
+        "y": 2.1882168674698788
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 6.21392222222226,
+        "y": 5.535644444444546
+      },
+      "prevControl": {
+        "x": 5.559927710843374,
+        "y": 4.00221686746988
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Middle-Exit"
+      "linkedName": null
     }
   ],
   "rotationTargets": [
     {
       "waypointRelativePos": 0.5,
       "rotationDegrees": -90.0
-    },
-    {
-      "waypointRelativePos": 1.0,
-      "rotationDegrees": -90.0
-    },
-    {
-      "waypointRelativePos": 1.5,
-      "rotationDegrees": 180.0
     }
   ],
   "constraintZones": [],
@@ -63,8 +71,8 @@
   "eventMarkers": [
     {
       "name": "Intake",
-      "waypointRelativePos": 0.1512491559756926,
-      "endWaypointRelativePos": null,
+      "waypointRelativePos": 0.44962779156328514,
+      "endWaypointRelativePos": 3.0,
       "command": null
     }
   ],
@@ -77,14 +85,14 @@
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 3.5,
-    "rotation": 90.0
+    "velocity": 3.0,
+    "rotation": 135.0
   },
   "reversed": false,
-  "folder": "DTrench Starting",
+  "folder": "DBump Starting",
   "idealStartingState": {
-    "velocity": 0.0,
-    "rotation": -90.0
+    "velocity": 3.0,
+    "rotation": 180.0
   },
   "useDefaultConstraints": true
 }

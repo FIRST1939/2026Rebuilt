@@ -4,12 +4,12 @@ import org.littletonrobotics.junction.networktables.LoggedNetworkNumber;
 
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.Constants;
+import frc.robot.Constants.*;
 import frc.robot.bindings.BindingParams;
 import frc.robot.commands.feeder.RunFeederVelocity;
 import frc.robot.commands.intake.AgitateIntake;
 import frc.robot.commands.shooter.RunFlywheelAndHood;
-import frc.robot.commands.spindexer.RunSpindexerVelocity;
+import frc.robot.commands.spindexer.RunSpindexerPercentage;
 
 public class ShotConfigBindings {
     
@@ -47,8 +47,8 @@ public class ShotConfigBindings {
 
         modeTrigger.and(bindingParams.operatorController.rightTrigger()).whileTrue((
             Commands.parallel(
-                new RunSpindexerVelocity(bindingParams.spindexer, Constants.kSpindexerVelocity),
-                new RunFeederVelocity(bindingParams.feeder, Constants.kFeederVelocity),
+                new RunSpindexerPercentage(bindingParams.spindexer, SpindexerConstants.kSpindexerPercentage),
+                new RunFeederVelocity(bindingParams.feeder, FeederConstants.kFeederVelocity),
                 new AgitateIntake(bindingParams.intake, bindingParams.intakeStateManager)
             )
         ));
