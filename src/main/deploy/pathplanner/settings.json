@@ -3,18 +3,13 @@
   "robotLength": 0.855,
   "holonomicMode": true,
   "pathFolders": [
-    "DBump Starting",
     "DTrench Starting",
-    "Hub Starting",
-    "Neutral Starting",
     "Depot Starting",
-    "OBump Starting",
+    "Neutral Starting",
     "OTrench Starting"
   ],
   "autoFolders": [
-    "DTench Starting + Climb",
     "DTrench Starting",
-    "DTrench Starting + Depot",
     "OTrench Starting"
   ],
   "defaultMaxVel": 2.5,

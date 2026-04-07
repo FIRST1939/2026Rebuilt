@@ -3,29 +3,45 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.388402282458444,
-        "y": 7.431398002848417
+        "x": 7.756397590361445,
+        "y": 6.712289156626506
       },
       "prevControl": null,
       "nextControl": {
-        "x": 8.388402282458443,
-        "y": 7.431398002848417
+        "x": 7.756397590361445,
+        "y": 5.712289156626506
+      },
+      "isLocked": false,
+      "linkedName": "DNeutral Pass 2"
+    },
+    {
+      "anchor": {
+        "x": 7.756,
+        "y": 5.5
+      },
+      "prevControl": {
+        "x": 7.756,
+        "y": 6.0
+      },
+      "nextControl": {
+        "x": 7.756,
+        "y": 5.0
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 8.608759036144578,
-        "y": 5.073132530120482
+        "x": 7.35,
+        "y": 4.65
       },
       "prevControl": {
-        "x": 8.608759036144578,
-        "y": 7.823132530120482
+        "x": 7.85,
+        "y": 4.65
       },
       "nextControl": {
-        "x": 8.608759036144578,
-        "y": 3.073132530120482
+        "x": 6.35,
+        "y": 4.65
       },
       "isLocked": false,
       "linkedName": null
@@ -37,39 +53,28 @@
       },
       "prevControl": {
         "x": 6.5,
-        "y": 4.170942938659058
+        "y": 5.089942938659058
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Middle-Exit"
+      "linkedName": "Neutral Exit 1"
     }
   ],
   "rotationTargets": [
-    {
-      "waypointRelativePos": 0.5,
-      "rotationDegrees": -90.0
-    },
     {
       "waypointRelativePos": 1.0,
       "rotationDegrees": -90.0
     },
     {
-      "waypointRelativePos": 1.5,
+      "waypointRelativePos": 2.0,
       "rotationDegrees": 180.0
     }
   ],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [
-    {
-      "name": "Intake",
-      "waypointRelativePos": 0.1512491559756926,
-      "endWaypointRelativePos": null,
-      "command": null
-    }
-  ],
+  "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 2.5,
+    "maxVelocity": 2.0,
     "maxAcceleration": 8.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
@@ -77,14 +82,14 @@
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 3.5,
+    "velocity": 1.0,
     "rotation": 90.0
   },
   "reversed": false,
-  "folder": "DTrench Starting",
+  "folder": "Neutral Starting",
   "idealStartingState": {
-    "velocity": 0.0,
+    "velocity": 3.5,
     "rotation": -90.0
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }

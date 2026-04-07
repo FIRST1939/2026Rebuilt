@@ -3,49 +3,65 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 5.884,
-        "y": 5.214
+        "x": 6.5,
+        "y": 5.839942938659058
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.852954250818778,
-        "y": 7.893267433133188
+        "x": 6.5,
+        "y": 6.839942938659058
+      },
+      "isLocked": false,
+      "linkedName": "Neutral Exit 1"
+    },
+    {
+      "anchor": {
+        "x": 5.342428072689229,
+        "y": 7.6
+      },
+      "prevControl": {
+        "x": 7.3348174688727195,
+        "y": 7.425688514504683
+      },
+      "nextControl": {
+        "x": 4.395364609907885,
+        "y": 7.682857316632973
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.875,
-        "y": 7.315
+        "x": 2.6094457831325304,
+        "y": 6.865277108433735
       },
       "prevControl": {
-        "x": 6.858249010644105,
-        "y": 7.4191931632096075
+        "x": 3.475471186916969,
+        "y": 7.365277108433735
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "DMid Shot"
     }
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.5,
-      "rotationDegrees": 0.0
+      "waypointRelativePos": 0.8655742112810713,
+      "rotationDegrees": 180.0
     },
     {
-      "waypointRelativePos": 0.8877903761061945,
-      "rotationDegrees": 0.0
+      "waypointRelativePos": 1.5,
+      "rotationDegrees": -170.0
     }
   ],
   "constraintZones": [
     {
       "name": "Constraints Zone",
       "minWaypointRelativePos": 0,
-      "maxWaypointRelativePos": 0.5815409593621399,
+      "maxWaypointRelativePos": 1.0,
       "constraints": {
-        "maxVelocity": 3.0,
-        "maxAcceleration": 3.0,
+        "maxVelocity": 1.0,
+        "maxAcceleration": 8.0,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,
         "nominalVoltage": 12.0,
@@ -56,14 +72,14 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "Intake",
-      "waypointRelativePos": 0.0,
+      "name": "Prepare DMid Shot",
+      "waypointRelativePos": 1.3558312655086826,
       "endWaypointRelativePos": null,
       "command": null
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 2.5,
+    "maxVelocity": 1.5,
     "maxAcceleration": 8.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
@@ -72,13 +88,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 119.99999999999999
+    "rotation": 130.0
   },
   "reversed": false,
   "folder": "Neutral Starting",
   "idealStartingState": {
-    "velocity": 0,
-    "rotation": -115.0
+    "velocity": 1.0,
+    "rotation": 90.0
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }

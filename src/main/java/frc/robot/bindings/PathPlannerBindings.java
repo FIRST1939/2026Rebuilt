@@ -11,7 +11,6 @@ import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import frc.robot.Constants.*;
 import frc.robot.commands.climber.LowerClimberToHeight;
 import frc.robot.commands.climber.RaiseClimberToHeight;
-import frc.robot.commands.drive.PPShootOnTheMoveRotation;
 import frc.robot.commands.feeder.RunFeederVelocity;
 import frc.robot.commands.intake.AgitateIntake;
 import frc.robot.commands.intake.DeepAgitateIntake;
@@ -62,6 +61,21 @@ public class PathPlannerBindings {
             () -> dTrenchShotSolution.hoodPositionRotations
         );
 
+        ShotSolution dMidShotSolution = bindingParams.shotSolver.getPPShotSolution(
+            new Pose2d(
+                2.609, 
+                6.865, 
+                Rotation2d.fromDegrees(130.0)
+            )
+        );
+
+        Command prepareDMidShotCommand = new RunFlywheelAndHood(
+            bindingParams.shooter, 
+            () -> dMidShotSolution.flywheelRPM, 
+            () -> dMidShotSolution.hoodPositionRotations
+        );
+
+
         ShotSolution depotShotSolution = bindingParams.shotSolver.getPPShotSolution(
             new Pose2d(
                 1.702, 
@@ -77,6 +91,7 @@ public class PathPlannerBindings {
         );
 
         new EventTrigger("Prepare DTrench Shot").onTrue(prepareDTrenchShotCommand);
+        new EventTrigger("Prepare DMid Shot").onTrue(prepareDMidShotCommand);
         new EventTrigger("Prepare Depot Shot").onTrue(prepareDepotShotCommand);
 
         NamedCommands.registerCommand(
@@ -84,13 +99,9 @@ public class PathPlannerBindings {
             Commands.runOnce(() -> {
 
                 prepareDTrenchShotCommand.cancel();
+                prepareDMidShotCommand.cancel();
                 prepareDepotShotCommand.cancel();
             })
-        );
-
-        NamedCommands.registerCommand(
-            "IdleIntake",
-            Commands.runOnce(() -> bindingParams.intakeStateManager.setGoalState(State.IDLE))
         );
 
         NamedCommands.registerCommand(
@@ -110,6 +121,20 @@ public class PathPlannerBindings {
                 )
             )
         );
+
+        NamedCommands.registerCommand("Raise Climber",
+            new RaiseClimberToHeight(
+            bindingParams.climber, 
+            ClimberConstants.kRaisingClimberSetpoint, 
+            ClimberConstants.kRaisingClimberPercentage)
+        );
+
+        NamedCommands.registerCommand("Lower Climber",
+            new LowerClimberToHeight(
+            bindingParams.climber, 
+            ClimberConstants.kLoweringClimberSetpoint, 
+            ClimberConstants.kLoweringClimberPercentage)
+        );
         
         /*
         NamedCommands.registerCommand("RegressionShot", 
@@ -119,7 +144,6 @@ public class PathPlannerBindings {
                 () -> bindingParams.shotSolver.getShotSolution().hoodPositionRotations
             )
         );
-        */
 
         new EventTrigger("ShotHeading").whileTrue(
             new PPShootOnTheMoveRotation(
@@ -127,19 +151,6 @@ public class PathPlannerBindings {
                 bindingParams.shotSolver
             )
         );
-
-        NamedCommands.registerCommand("ClimberUp",
-            new RaiseClimberToHeight(
-            bindingParams.climber, 
-            ClimberConstants.kRaisingClimberSetpoint, 
-            ClimberConstants.kRaisingClimberPercentage)
-        );
-
-        NamedCommands.registerCommand("ClimberDown",
-            new LowerClimberToHeight(
-            bindingParams.climber, 
-            ClimberConstants.kLoweringClimberSetpoint, 
-            ClimberConstants.kLoweringClimberPercentage)
-        );
+        */
     }
 }

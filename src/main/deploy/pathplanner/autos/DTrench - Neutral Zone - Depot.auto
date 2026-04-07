@@ -13,13 +13,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "DCenterline - Middle Exit 1"
+            "pathName": "DCenterline - Neutral Exit 1"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Middle Exit 1 - Depot Shot"
+            "pathName": "Neutral Exit 1 - Depot Shot"
           }
         },
         {
@@ -63,6 +63,6 @@
     }
   },
   "resetOdom": true,
-  "folder": null,
+  "folder": "DTrench Starting",
   "choreoAuto": false
 }
