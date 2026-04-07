@@ -9,7 +9,7 @@
       "prevControl": null,
       "nextControl": {
         "x": 6.5,
-        "y": 6.839942938659058
+        "y": 7.089942938659058
       },
       "isLocked": false,
       "linkedName": "DMiddle-Exit1"
@@ -17,15 +17,15 @@
     {
       "anchor": {
         "x": 5.342428072689229,
-        "y": 7.35
+        "y": 7.45
       },
       "prevControl": {
         "x": 6.338622770780973,
-        "y": 7.2628442572523415
+        "y": 7.362844257252342
       },
       "nextControl": {
         "x": 4.395364609907885,
-        "y": 7.432857316632973
+        "y": 7.532857316632974
       },
       "isLocked": false,
       "linkedName": null
@@ -60,7 +60,7 @@
       "minWaypointRelativePos": 0,
       "maxWaypointRelativePos": 1.51,
       "constraints": {
-        "maxVelocity": 2.5,
+        "maxVelocity": 2.0,
         "maxAcceleration": 15.0,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,
@@ -93,7 +93,7 @@
   "reversed": false,
   "folder": "Neutral Starting",
   "idealStartingState": {
-    "velocity": 3.0,
+    "velocity": 2.0,
     "rotation": 90.0
   },
   "useDefaultConstraints": true
