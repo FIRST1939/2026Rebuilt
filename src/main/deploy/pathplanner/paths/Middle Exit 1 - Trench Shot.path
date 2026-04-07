@@ -8,36 +8,36 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.760472266500395,
-        "y": 7.31715456817737
+        "x": 6.5,
+        "y": 6.839942938659058
       },
       "isLocked": false,
-      "linkedName": "Middle-Exit"
+      "linkedName": "DMiddle-Exit1"
     },
     {
       "anchor": {
-        "x": 4.595420827389443,
-        "y": 7.375
+        "x": 5.342428072689229,
+        "y": 7.35
       },
       "prevControl": {
-        "x": 6.595420827389443,
-        "y": 7.375
+        "x": 6.338622770780973,
+        "y": 7.2628442572523415
       },
       "nextControl": {
-        "x": 3.595420827389443,
-        "y": 7.375
+        "x": 4.395364609907885,
+        "y": 7.432857316632973
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.874579172610556,
+        "x": 2.875,
         "y": 7.25
       },
       "prevControl": {
-        "x": 3.874579172610556,
-        "y": 7.25
+        "x": 3.840925826289068,
+        "y": 7.508819045102521
       },
       "nextControl": null,
       "isLocked": false,
@@ -46,31 +46,24 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.5,
+      "waypointRelativePos": 0.8655742112810713,
       "rotationDegrees": 180.0
     },
     {
-      "waypointRelativePos": 1.1,
+      "waypointRelativePos": 1.5099934273422562,
       "rotationDegrees": 180.0
     }
   ],
-  "constraintZones": [
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [
     {
-      "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.6536124240378093,
-      "maxWaypointRelativePos": 1.0,
-      "constraints": {
-        "maxVelocity": 1.5,
-        "maxAcceleration": 7.0,
-        "maxAngularVelocity": 540.0,
-        "maxAngularAcceleration": 720.0,
-        "nominalVoltage": 12.0,
-        "unlimited": false
-      }
+      "name": "Prepare DTrench Shot",
+      "waypointRelativePos": 1.51,
+      "endWaypointRelativePos": null,
+      "command": null
     }
   ],
-  "pointTowardsZones": [],
-  "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 3.5,
     "maxAcceleration": 15.0,
@@ -86,7 +79,7 @@
   "reversed": false,
   "folder": "Neutral Starting",
   "idealStartingState": {
-    "velocity": 3.5,
+    "velocity": 3.0,
     "rotation": 90.0
   },
   "useDefaultConstraints": true
