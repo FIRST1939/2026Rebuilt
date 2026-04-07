@@ -5,7 +5,6 @@ import com.pathplanner.lib.events.EventTrigger;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants.*;
@@ -47,16 +46,13 @@ public class PathPlannerBindings {
             )
         );
 
-        bindingParams.shotSolver.calculateShotSolution(
+        ShotSolution DTrenchShotSolution = bindingParams.shotSolver.getPPShotSolution(
             new Pose2d(
                 2.875, 
                 7.25, 
                 Rotation2d.fromDegrees(120.0)
-            ), 
-            new ChassisSpeeds()
+            )
         );
-
-        ShotSolution DTrenchShotSolution = bindingParams.shotSolver.getShotSolution();
 
         Command prepareDTrenchShotCommand = new RunFlywheelAndHood(
             bindingParams.shooter, 

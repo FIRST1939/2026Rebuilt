@@ -37,8 +37,13 @@ public class Util {
 
     public static Translation2d getHubPosition () {
 
+        return getHubPosition(true);
+    }
+
+    public static Translation2d getHubPosition (boolean useFlipLogic) {
+
         Translation2d hubPosition = FieldConstants.Hub.innerCenterPoint.toTranslation2d();
-        if (isRedAlliance()) { hubPosition = FieldConstants.Hub.oppTopCenterPoint.toTranslation2d(); }
+        if (useFlipLogic && isRedAlliance()) { hubPosition = FieldConstants.Hub.oppTopCenterPoint.toTranslation2d(); }
 
         return hubPosition;
     }

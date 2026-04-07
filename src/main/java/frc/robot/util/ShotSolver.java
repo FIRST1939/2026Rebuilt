@@ -38,16 +38,21 @@ public class ShotSolver {
 
     private ShotSolution m_shotSolution = new ShotSolution(0, 0, new Rotation2d(), 0);
 
+    public ShotSolution getPPShotSolution(Pose2d robotPose) {
+
+        return calculateShotSolutionStatic(robotPose, false);
+    }
+
     public void calculateShotSolution(Pose2d measuredRobotPose, ChassisSpeeds robotSpeeds) {
 
-        ShotSolution staticShotSolution = calculateShotSolutionStatic(measuredRobotPose);
+        ShotSolution staticShotSolution = calculateShotSolutionStatic(measuredRobotPose, true);
         Logger.recordOutput("ShotSolver/Static/FlywheelRPM", staticShotSolution.flywheelRPM);
         Logger.recordOutput("ShotSolver/Static/HoodPosition", staticShotSolution.hoodPositionRotations);
         Logger.recordOutput("ShotSolver/Static/AimHeading", staticShotSolution.aimHeading.getDegrees());
         Logger.recordOutput("ShotSolver/Static/TimeOfFlight", staticShotSolution.timeOfFlight);
 
         Pose2d futureRobotPose = findFuturePose(measuredRobotPose, robotSpeeds);
-        ShotSolution futureShooterSolution = calculateShotSolutionStatic(futureRobotPose);
+        ShotSolution futureShooterSolution = calculateShotSolutionStatic(futureRobotPose, true);
         Logger.recordOutput("ShotSolver/Future/RobotPose", futureRobotPose);
         Logger.recordOutput("ShotSolver/Future/FlywheelRPM", futureShooterSolution.flywheelRPM);
         Logger.recordOutput("ShotSolver/Future/HoodPosition", futureShooterSolution.hoodPositionRotations);
@@ -67,10 +72,10 @@ public class ShotSolver {
      * Distance/RPM/hood are based on the shooter position (where the ball leaves).
      * Aim heading is based on the robot center (what the robot actually rotates around).
      */
-    public ShotSolution calculateShotSolutionStatic(Pose2d robotPose) {
+    public ShotSolution calculateShotSolutionStatic(Pose2d robotPose, boolean useFlipLogic) {
 
         // Distance from shooter to hub — used for RPM, hood, and time of flight lookup
-        Translation2d shooterToTarget = Util.getHubPosition().minus(getShooterPose(robotPose).getTranslation());
+        Translation2d shooterToTarget = Util.getHubPosition(useFlipLogic).minus(getShooterPose(robotPose).getTranslation());
         double distanceToTarget = shooterToTarget.getNorm();
         ShooterParams params = kShooterMap.get(distanceToTarget);
 
@@ -88,7 +93,7 @@ public class ShotSolver {
 
         for (int i = 0; i < 5; i++) {
 
-            ShotSolution futureShotSolution = calculateShotSolutionStatic(futurePose);
+            ShotSolution futureShotSolution = calculateShotSolutionStatic(futurePose, true);
             double futureTimeOfFlight = futureShotSolution.timeOfFlight;
             Rotation2d futureAimHeading = getAimHeading(futurePose);
 
