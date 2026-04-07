@@ -230,9 +230,10 @@ public class RobotContainer {
         return m_autoSelector.get();
     }
 
-    public void updateShotSolution() {
+    public void updateShotSolutions() {
 
         m_shotSolver.calculateShotSolution(m_drive.getPose(), m_drive.getFieldRelativeChassisSpeeds());
+        m_ferrySolver.calculateFerrySolution(m_drive.getPose(), m_drive.getFieldRelativeChassisSpeeds());
     }
     
     public void displayShotConditions() {
