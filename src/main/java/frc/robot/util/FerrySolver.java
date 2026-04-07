@@ -24,19 +24,19 @@ public class FerrySolver {
     );
 
     private static final List<Translation2d> kBlueFerryTargets = Arrays.asList(
-        new Translation2d(FieldConstants.LinesVertical.allianceZone, FieldConstants.LinesHorizontal.leftBumpMiddle),
-        new Translation2d(FieldConstants.LinesVertical.allianceZone, FieldConstants.LinesHorizontal.rightBumpMiddle)
+        new Translation2d(FieldConstants.LinesVertical.allianceZone - 2.0, FieldConstants.LinesHorizontal.leftBumpStart),
+        new Translation2d(FieldConstants.LinesVertical.allianceZone - 2.0, FieldConstants.LinesHorizontal.rightBumpEnd)
     );
 
     private static final List<Translation2d> kRedFerryTargets = Arrays.asList(
-        new Translation2d(FieldConstants.LinesVertical.oppAllianceZone, FieldConstants.LinesHorizontal.leftBumpMiddle),
-        new Translation2d(FieldConstants.LinesVertical.oppAllianceZone, FieldConstants.LinesHorizontal.rightBumpMiddle)
+        new Translation2d(FieldConstants.LinesVertical.oppAllianceZone + 2.0, FieldConstants.LinesHorizontal.leftBumpStart),
+        new Translation2d(FieldConstants.LinesVertical.oppAllianceZone + 2.0, FieldConstants.LinesHorizontal.rightBumpEnd)
     );
 
     static {
 
-        kFerryMap.put(0.0, new ShooterParams(2750, 0.071, 0.0));
-        kFerryMap.put(7.0, new ShooterParams(2750, 0.071, 0.0));
+        kFerryMap.put(2.0, new ShooterParams(2000, 0.071, 0.0));
+        kFerryMap.put(7.0, new ShooterParams(4000, 0.071, 0.0));
     }
 
     private ShotSolution m_ferrySolution = new ShotSolution(0, 0, new Rotation2d(), 0);
