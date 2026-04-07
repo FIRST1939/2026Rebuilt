@@ -48,11 +48,25 @@ public class PathPlannerBindings {
             )
         );
 
+        ShotSolution dTrenchShotSolution = bindingParams.shotSolver.getPPShotSolution(
+            new Pose2d(
+                2.875, 
+                7.25, 
+                Rotation2d.fromDegrees(120.0)
+            )
+        );
+
+        Command prepareDTrenchShotCommand = new RunFlywheelAndHood(
+            bindingParams.shooter, 
+            () -> dTrenchShotSolution.flywheelRPM, 
+            () -> dTrenchShotSolution.hoodPositionRotations
+        );
+
         ShotSolution depotShotSolution = bindingParams.shotSolver.getPPShotSolution(
             new Pose2d(
                 1.702, 
                 5.84, 
-                Rotation2d.fromDegrees(120.0)
+                Rotation2d.fromDegrees(150.0)
             )
         );
 
@@ -62,12 +76,14 @@ public class PathPlannerBindings {
             () -> depotShotSolution.hoodPositionRotations
         );
 
+        new EventTrigger("Prepare DTrench Shot").onTrue(prepareDTrenchShotCommand);
         new EventTrigger("Prepare Depot Shot").onTrue(prepareDepotShotCommand);
 
         NamedCommands.registerCommand(
             "Stop Shot",
             Commands.runOnce(() -> {
 
+                prepareDTrenchShotCommand.cancel();
                 prepareDepotShotCommand.cancel();
             })
         );

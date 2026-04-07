@@ -129,7 +129,7 @@ public class Drive extends SubsystemBase {
         this::getRobotRelativeChassisSpeeds,
         this::runVelocity,
         new PPHolonomicDriveController(
-            new PIDConstants(5.0, 0.0, 0.0), new PIDConstants(5.0, 0.0, 0.0)),
+            new PIDConstants(5.0, 0.0, 0.0), new PIDConstants(DriveConstants.kAngleControllerP, DriveConstants.kAngleControllerI, DriveConstants.kAngleControllerD)),
         PP_CONFIG,
         () -> Util.isRedAlliance(),
         this);
