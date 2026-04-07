@@ -7,12 +7,14 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import frc.robot.Constants.*;
 import frc.robot.commands.climber.LowerClimberToHeight;
 import frc.robot.commands.climber.RaiseClimberToHeight;
 import frc.robot.commands.drive.PPShootOnTheMoveRotation;
 import frc.robot.commands.feeder.RunFeederVelocity;
 import frc.robot.commands.intake.AgitateIntake;
+import frc.robot.commands.intake.DeepAgitateIntake;
 import frc.robot.commands.intake.IntakeStateManager.State;
 import frc.robot.commands.shooter.RunFlywheelAndHood;
 import frc.robot.commands.spindexer.RunSpindexerPercentage;
@@ -80,9 +82,15 @@ public class PathPlannerBindings {
             Commands.sequence(
                 Commands.waitUntil(() -> bindingParams.shooter.isAtGoal()),
                 Commands.parallel(
-                    new AgitateIntake(bindingParams.intake, bindingParams.intakeStateManager),
                     new RunSpindexerPercentage(bindingParams.spindexer, SpindexerConstants.kSpindexerPercentage),
-                    new RunFeederVelocity(bindingParams.feeder, FeederConstants.kFeederVelocity)
+                    new RunFeederVelocity(bindingParams.feeder, FeederConstants.kFeederVelocity),
+                    new AgitateIntake(bindingParams.intake, bindingParams.intakeStateManager),
+                    new RepeatCommand(
+                        Commands.sequence(
+                            Commands.waitSeconds(1.5),
+                            new DeepAgitateIntake(bindingParams.intake, bindingParams.intakeStateManager)
+                        )
+                    )
                 )
             )
         );
