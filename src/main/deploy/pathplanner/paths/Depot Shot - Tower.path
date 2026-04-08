@@ -17,27 +17,27 @@
     {
       "anchor": {
         "x": 1.5,
-        "y": 4.65
+        "y": 4.7
       },
       "prevControl": {
         "x": 2.0,
-        "y": 4.65
+        "y": 4.7
       },
       "nextControl": {
         "x": 1.25,
-        "y": 4.65
+        "y": 4.7
       },
       "isLocked": false,
       "linkedName": "DTower Leadin"
     },
     {
       "anchor": {
-        "x": 1.07,
+        "x": 1.0,
         "y": 4.45
       },
       "prevControl": {
-        "x": 1.07,
-        "y": 4.75
+        "x": 1.0,
+        "y": 4.8
       },
       "nextControl": null,
       "isLocked": false,
@@ -75,7 +75,7 @@
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 1.25,
+    "maxVelocity": 1.0,
     "maxAcceleration": 8.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,

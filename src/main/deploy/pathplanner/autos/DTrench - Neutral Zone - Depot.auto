@@ -29,7 +29,7 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 3.0
+                  "waitTime": 3.5
                 }
               },
               {
@@ -51,12 +51,6 @@
           "type": "path",
           "data": {
             "pathName": "Depot Shot - Depo - Depot Shot"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Shoot"
           }
         }
       ]

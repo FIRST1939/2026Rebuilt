@@ -35,8 +35,8 @@ public class FerrySolver {
 
     static {
 
-        kFerryMap.put(2.0, new ShooterParams(2000, 0.071, 0.0));
-        kFerryMap.put(7.0, new ShooterParams(4000, 0.071, 0.0));
+        kFerryMap.put(2.0, new ShooterParams(2000, 0.08, 0.0));
+        kFerryMap.put(7.0, new ShooterParams(4000, 0.08, 0.0));
     }
 
     private ShotSolution m_ferrySolution = new ShotSolution(0, 0, new Rotation2d(), 0);

@@ -1,0 +1,68 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 5.9314698795180725,
+        "y": 5.41189156626506
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 2.9314698795180725,
+        "y": 5.41189156626506
+      },
+      "isLocked": false,
+      "linkedName": "Neutral DBump Exit"
+    },
+    {
+      "anchor": {
+        "x": 1.702,
+        "y": 5.839942938659058
+      },
+      "prevControl": {
+        "x": 2.584947592858927,
+        "y": 5.3704713758731675
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Depot Shot"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 0,
+      "maxWaypointRelativePos": 0.3841191066997523,
+      "constraints": {
+        "maxVelocity": 3.0,
+        "maxAcceleration": 8.0,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    }
+  ],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 2.5,
+    "maxAcceleration": 8.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 152.0
+  },
+  "reversed": false,
+  "folder": "Neutral Starting",
+  "idealStartingState": {
+    "velocity": 3.0,
+    "rotation": 135.0
+  },
+  "useDefaultConstraints": true
+}

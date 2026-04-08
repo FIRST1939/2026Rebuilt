@@ -29,7 +29,7 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 3.0
+                  "waitTime": 5.0
                 }
               },
               {
@@ -56,13 +56,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "DNeutral Pass 2 - Neutral Exit 1"
+            "pathName": "DNeutral Pass 2 - Neutral DBump Exit"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Neutral Exit 1 - DMid Shot"
+            "pathName": "Neutral DBump Exit - Depot Shot"
           }
         }
       ]
