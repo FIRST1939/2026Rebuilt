@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.5,
-        "y": 6.839942938659058
+        "x": 7.0,
+        "y": 6.705968342443496
       },
       "isLocked": false,
       "linkedName": "Neutral Exit 1"
@@ -74,22 +74,9 @@
     {
       "name": "Constraints Zone",
       "minWaypointRelativePos": 0,
-      "maxWaypointRelativePos": 1.0,
-      "constraints": {
-        "maxVelocity": 1.0,
-        "maxAcceleration": 8.0,
-        "maxAngularVelocity": 540.0,
-        "maxAngularAcceleration": 720.0,
-        "nominalVoltage": 12.0,
-        "unlimited": false
-      }
-    },
-    {
-      "name": "Constraints Zone",
-      "minWaypointRelativePos": 0,
       "maxWaypointRelativePos": 1.51,
       "constraints": {
-        "maxVelocity": 2.0,
+        "maxVelocity": 1.25,
         "maxAcceleration": 8.0,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,
@@ -103,6 +90,12 @@
     {
       "name": "Prepare Depot Shot",
       "waypointRelativePos": 1.51,
+      "endWaypointRelativePos": null,
+      "command": null
+    },
+    {
+      "name": "Stop Intake",
+      "waypointRelativePos": 3.0,
       "endWaypointRelativePos": null,
       "command": null
     }
@@ -122,7 +115,7 @@
   "reversed": false,
   "folder": "Neutral Starting",
   "idealStartingState": {
-    "velocity": 1.0,
+    "velocity": 1.5,
     "rotation": 90.0
   },
   "useDefaultConstraints": false

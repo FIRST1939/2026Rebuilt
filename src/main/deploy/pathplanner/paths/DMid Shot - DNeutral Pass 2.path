@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.4754711869169688,
-        "y": 7.365277108433735
+        "x": 1.3784360918672705,
+        "y": 7.082337330517397
       },
       "isLocked": false,
       "linkedName": "DMid Shot"
@@ -58,9 +58,22 @@
     {
       "name": "Constraints Zone",
       "minWaypointRelativePos": 0,
+      "maxWaypointRelativePos": 0.68,
+      "constraints": {
+        "maxVelocity": 1.0,
+        "maxAcceleration": 8.0,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    },
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 0,
       "maxWaypointRelativePos": 1.2089330024813882,
       "constraints": {
-        "maxVelocity": 1.25,
+        "maxVelocity": 1.5,
         "maxAcceleration": 8.0,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,

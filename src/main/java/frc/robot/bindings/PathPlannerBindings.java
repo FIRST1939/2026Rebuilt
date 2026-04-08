@@ -25,14 +25,15 @@ public class PathPlannerBindings {
 
         new EventTrigger("Start Intake").onTrue(
             Commands.runOnce(() -> 
-                bindingParams.intakeStateManager.setGoalState(State.INTAKING)
+                bindingParams.intakeStateManager.setMegaOverrideGoal(State.INTAKING)
             )
         );
 
         new EventTrigger("Stop Intake").onTrue(
-            Commands.runOnce(() -> 
-                bindingParams.intakeStateManager.setGoalState(State.EXTENDED)
-            )
+            Commands.runOnce(() -> {
+                bindingParams.intakeStateManager.clearMegaOverrideGoal();
+                bindingParams.intakeStateManager.setGoalState(State.EXTENDED);
+            })
         );
 
         new EventTrigger("Idle Intake").onTrue(
