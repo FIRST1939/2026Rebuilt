@@ -3,10 +3,10 @@
   "robotLength": 0.855,
   "holonomicMode": true,
   "pathFolders": [
-    "DTrench Starting",
-    "Depot Starting",
-    "Neutral Starting",
-    "OTrench Starting"
+    "Intake Neutral",
+    "Starting",
+    "To Neutral Under Trench",
+    "To Zone Under Trench"
   ],
   "autoFolders": [
     "DTrench Starting",

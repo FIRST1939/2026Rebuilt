@@ -4,60 +4,44 @@
     {
       "anchor": {
         "x": 6.5,
-        "y": 5.839942938659058
+        "y": 2.2362
       },
       "prevControl": null,
       "nextControl": {
         "x": 7.0,
-        "y": 6.705968342443496
+        "y": 1.3701745962155616
       },
       "isLocked": false,
-      "linkedName": "Neutral Exit 1"
+      "linkedName": "Neutral Exit 2"
     },
     {
       "anchor": {
         "x": 5.342428072689229,
-        "y": 7.6
+        "y": 0.4762
       },
       "prevControl": {
-        "x": 7.3348174688727195,
-        "y": 7.425688514504683
+        "x": 7.085768794349784,
+        "y": 0.6287225498084019
       },
       "nextControl": {
-        "x": 4.395364609907885,
-        "y": 7.682857316632973
+        "x": 4.395046914803979,
+        "y": 0.39331488864697706
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.875,
-        "y": 7.25
+        "x": 2.6094457831325304,
+        "y": 1.2112
       },
       "prevControl": {
-        "x": 3.840925826289068,
-        "y": 7.508819045102521
-      },
-      "nextControl": {
-        "x": 2.3920370868554657,
-        "y": 7.12059047744874
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 1.702,
-        "y": 5.839942938659058
-      },
-      "prevControl": {
-        "x": 2.044020143325669,
-        "y": 6.779635559444966
+        "x": 3.475471186916969,
+        "y": 0.7112
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Depot Shot"
+      "linkedName": "OMid Shot"
     }
   ],
   "rotationTargets": [
@@ -66,17 +50,30 @@
       "rotationDegrees": 180.0
     },
     {
-      "waypointRelativePos": 2.0,
-      "rotationDegrees": -170.0
+      "waypointRelativePos": 1.5,
+      "rotationDegrees": 170.0
     }
   ],
   "constraintZones": [
     {
       "name": "Constraints Zone",
       "minWaypointRelativePos": 0,
-      "maxWaypointRelativePos": 1.51,
+      "maxWaypointRelativePos": 1.0,
       "constraints": {
-        "maxVelocity": 1.25,
+        "maxVelocity": 1.5,
+        "maxAcceleration": 8.0,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    },
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 1.5,
+      "maxWaypointRelativePos": 2.0,
+      "constraints": {
+        "maxVelocity": 1.0,
         "maxAcceleration": 8.0,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,
@@ -88,14 +85,14 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "Prepare Depot Shot",
-      "waypointRelativePos": 1.51,
+      "name": "Prepare DMid Shot",
+      "waypointRelativePos": 1.3558312655086826,
       "endWaypointRelativePos": null,
       "command": null
     },
     {
       "name": "Stop Intake",
-      "waypointRelativePos": 3.0,
+      "waypointRelativePos": 2.0,
       "endWaypointRelativePos": null,
       "command": null
     }
@@ -110,13 +107,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 152.0
+    "rotation": -130.0
   },
   "reversed": false,
   "folder": "To Zone Under Trench",
   "idealStartingState": {
     "velocity": 1.5,
-    "rotation": 90.0
+    "rotation": -90.0
   },
   "useDefaultConstraints": false
 }
