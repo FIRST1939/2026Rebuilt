@@ -47,7 +47,7 @@ public final class Constants {
         public static final double kPivotOutSetpoint = 0.35;
         public static final double kPivotIdleSetpoint = 0.1;
         public static final double kPivotAgitateOutSetpoint = 0.3;
-        public static final double kPivotAgitateInSetpoint = 0.2;
+        public static final double kPivotAgitateInSetpoint = 0.18;
 
         public static final double kPivotStowingPercentage = -0.25;
         public static final double kPivotExtendedPercentage = 0.1;
@@ -77,6 +77,9 @@ public final class Constants {
     }
 
     public static class ShooterConstants {
+
+        public static final double kTestFlywheelVelocity = 1000;
+        public static final double kTestHoodPosition = 0.05;
 
         public static final double kHubFlywheelVelocity = 2750;
         public static final double kOutpostFlywheelVelocity = 1500.0;

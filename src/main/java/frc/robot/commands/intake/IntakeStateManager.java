@@ -12,7 +12,7 @@ import frc.robot.subsystems.intake.Intake;
 public class IntakeStateManager extends Command {
     
     private final Intake m_intake;
-    private State m_goalState = State.STOWED;
+    private State m_goalState = null;
     private Optional<State> m_overrideGoal = Optional.empty();
     private Optional<State> m_megaOverrideGoal = Optional.empty();
 

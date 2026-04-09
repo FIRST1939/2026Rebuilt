@@ -112,20 +112,8 @@ public class MatchBindings {
         modeTrigger.and(bindingParams.driverController.povUp()).toggleOnTrue(new RaiseClimberToHeight(bindingParams.climber, ClimberConstants.kRaisingClimberSetpoint, ClimberConstants.kRaisingClimberPercentage));
         modeTrigger.and(bindingParams.driverController.povDown()).toggleOnTrue(new LowerClimberToHeight(bindingParams.climber, ClimberConstants.kLoweringClimberSetpoint, ClimberConstants.kLoweringClimberPercentage));
 
-        modeTrigger.and(bindingParams.operatorController.povRight()).whileTrue(
-            new RunFlywheelAndHood(bindingParams.shooter, 
-            () -> ShooterConstants.kOutpostFlywheelVelocity,
-            () -> ShooterConstants.kOutpostHoodSetpoint));
-        //Static Shot Outpost Command
-
         modeTrigger.and(bindingParams.operatorController.povUp()).toggleOnTrue(new RaiseClimberToHeight(bindingParams.climber, ClimberConstants.kRaisingClimberSetpoint, ClimberConstants.kRaisingClimberPercentage));
         modeTrigger.and(bindingParams.operatorController.povDown()).toggleOnTrue(new LowerClimberToHeight(bindingParams.climber, ClimberConstants.kLoweringClimberSetpoint, ClimberConstants.kLoweringClimberPercentage));
-
-        modeTrigger.and(bindingParams.operatorController.povLeft()).whileTrue(
-            new RunFlywheelAndHood(bindingParams.shooter, 
-            () -> ShooterConstants.kTrenchFlywheelVelocity,
-            () -> ShooterConstants.kTrenchHoodSetpoint));
-        //Static Shot Trench Command
 
         modeTrigger.and(bindingParams.operatorController.rightTrigger()).whileTrue(
             Commands.parallel(
@@ -138,11 +126,30 @@ public class MatchBindings {
                     new RepeatCommand(
                         Commands.parallel(
                             new RunSpindexerPercentage(bindingParams.spindexer, SpindexerConstants.kSpindexerPercentage),
-                            new RunFeederVelocity(bindingParams.feeder, FeederConstants.kFeederVelocity),
+                            new RunFeederAntiClog(bindingParams.feeder, bindingParams.spindexer),
                             new AgitateIntake(bindingParams.intake, bindingParams.intakeStateManager)
                         ).onlyWhile(() -> ShiftUtil.fuelWillScore(bindingParams.shotSolver.getShotSolution().timeOfFlight) &&
                         m_hubAlignedDebouncer.calculate(bindingParams.drive.atTargetRotation(bindingParams.shotSolver.getShotSolution().aimHeading)))
-                    ) // TODO Additional Shot Conditions
+                    )
+                )
+            )
+        );
+
+        modeTrigger.and(bindingParams.operatorController.povRight()).whileTrue(
+            Commands.parallel(
+                new RunFlywheelAndHood(bindingParams.shooter,
+                    () -> ShooterConstants.kTestFlywheelVelocity,
+                    () -> ShooterConstants.kTestHoodPosition
+                ),
+                Commands.sequence(
+                    Commands.waitUntil(() -> bindingParams.shooter.isAtGoal()),
+                    new RepeatCommand(
+                        Commands.parallel(
+                            new RunSpindexerPercentage(bindingParams.spindexer, SpindexerConstants.kSpindexerPercentage),
+                            new RunFeederAntiClog(bindingParams.feeder, bindingParams.spindexer),
+                            new AgitateIntake(bindingParams.intake, bindingParams.intakeStateManager)
+                        )
+                    )
                 )
             )
         );
