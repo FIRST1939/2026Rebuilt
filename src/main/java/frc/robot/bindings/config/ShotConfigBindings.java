@@ -9,6 +9,7 @@ import frc.robot.bindings.BindingParams;
 import frc.robot.commands.feeder.RunFeederVelocity;
 import frc.robot.commands.intake.AgitateIntake;
 import frc.robot.commands.shooter.RunFlywheelAndHood;
+import frc.robot.commands.shooter.ZeroHood;
 import frc.robot.commands.spindexer.RunSpindexerPercentage;
 
 public class ShotConfigBindings {
@@ -44,6 +45,8 @@ public class ShotConfigBindings {
                 () -> m_hoodAngleDegrees.get() / 360.0
             )
         );
+
+        modeTrigger.and(bindingParams.operatorController.leftTrigger()).onFalse(new ZeroHood(bindingParams.shooter));
 
         modeTrigger.and(bindingParams.operatorController.rightTrigger()).whileTrue((
             Commands.parallel(

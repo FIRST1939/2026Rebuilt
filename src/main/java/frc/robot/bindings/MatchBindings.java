@@ -136,6 +136,8 @@ public class MatchBindings {
             )
         );
 
+        modeTrigger.and(bindingParams.operatorController.rightTrigger()).onFalse(new ZeroHood(bindingParams.shooter));
+
         modeTrigger.and(bindingParams.operatorController.povRight()).whileTrue(
             Commands.parallel(
                 new RunFlywheelAndHood(bindingParams.shooter,
@@ -155,6 +157,8 @@ public class MatchBindings {
             )
         );
 
+        modeTrigger.and(bindingParams.operatorController.povRight()).onFalse(new ZeroHood(bindingParams.shooter));
+
         modeTrigger.and(bindingParams.operatorController.leftTrigger()).whileTrue(
             Commands.parallel(
                 new RunFlywheelAndHood(bindingParams.shooter,
@@ -173,6 +177,8 @@ public class MatchBindings {
                 )
             )
         );
+
+        modeTrigger.and(bindingParams.operatorController.leftTrigger()).onFalse(new ZeroHood(bindingParams.shooter));
 
         modeTrigger.and(bindingParams.operatorController.leftBumper()).onTrue(Commands.runOnce(() -> bindingParams.intakeStateManager.setGoalState(State.IDLE)));
         //Pivot Intake Idle
