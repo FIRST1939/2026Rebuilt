@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import frc.robot.Constants.*;
 import frc.robot.commands.climber.LowerClimberToHeight;
 import frc.robot.commands.climber.RaiseClimberToHeight;
-import frc.robot.commands.feeder.RunFeederVelocity;
+import frc.robot.commands.feeder.RunFeederAntiClog;
 import frc.robot.commands.intake.AgitateIntake;
 import frc.robot.commands.intake.DeepAgitateIntake;
 import frc.robot.commands.intake.IntakeStateManager.State;
@@ -111,7 +111,7 @@ public class PathPlannerBindings {
                 Commands.waitUntil(() -> bindingParams.shooter.isAtGoal()),
                 Commands.parallel(
                     new RunSpindexerPercentage(bindingParams.spindexer, SpindexerConstants.kSpindexerPercentage),
-                    new RunFeederVelocity(bindingParams.feeder, FeederConstants.kFeederVelocity),
+                    new RunFeederAntiClog(bindingParams.feeder, bindingParams.spindexer),
                     new AgitateIntake(bindingParams.intake, bindingParams.intakeStateManager),
                     new RepeatCommand(
                         Commands.sequence(

@@ -81,6 +81,8 @@ public final class Constants {
         public static final double kTestFlywheelVelocity = 1000;
         public static final double kTestHoodPosition = 0.05;
 
+        public static final double kHoodZeroPercentage = -0.1;
+
         public static final double kHubFlywheelVelocity = 2750;
         public static final double kOutpostFlywheelVelocity = 1500.0;
         public static final double kTowerFlywheelVelocity = 3000;

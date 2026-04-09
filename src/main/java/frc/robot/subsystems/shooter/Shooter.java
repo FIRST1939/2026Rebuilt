@@ -112,6 +112,16 @@ public class Shooter extends SubsystemBase {
         return m_inputs.hoodCurrent;
     }
 
+    public double getHoodVelocity () {
+
+        return m_inputs.hoodVelocity;
+    }
+
+    public void zeroHood () {
+
+        m_io.zeroHood();
+    }
+
     public void setFlywheelPercentage (double percent) {
 
         m_io.setFlywheelPercentage(percent);

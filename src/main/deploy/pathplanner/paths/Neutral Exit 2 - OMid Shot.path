@@ -9,7 +9,7 @@
       "prevControl": null,
       "nextControl": {
         "x": 7.0,
-        "y": 1.3701745962155616
+        "y": 1.3701745962155618
       },
       "isLocked": false,
       "linkedName": "Neutral Exit 2"
@@ -25,7 +25,7 @@
       },
       "nextControl": {
         "x": 4.395046914803979,
-        "y": 0.39331488864697706
+        "y": 0.3933148886469771
       },
       "isLocked": false,
       "linkedName": null
@@ -60,7 +60,7 @@
       "minWaypointRelativePos": 0,
       "maxWaypointRelativePos": 1.0,
       "constraints": {
-        "maxVelocity": 1.5,
+        "maxVelocity": 2.25,
         "maxAcceleration": 8.0,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,
@@ -73,7 +73,7 @@
       "minWaypointRelativePos": 1.5,
       "maxWaypointRelativePos": 2.0,
       "constraints": {
-        "maxVelocity": 1.0,
+        "maxVelocity": 1.625,
         "maxAcceleration": 8.0,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,
@@ -98,7 +98,7 @@
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 1.5,
+    "maxVelocity": 2.5,
     "maxAcceleration": 8.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
@@ -112,8 +112,8 @@
   "reversed": false,
   "folder": "To Zone Under Trench",
   "idealStartingState": {
-    "velocity": 1.5,
+    "velocity": 2.25,
     "rotation": -90.0
   },
-  "useDefaultConstraints": false
+  "useDefaultConstraints": true
 }

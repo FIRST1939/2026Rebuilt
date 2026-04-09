@@ -114,6 +114,7 @@ public class MatchBindings {
 
         modeTrigger.and(bindingParams.operatorController.povUp()).toggleOnTrue(new RaiseClimberToHeight(bindingParams.climber, ClimberConstants.kRaisingClimberSetpoint, ClimberConstants.kRaisingClimberPercentage));
         modeTrigger.and(bindingParams.operatorController.povDown()).toggleOnTrue(new LowerClimberToHeight(bindingParams.climber, ClimberConstants.kLoweringClimberSetpoint, ClimberConstants.kLoweringClimberPercentage));
+        modeTrigger.and(bindingParams.operatorController.povLeft()).toggleOnTrue(new ZeroHood(bindingParams.shooter));
 
         modeTrigger.and(bindingParams.operatorController.rightTrigger()).whileTrue(
             Commands.parallel(

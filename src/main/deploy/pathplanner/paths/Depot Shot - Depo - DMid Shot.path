@@ -48,16 +48,16 @@
     },
     {
       "anchor": {
-        "x": 2.874579172610556,
-        "y": 7.25
+        "x": 2.6094457831325304,
+        "y": 6.865277108433735
       },
       "prevControl": {
-        "x": 2.228449654538266,
-        "y": 6.075271084337349
+        "x": 1.9633162650602407,
+        "y": 5.690548192771084
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "DTrench-Shot"
+      "linkedName": "DMid Shot"
     }
   ],
   "rotationTargets": [
@@ -120,7 +120,7 @@
       "command": null
     },
     {
-      "name": "Prepare DTrench Shot",
+      "name": "Prepare DMid Shot",
       "waypointRelativePos": 2.34,
       "endWaypointRelativePos": null,
       "command": null
@@ -142,7 +142,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 119.99999999999999
+    "rotation": 130.0
   },
   "reversed": false,
   "folder": null,

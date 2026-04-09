@@ -165,4 +165,10 @@ public class ShooterIOHardware implements ShooterIO {
 
         m_hoodController.setSetpoint(position, ControlType.kPosition);
     }    
+
+    @Override
+    public void zeroHood () {
+
+        m_hoodEncoder.setPosition(0);
+    }
 }
