@@ -2,12 +2,12 @@ package frc.robot.util;
 
 import java.util.Optional;
 
-import org.littletonrobotics.junction.Logger;
-
 import edu.wpi.first.wpilibj.DriverStation;
 
 public class ShiftUtil {
     
+    public static boolean m_autoRun = false;
+
     public static class Shift {
         
         private final String m_name;
@@ -31,7 +31,7 @@ public class ShiftUtil {
         Optional<Boolean> redActiveFirst;
         String gameData = DriverStation.getGameSpecificMessage();
 
-        if (gameData.isEmpty() || DriverStation.isAutonomous() || DriverStation.isDisabled()) {
+        if (gameData.isEmpty() || DriverStation.isAutonomous() || (DriverStation.isDisabled() && !m_autoRun)) {
 
             redActiveFirst = Optional.empty();
         } else {
@@ -49,7 +49,7 @@ public class ShiftUtil {
 
     public static Shift getCurrentShift() {
 
-        double matchTime = DriverStation.getMatchTime();
+        double matchTime = MatchClock.getMatchTime();
 
         if (DriverStation.isAutonomous()) {
 
@@ -95,9 +95,6 @@ public class ShiftUtil {
         // 92.5% of Fuel Gets Processed in <= 1.875s
         // 95% of Fuel Gets Processed in <= 2.00s
         double timeToProcess = 1.875;
-
-        Logger.recordOutput("Time Left in Shift", timeLeftInShift);
-        Logger.recordOutput("Total Time to Score", timeOfFlight + timeToProcess);
 
         if (currentShift.isActive()) {
 

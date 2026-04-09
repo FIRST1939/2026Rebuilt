@@ -1,1 +1,195 @@
-{"tabs":[{"name":"Dashboard","grid_layout":{"layouts":[],"containers":[{"title":"Auto Selector","x":1152.0,"y":0.0,"width":384.0,"height":128.0,"type":"ComboBox Chooser","properties":{"topic":"/SmartDashboard/Auto Selector","period":0.06}},{"title":"Shift Timer","x":384.0,"y":0.0,"width":768.0,"height":512.0,"type":"Match Time","properties":{"topic":"/AdvantageKit/RealOutputs/Shift Timer","period":0.06,"data_type":"double","time_display_mode":"Minutes and Seconds","red_start_time":5,"yellow_start_time":15}},{"title":"limelight-side","x":0.0,"y":256.0,"width":384.0,"height":256.0,"type":"Camera Stream","properties":{"topic":"/CameraPublisher/limelight-side","period":0.06}},{"title":"RollerVelocity","x":1152.0,"y":128.0,"width":256.0,"height":128.0,"type":"Text Display","properties":{"topic":"/AdvantageKit/Intake/RollerVelocity","period":0.06,"data_type":"double"}},{"title":"RollerVoltage","x":1152.0,"y":256.0,"width":128.0,"height":128.0,"type":"Text Display","properties":{"topic":"/AdvantageKit/Intake/RollerVoltage","period":0.06,"data_type":"double"}},{"title":"RollerCurrent","x":1152.0,"y":384.0,"width":256.0,"height":128.0,"type":"Text Display","properties":{"topic":"/AdvantageKit/Intake/RollerCurrent","period":0.06,"data_type":"double"}},{"title":"limelight","x":0.0,"y":0.0,"width":384.0,"height":256.0,"type":"Camera Stream","properties":{"topic":"/CameraPublisher/limelight","period":0.06}}]}}]}
+{
+  "version": 1.0,
+  "grid_size": 128,
+  "tabs": [
+    {
+      "name": "Dashboard",
+      "grid_layout": {
+        "layouts": [],
+        "containers": [
+          {
+            "title": "Auto Selector",
+            "x": 0.0,
+            "y": 384.0,
+            "width": 384.0,
+            "height": 128.0,
+            "type": "ComboBox Chooser",
+            "properties": {
+              "topic": "/SmartDashboard/Auto Selector",
+              "period": 0.06,
+              "sort_options": false
+            }
+          },
+          {
+            "title": "limelight",
+            "x": 0.0,
+            "y": 0.0,
+            "width": 384.0,
+            "height": 384.0,
+            "type": "Camera Stream",
+            "properties": {
+              "topic": "/CameraPublisher/limelight",
+              "period": 0.06,
+              "rotation_turns": 0
+            }
+          },
+          {
+            "title": "Current Shift",
+            "x": 384.0,
+            "y": 384.0,
+            "width": 512.0,
+            "height": 256.0,
+            "type": "Large Text Display",
+            "properties": {
+              "topic": "/AdvantageKit/RealOutputs/Current Shift",
+              "period": 0.06,
+              "data_type": "string"
+            }
+          },
+          {
+            "title": "Hub Active",
+            "x": 896.0,
+            "y": 0.0,
+            "width": 256.0,
+            "height": 384.0,
+            "type": "Boolean Box",
+            "properties": {
+              "topic": "/AdvantageKit/RealOutputs/Hub Active",
+              "period": 0.06,
+              "data_type": "boolean",
+              "true_color": 4283215696,
+              "false_color": 4294198070,
+              "true_icon": "None",
+              "false_icon": "None"
+            }
+          },
+          {
+            "title": "Hub Aligned",
+            "x": 1152.0,
+            "y": 128.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Boolean Box",
+            "properties": {
+              "topic": "/AdvantageKit/RealOutputs/Hub Aligned",
+              "period": 0.06,
+              "data_type": "boolean",
+              "true_color": 4283215696,
+              "false_color": 4294198070,
+              "true_icon": "None",
+              "false_icon": "None"
+            }
+          },
+          {
+            "title": "Shooter Spun Up",
+            "x": 1152.0,
+            "y": 0.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Boolean Box",
+            "properties": {
+              "topic": "/AdvantageKit/RealOutputs/Shooter Spun Up",
+              "period": 0.06,
+              "data_type": "boolean",
+              "true_color": 4283215696,
+              "false_color": 4294198070,
+              "true_icon": "None",
+              "false_icon": "None"
+            }
+          },
+          {
+            "title": "Spindexer Clogged",
+            "x": 1152.0,
+            "y": 256.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Boolean Box",
+            "properties": {
+              "topic": "/AdvantageKit/RealOutputs/Spindexer Clogged",
+              "period": 0.06,
+              "data_type": "boolean",
+              "true_color": 4283215696,
+              "false_color": 4294198070,
+              "true_icon": "None",
+              "false_icon": "None"
+            }
+          },
+          {
+            "title": "Remaining Shift Time",
+            "x": 384.0,
+            "y": 0.0,
+            "width": 512.0,
+            "height": 384.0,
+            "type": "Large Text Display",
+            "properties": {
+              "topic": "/AdvantageKit/RealOutputs/Remaining Shift Time",
+              "period": 0.06,
+              "data_type": "double"
+            }
+          },
+          {
+            "title": "Did We Win Auto?",
+            "x": 0.0,
+            "y": 512.0,
+            "width": 384.0,
+            "height": 128.0,
+            "type": "Single Color View",
+            "properties": {
+              "topic": "/AdvantageKit/RealOutputs/Did We Win Auto?",
+              "period": 0.06,
+              "data_type": "string"
+            }
+          },
+          {
+            "title": "Fuel Will Score",
+            "x": 896.0,
+            "y": 384.0,
+            "width": 256.0,
+            "height": 256.0,
+            "type": "Boolean Box",
+            "properties": {
+              "topic": "/AdvantageKit/RealOutputs/Fuel Will Score",
+              "period": 0.06,
+              "data_type": "boolean",
+              "true_color": 4283215696,
+              "false_color": 4294198070,
+              "true_icon": "None",
+              "false_icon": "None"
+            }
+          },
+          {
+            "title": "Intake State",
+            "x": 1152.0,
+            "y": 384.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Large Text Display",
+            "properties": {
+              "topic": "/AdvantageKit/RealOutputs/Intake State",
+              "period": 0.06,
+              "data_type": "string"
+            }
+          },
+          {
+            "title": "RollerVelocity",
+            "x": 1152.0,
+            "y": 512.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Number Bar",
+            "properties": {
+              "topic": "/AdvantageKit/Intake/RollerVelocity",
+              "period": 0.06,
+              "data_type": "double",
+              "min_value": 0.0,
+              "max_value": 3000.0,
+              "divisions": 3,
+              "inverted": false,
+              "orientation": "horizontal"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

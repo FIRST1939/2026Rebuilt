@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import java.util.Optional;
+
 import org.ironmaple.simulation.SimulatedArena;
 import org.ironmaple.simulation.seasonspecific.rebuilt2026.Arena2026Rebuilt;
 import org.littletonrobotics.junction.LoggedRobot;
@@ -11,8 +13,10 @@ import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.NT4Publisher;
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.util.MatchClock;
 import frc.robot.util.ShiftUtil;
 import frc.robot.util.ShiftUtil.Shift;
 
@@ -51,6 +55,7 @@ public class Robot extends LoggedRobot {
     public void robotPeriodic() {
 
         CommandScheduler.getInstance().run();
+        MatchClock.syncFMS();
 
         m_robotContainer.updateShotSolutions();
         m_robotContainer.displayShotConditions();
@@ -62,9 +67,18 @@ public class Robot extends LoggedRobot {
     public void updateActiveDisplay () {
 
         Shift currentShift = ShiftUtil.getCurrentShift();
-        String activeText = currentShift.isActive() ? " (Active)" : " (Inactive)";
-        Logger.recordOutput("Current Shift", currentShift.getName() + activeText);
-        Logger.recordOutput("Shift Timer", currentShift.getSecondsRemaining());
+        Logger.recordOutput("Hub Active", currentShift.isActive());
+        Logger.recordOutput("Current Shift", currentShift.getName());
+        Logger.recordOutput("Remaining Shift Time", Math.round(currentShift.getSecondsRemaining() * 10.0) / 10.0);
+
+        Optional<Boolean> activeFirst = ShiftUtil.activeFirst();
+        Color autoDashboardColor;
+
+        if (activeFirst.isEmpty()) { autoDashboardColor = new Color(253, 245, 60); } // Yelow
+        else if (activeFirst.get()) { autoDashboardColor = new Color(244, 67, 54); } // Red
+        else { autoDashboardColor = new Color(76, 175, 80); } // Green
+
+        Logger.recordOutput("Did We Win Auto?", autoDashboardColor.toHexString());
     }
 
     @Override
@@ -85,6 +99,7 @@ public class Robot extends LoggedRobot {
             m_robotContainer.simulateAutoPreload();
         }
 
+        MatchClock.startAutonomousClock();
         m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
         if (m_autonomousCommand != null) {
@@ -97,7 +112,11 @@ public class Robot extends LoggedRobot {
     public void autonomousPeriodic() {}
 
     @Override
-    public void autonomousExit() {}
+    public void autonomousExit() {
+
+        MatchClock.stopClock();
+        ShiftUtil.m_autoRun = true;
+    }
 
     @Override
     public void teleopInit() {
@@ -105,13 +124,18 @@ public class Robot extends LoggedRobot {
 
             m_autonomousCommand.cancel();
         }
+
+        MatchClock.startTeleopClock();
     }
 
     @Override
     public void teleopPeriodic() {}
 
     @Override
-    public void teleopExit() {}
+    public void teleopExit() {
+
+        MatchClock.stopClock();
+    }
 
     @Override
     public void simulationPeriodic() {
