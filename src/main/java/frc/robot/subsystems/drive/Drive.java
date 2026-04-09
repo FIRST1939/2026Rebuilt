@@ -38,8 +38,8 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import frc.robot.Constants;
-import frc.robot.Constants.Mode;
+import frc.robot.Constants.*;
+import frc.robot.Constants.ModeConstants.Mode;
 import frc.robot.generated.TunerConstants;
 import frc.robot.util.LocalADStarAK;
 import java.util.concurrent.locks.Lock;
@@ -126,10 +126,10 @@ public class Drive extends SubsystemBase {
     AutoBuilder.configure(
         this::getPose,
         this::setPose,
-        this::getChassisSpeeds,
+        this::getRobotRelativeChassisSpeeds,
         this::runVelocity,
         new PPHolonomicDriveController(
-            new PIDConstants(5.0, 0.0, 0.0), new PIDConstants(5.0, 0.0, 0.0)),
+            new PIDConstants(5.0, 0.0, 0.0), new PIDConstants(DriveConstants.kAngleControllerP, DriveConstants.kAngleControllerI, DriveConstants.kAngleControllerD)),
         PP_CONFIG,
         () -> Util.isRedAlliance(),
         this);
@@ -213,7 +213,7 @@ public class Drive extends SubsystemBase {
     }
 
     // Update gyro alert
-    gyroDisconnectedAlert.set(!gyroInputs.connected && Constants.currentMode != Mode.SIM);
+    gyroDisconnectedAlert.set(!gyroInputs.connected && ModeConstants.currentMode != Mode.SIM);
   }
 
   /**
@@ -298,12 +298,16 @@ public class Drive extends SubsystemBase {
 
   /** Returns the measured chassis speeds of the robot. */
   @AutoLogOutput(key = "SwerveChassisSpeeds/Measured")
-  public ChassisSpeeds getChassisSpeeds() {
+  public ChassisSpeeds getRobotRelativeChassisSpeeds() {
     return kinematics.toChassisSpeeds(getModuleStates());
   }
 
+  public ChassisSpeeds getFieldRelativeChassisSpeeds() {
+    return ChassisSpeeds.fromRobotRelativeSpeeds(getRobotRelativeChassisSpeeds(), getRotation());
+  }
+
   public double getSpeed() {
-    ChassisSpeeds chassisSpeeds = getChassisSpeeds();
+    ChassisSpeeds chassisSpeeds = getFieldRelativeChassisSpeeds();
     return Math.hypot(chassisSpeeds.vxMetersPerSecond, chassisSpeeds.vyMetersPerSecond);
   }
 
@@ -334,6 +338,12 @@ public class Drive extends SubsystemBase {
   /** Returns the current odometry rotation. */
   public Rotation2d getRotation() {
     return getPose().getRotation();
+  }
+
+  public boolean atTargetRotation(Rotation2d target) {
+
+    Logger.recordOutput("Angle Error", Math.abs(target.minus(getRotation()).getRadians()));
+    return Math.abs(target.minus(getRotation()).getRadians()) <= DriveConstants.kAngleTolerance;
   }
 
   /** Resets the current odometry pose. */

@@ -59,11 +59,13 @@ public class RobotContainer {
     private final Climber m_climber;
 
     private SwerveDriveSimulation m_swerveDriveSimulation = null;
+    private RobotBumpSim m_robotBumpSim = null;
     private IntakeSimulation m_intakeSimulation = null;
     private Timer m_simulatedShotTimer = new Timer();
     
     private final IntakeStateManager m_intakeStateManager;
     private final ShotSolver m_shotSolver;
+    private final FerrySolver m_ferrySolver;
     
     private enum OpModes {
         MATCH,
@@ -133,6 +135,8 @@ public class RobotContainer {
                 new Pose2d()
             );
 
+            m_robotBumpSim = new RobotBumpSim(Drive.getModuleTranslations());
+
             m_intakeSimulation = IntakeSimulation.OverTheBumperIntake(
                 "Fuel", 
                 m_swerveDriveSimulation, 
@@ -178,6 +182,7 @@ public class RobotContainer {
 
         m_intakeStateManager = new IntakeStateManager(m_intake);
         m_shotSolver = new ShotSolver();
+        m_ferrySolver = new FerrySolver();
 
         m_opModeSelector.addDefaultOption("Match", OpModes.MATCH);
         m_opModeSelector.addOption("Percent", OpModes.PERCENT);
@@ -198,6 +203,7 @@ public class RobotContainer {
             m_climber, 
             m_intakeStateManager, 
             m_shotSolver, 
+            m_ferrySolver,
             m_driverController, 
             m_operatorController
         );
@@ -221,20 +227,47 @@ public class RobotContainer {
         return m_autoSelector.get();
     }
 
-    public void updateShotSolution() {
+    public void updateShotSolutions() {
 
-        m_shotSolver.calculateShotSolution(m_drive.getPose(), m_drive.getChassisSpeeds());
+        m_shotSolver.calculateShotSolution(m_drive.getPose(), m_drive.getFieldRelativeChassisSpeeds());
+        m_ferrySolver.calculateFerrySolution(m_drive.getPose(), m_drive.getFieldRelativeChassisSpeeds());
     }
     
-    public void checkHubAlignment() {
+    public void displayShotConditions() {
 
-        double error = Math.abs(m_drive.getRotation().getDegrees() - m_shotSolver.getShotSolution().aimHeading.getDegrees());
-        Logger.recordOutput("Hub Aligned", error < 1.5);
+        Logger.recordOutput("Shooter Spun Up", m_shooter.isAtGoal());
+        Logger.recordOutput("Fuel Will Score", ShiftUtil.fuelWillScore(m_shotSolver.getShotSolution().timeOfFlight));
+        Logger.recordOutput("Hub Aligned", m_drive.atTargetRotation(m_shotSolver.getShotSolution().aimHeading));
+    }
+
+    public void displayTargetHeading() {
+
+        Logger.recordOutput(
+            "TargetHeading", 
+            new Pose2d(
+                m_drive.getPose().getTranslation(),
+                m_shotSolver.getShotSolution().aimHeading
+            )
+        );
     }
 
     public void simulateAutoPreload() {
 
         m_intakeSimulation.setGamePiecesCount(8);
+    }
+
+    public void simulateBump() {
+
+        Pose2d simPose = m_swerveDriveSimulation.getSimulatedDriveTrainPose();
+        ChassisSpeeds fieldRelativeSpeeds = m_swerveDriveSimulation.getDriveTrainSimulatedChassisSpeedsFieldRelative();
+        Pose3d simPose3d = m_robotBumpSim.update(simPose, fieldRelativeSpeeds, 5);
+
+        if (m_robotBumpSim.isOnRamp()) {
+            
+            m_swerveDriveSimulation.setSimulationWorldPose(m_robotBumpSim.getSimWorldPose(simPose));
+        }
+
+        Logger.recordOutput("FieldSimulation/RobotPosition", simPose3d);
     }
 
     public void simulateIntakeBody() {
@@ -279,7 +312,7 @@ public class RobotContainer {
             chassisSpeeds, 
             robotPose.getRotation().plus(Rotation2d.fromRadians(Math.PI)), 
             Meters.of(0.413243), 
-            MetersPerSecond.of(m_shooter.getFlywheelVelocity() * (0.1016 * Math.PI) * (1.0 / 60.0) - 8.5),
+            MetersPerSecond.of(m_shooter.getFlywheelVelocity() * (0.1016 * Math.PI) * (1.0 / 60.0) * 0.5),
             Rotations.of(0.25 - m_shooter.getHoodPosition())
         );
 
@@ -287,9 +320,8 @@ public class RobotContainer {
         m_simulatedShotTimer.restart();
     }
 
-    public void displayFieldSimToAdvantageScope() {
+    public void displayFuelSimToAdvantageScope() {
 
-        Logger.recordOutput("FieldSimulation/RobotPosition", m_swerveDriveSimulation.getSimulatedDriveTrainPose());
         Logger.recordOutput("FieldSimulation/Fuel", SimulatedArena.getInstance().getGamePiecesArrayByType("Fuel"));
     }
 

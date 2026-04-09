@@ -16,61 +16,85 @@ import edu.wpi.first.wpilibj.RobotBase;
  */
 public final class Constants {
 
-    public static final Mode simMode = Mode.SIM;
-    public static final Mode currentMode = RobotBase.isReal() ? Mode.REAL : simMode;
+    public static class ModeConstants {
 
-    public static enum Mode {
-        REAL,
-        SIM,
-        REPLAY
+        public static final Mode simMode = Mode.SIM;
+        public static final Mode currentMode = RobotBase.isReal() ? Mode.REAL : simMode;
+
+        public static enum Mode {
+            REAL,
+            SIM,
+            REPLAY
+        }
     }
 
-    public static final double kFeederVelocity = 1500.0;
-    public static final double kPivotOutSetpoint = 0.35;
-    public static final double kPivotAgitateOutSetpoint = 0.3;
-    public static final double kPivotLightSetpoint = 0.2; // 0.275
-    public static final double kPivotInSetpoint = 0.1;
-    
-    public static final double kPivotZeroPercentage = -0.25;
+    public static class FieldUtilConstants {
 
-    public static final double kSpindexerVelocity = 300.0;
-    public static final double kSpindexerReverseVelocity = -180.0;
-    public static final double kFeederReverseVelocity = -1500.0;
-    public static final double kRollerReverseVelocity = -2750.0;
+        public static boolean disableHAL = false;
 
-    public static final double kClimberClimbingPercentage = -0.6;
-    public static final double kClimberReleasingPercentage = 0.2;
-    public static final double kClimberRaisingPercentage = 0.2;
-    public static final double kRollerPercentage = 1.0;
-    public static final double kConversionFactor = (1.0 / 0.0254) * (1.0 / (3.0 * Math.PI)) * (60.0 / 1.0);
-    public static final double kBaseRollerIntakeVelocity = 3000.0; //1350
-    public static final double kAgitateIntakeInterval = 0.25;
+        public static void disableHAL() {
+            disableHAL = true;
+        }
+    }
 
-    public static final double kAutoAgitateIntakeInterval = 0.25;
-    public static final double kAgitateIntakeOffset = 0.05;
-    public static final double kRollerIntakeVelocity = 3000.0;
-    public static final double kRollerAgitateVelocity = 1250.0;
-    public static final double kPivotIdleSetpoint = 0.100;
+    public static class ControllerConstants {
 
-    public static final double kHubFlywheelVelocity = 2750;
-    public static final double kOutpostFlywheelVelocity = 750.0;
-    public static final double kTowerFlywheelVelocity = 3000;
-    public static final double kTrenchFlywheelVelocity = 3250;
+        public static final double kJoystickDeadband = 0.1;
+    }
 
-    public static final double kHubHoodSetpoint = 0.0125;
-    public static final double kOutpostHoodSetpoint = 0.05;
-    public static final double kTowerHoodSetpoint = 0.047;
-    public static final double kTrenchHoodSetpoint = 0.0458;
-    
-    public static final double kRaisingClimberSetpoint = 14.0;
-    public static final double kLoweringClimberSetpoint = 0.5;
+    public static class IntakeConstants {
 
-    public static final double kRaisingClimberPercentage = 0.75;
-    public static final double kLoweringClimberPercentage = -0.75;
+        public static final double kPivotOutSetpoint = 0.35;
+        public static final double kPivotIdleSetpoint = 0.1;
+        public static final double kPivotAgitateOutSetpoint = 0.3;
+        public static final double kPivotAgitateInSetpoint = 0.2;
 
-    public static boolean disableHAL = false;
+        public static final double kPivotStowingPercentage = -0.25;
+        public static final double kPivotExtendedPercentage = 0.1;
+        public static final double kPivotIntakePercentage = 0.25;
 
-    public static void disableHAL() {
-        disableHAL = true;
+        // Not Current Used
+        public static final double kRollerConversionFactor = (1.0 / 0.0254) * (1.0 / (3.0 * Math.PI)) * (60.0 / 1.0);
+        public static final double kRollerBaseIntakeVelocity = 3000.0;
+
+        // Currently Used
+        public static final double kRollerIntakePercentage = 1.0;
+
+        public static final double kRollerAgitateVelocity = 1250.0;
+        public static final double kRollerReverseVelocity = -2750.0;
+    }
+
+    public static class SpindexerConstants {
+
+        public static final double kSpindexerPercentage = 1.0;
+        public static final double kSpindexerReversePercentage = -0.5;
+    }
+
+    public static class FeederConstants {
+
+        public static final double kFeederVelocity = 1500.0;
+        public static final double kFeederReverseVelocity = -1500.0;
+    }
+
+    public static class ShooterConstants {
+
+        public static final double kHubFlywheelVelocity = 2750;
+        public static final double kOutpostFlywheelVelocity = 1500.0;
+        public static final double kTowerFlywheelVelocity = 3000;
+        public static final double kTrenchFlywheelVelocity = 3250;
+
+        public static final double kHubHoodSetpoint = 0.0125;
+        public static final double kOutpostHoodSetpoint = 0.05;
+        public static final double kTowerHoodSetpoint = 0.047;
+        public static final double kTrenchHoodSetpoint = 0.0458;
+    }
+
+    public static class ClimberConstants {
+        
+        public static final double kRaisingClimberSetpoint = 14.0;
+        public static final double kLoweringClimberSetpoint = 0.5;
+
+        public static final double kRaisingClimberPercentage = 0.75;
+        public static final double kLoweringClimberPercentage = -0.75;
     }
 }

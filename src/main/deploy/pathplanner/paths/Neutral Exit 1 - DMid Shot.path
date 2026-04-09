@@ -3,69 +3,65 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.388402282458444,
-        "y": 7.431398002848417
-      },
-      "prevControl": null,
-      "nextControl": {
-        "x": 8.388402282458443,
-        "y": 7.431398002848417
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 8.125,
-        "y": 5.0
-      },
-      "prevControl": {
-        "x": 8.125,
-        "y": 7.75
-      },
-      "nextControl": {
-        "x": 8.125,
-        "y": 3.0
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
         "x": 6.5,
         "y": 5.839942938659058
       },
-      "prevControl": {
+      "prevControl": null,
+      "nextControl": {
         "x": 6.5,
-        "y": 4.170942938659058
+        "y": 6.839942938659058
+      },
+      "isLocked": false,
+      "linkedName": "Neutral Exit 1"
+    },
+    {
+      "anchor": {
+        "x": 5.342428072689229,
+        "y": 7.6
+      },
+      "prevControl": {
+        "x": 7.3348174688727195,
+        "y": 7.425688514504683
+      },
+      "nextControl": {
+        "x": 4.395364609907885,
+        "y": 7.682857316632973
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 2.6094457831325304,
+        "y": 6.865277108433735
+      },
+      "prevControl": {
+        "x": 3.475471186916969,
+        "y": 7.365277108433735
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Middle-Exit"
+      "linkedName": "DMid Shot"
     }
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.5,
-      "rotationDegrees": -90.0
-    },
-    {
-      "waypointRelativePos": 1.0,
-      "rotationDegrees": -90.0
+      "waypointRelativePos": 0.8655742112810713,
+      "rotationDegrees": 180.0
     },
     {
       "waypointRelativePos": 1.5,
-      "rotationDegrees": 180.0
+      "rotationDegrees": -170.0
     }
   ],
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.0,
-      "maxWaypointRelativePos": 0.5124421296296295,
+      "minWaypointRelativePos": 0,
+      "maxWaypointRelativePos": 1.0,
       "constraints": {
-        "maxVelocity": 3.0,
-        "maxAcceleration": 7.0,
+        "maxVelocity": 1.5,
+        "maxAcceleration": 8.0,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,
         "nominalVoltage": 12.0,
@@ -74,11 +70,11 @@
     },
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.4317638623326963,
+      "minWaypointRelativePos": 1.5,
       "maxWaypointRelativePos": 2.0,
       "constraints": {
-        "maxVelocity": 3.0,
-        "maxAcceleration": 7.0,
+        "maxVelocity": 1.0,
+        "maxAcceleration": 8.0,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,
         "nominalVoltage": 12.0,
@@ -89,29 +85,35 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "Intake",
-      "waypointRelativePos": 0.1512491559756926,
+      "name": "Prepare DMid Shot",
+      "waypointRelativePos": 1.3558312655086826,
+      "endWaypointRelativePos": null,
+      "command": null
+    },
+    {
+      "name": "Stop Intake",
+      "waypointRelativePos": 2.0,
       "endWaypointRelativePos": null,
       "command": null
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 3.0,
-    "maxAcceleration": 7.0,
+    "maxVelocity": 1.5,
+    "maxAcceleration": 8.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 3.0,
-    "rotation": 90.0
+    "velocity": 0,
+    "rotation": 130.0
   },
   "reversed": false,
-  "folder": "DTrench-Middle",
+  "folder": "Neutral Starting",
   "idealStartingState": {
-    "velocity": 0,
-    "rotation": 180.0
+    "velocity": 1.5,
+    "rotation": 90.0
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }

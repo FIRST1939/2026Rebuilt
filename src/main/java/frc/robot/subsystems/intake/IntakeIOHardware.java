@@ -13,6 +13,7 @@ import com.revrobotics.spark.config.SparkFlexConfig;
 public class IntakeIOHardware implements IntakeIO {
     
     protected final SparkFlex m_rollerMotor = new SparkFlex(IntakeConstants.kRollerCAN, MotorType.kBrushless);
+    protected final SparkFlex m_rollerFollowerMotor = new SparkFlex(IntakeConstants.kRollerFollowerCAN, MotorType.kBrushless);
     protected final SparkFlex m_leftPivotMotor = new SparkFlex(IntakeConstants.kLeftPivotCAN, MotorType.kBrushless);
     protected final SparkFlex m_rightPivotMotor = new SparkFlex(IntakeConstants.kRightPivotCAN, MotorType.kBrushless);
     protected final RelativeEncoder m_rollerEncoder = m_rollerMotor.getEncoder();
@@ -24,25 +25,38 @@ public class IntakeIOHardware implements IntakeIO {
 
     public IntakeIOHardware () {
 
-        SparkFlexConfig rollerConfig = new SparkFlexConfig();
+        SparkFlexConfig globalRollerConfig = new SparkFlexConfig();
 
-        rollerConfig
+        globalRollerConfig
             .idleMode(IdleMode.kCoast)
-            .inverted(IntakeConstants.kRollerInverted)
             .voltageCompensation(12.0);
 
-        rollerConfig.encoder
+        globalRollerConfig.encoder
             .positionConversionFactor(IntakeConstants.kRollerGearing)
             .velocityConversionFactor(IntakeConstants.kRollerGearing);
 
-        rollerConfig.closedLoop
+        globalRollerConfig.closedLoop
             .p(IntakeConstants.kRollerFeedbackP)
             .feedForward
                 .kS(IntakeConstants.kRollerFeedforwardS)
                 .kV(IntakeConstants.kRollerFeedforwardV)
                 .kA(IntakeConstants.kRollerFeedforwardA);
 
+        SparkFlexConfig rollerConfig = new SparkFlexConfig();
+
+        rollerConfig
+            .apply(globalRollerConfig)
+            .inverted(IntakeConstants.kRollerInverted);
+
         m_rollerMotor.configure(rollerConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+
+        SparkFlexConfig rollerFollowerConfig = new SparkFlexConfig();
+
+        rollerFollowerConfig
+            .apply(globalRollerConfig)
+            .follow(m_rollerMotor, true);
+
+        m_rollerFollowerMotor.configure(rollerFollowerConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
         SparkFlexConfig globalPivotConfig = new SparkFlexConfig();
 

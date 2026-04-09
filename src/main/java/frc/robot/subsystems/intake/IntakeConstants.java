@@ -3,6 +3,7 @@ package frc.robot.subsystems.intake;
 public class IntakeConstants {
 
     public static final int kRollerCAN = 30;
+    public static final int kRollerFollowerCAN = 29;
     public static final double kRollerGearing = (20.0 / 40.0);
     public static final boolean kRollerInverted = false;
     public static final int kRollerCurrentlimit = 40;

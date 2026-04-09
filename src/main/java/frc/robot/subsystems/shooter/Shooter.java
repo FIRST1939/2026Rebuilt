@@ -141,6 +141,8 @@ public class Shooter extends SubsystemBase {
 
     public void setHoodPosition (double position) {
 
+        position = Math.min(position, 0.08);
+
         m_hoodTargetPosition = position;
         m_io.setHoodPosition(position);
     }
