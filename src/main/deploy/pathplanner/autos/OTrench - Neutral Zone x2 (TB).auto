@@ -13,13 +13,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "OCenterline - Neutral Exit 2"
+            "pathName": "OCenterline - OCenterline End"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Neutral Exit 2 - OMid Shot"
+            "pathName": "OCenterline End - OMid Shot"
           }
         },
         {
@@ -50,13 +50,25 @@
         {
           "type": "path",
           "data": {
-            "pathName": "OMid Shot - ONeutral Pass 2"
+            "pathName": "OMid Shot - ONeutral Pass 2A"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "ONeutral Pass 2 - Neutral OBump Exit"
+            "pathName": "ONeutral Pass 2A - Neutral OBump Exit"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Neutral OBump Exit - OBump Shot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot"
           }
         }
       ]

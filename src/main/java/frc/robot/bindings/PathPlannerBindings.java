@@ -6,6 +6,7 @@ import com.pathplanner.lib.events.EventTrigger;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import frc.robot.Constants.*;
@@ -16,6 +17,7 @@ import frc.robot.commands.intake.AgitateIntake;
 import frc.robot.commands.intake.DeepAgitateIntake;
 import frc.robot.commands.intake.IntakeStateManager.State;
 import frc.robot.commands.shooter.RunFlywheelAndHood;
+import frc.robot.commands.shooter.ZeroHood;
 import frc.robot.commands.spindexer.RunSpindexerPercentage;
 import frc.robot.util.MapUtil.ShotSolution;
 
@@ -32,6 +34,7 @@ public class PathPlannerBindings {
         new EventTrigger("Stop Intake").onTrue(
             Commands.runOnce(() -> {
                 bindingParams.intakeStateManager.clearMegaOverrideGoal();
+                bindingParams.intakeStateManager.clearOverrideGoal();
                 bindingParams.intakeStateManager.setGoalState(State.EXTENDED);
             })
         );
@@ -47,6 +50,8 @@ public class PathPlannerBindings {
                 bindingParams.intakeStateManager.setGoalState(State.STOWING)
             )
         );
+
+        Command zeroHood = new ZeroHood(bindingParams.shooter);
 
         ShotSolution dTrenchShotSolution = bindingParams.shotSolver.getPPShotSolution(
             new Pose2d(
@@ -91,9 +96,24 @@ public class PathPlannerBindings {
             () -> depotShotSolution.hoodPositionRotations
         );
 
+        ShotSolution bumpShotSolution = bindingParams.shotSolver.getPPShotSolution(
+            new Pose2d(
+                3.26,
+                5.412,
+                Rotation2d.fromDegrees(135)
+            )
+        );
+
+        Command prepareBumpShotSolution = new RunFlywheelAndHood(
+            bindingParams.shooter, 
+            () -> bumpShotSolution.flywheelRPM, 
+            () -> bumpShotSolution.hoodPositionRotations
+        );
+
         new EventTrigger("Prepare DTrench Shot").onTrue(prepareDTrenchShotCommand);
         new EventTrigger("Prepare DMid Shot").onTrue(prepareDMidShotCommand);
         new EventTrigger("Prepare Depot Shot").onTrue(prepareDepotShotCommand);
+        new EventTrigger("Prepare Bump Shot").onTrue(prepareBumpShotSolution);
 
         NamedCommands.registerCommand(
             "Stop Shot",
@@ -102,6 +122,9 @@ public class PathPlannerBindings {
                 prepareDTrenchShotCommand.cancel();
                 prepareDMidShotCommand.cancel();
                 prepareDepotShotCommand.cancel();
+                prepareBumpShotSolution.cancel();
+
+                CommandScheduler.getInstance().schedule(zeroHood);
             })
         );
 

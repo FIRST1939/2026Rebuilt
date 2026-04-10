@@ -13,13 +13,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "DCenterline - Neutral Exit 1"
+            "pathName": "DCenterline - Neutral DBump Exit"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Neutral Exit 1 - Depot Shot"
+            "pathName": "Neutral DBump Exit - DBump Shot"
           }
         },
         {
@@ -50,7 +50,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Depot Shot - Depo - DMid Shot"
+            "pathName": "DBump Shot - DNeutral Pass 2B"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "DNeutral Pass 2B - Neutral DBump Exit"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Neutral DBump Exit - Depot Shot"
           }
         },
         {

@@ -1,0 +1,100 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 3.2598323212336244,
+        "y": 5.412
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 1.8456187588605297,
+        "y": 6.826213562373095
+      },
+      "isLocked": false,
+      "linkedName": "DBump Shot"
+    },
+    {
+      "anchor": {
+        "x": 4.433125,
+        "y": 7.411463962427221
+      },
+      "prevControl": {
+        "x": 2.4331250000000004,
+        "y": 7.411463962427221
+      },
+      "nextControl": {
+        "x": 5.433125,
+        "y": 7.411463962427221
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 6.089218465702329,
+        "y": 6.528290574963609
+      },
+      "prevControl": {
+        "x": 6.089218465702329,
+        "y": 7.528290574963609
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "DNeutral Pass 2B"
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.75,
+      "rotationDegrees": 0.0
+    },
+    {
+      "waypointRelativePos": 1.3311125717017216,
+      "rotationDegrees": 0.0
+    }
+  ],
+  "constraintZones": [
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 0.0,
+      "maxWaypointRelativePos": 1.0,
+      "constraints": {
+        "maxVelocity": 2.0,
+        "maxAcceleration": 8.0,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    }
+  ],
+  "pointTowardsZones": [],
+  "eventMarkers": [
+    {
+      "name": "Start Intake",
+      "waypointRelativePos": 1.33,
+      "endWaypointRelativePos": null,
+      "command": null
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 2.5,
+    "maxAcceleration": 8.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": true
+  },
+  "goalEndState": {
+    "velocity": 3.5,
+    "rotation": -90.0
+  },
+  "reversed": false,
+  "folder": "To Neutral Under Trench",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 135.0
+  },
+  "useDefaultConstraints": true
+}

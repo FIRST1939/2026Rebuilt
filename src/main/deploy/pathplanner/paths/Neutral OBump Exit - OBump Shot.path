@@ -4,51 +4,37 @@
     {
       "anchor": {
         "x": 5.9314698795180725,
-        "y": 5.41189156626506
+        "y": 2.6642
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.9314698795180725,
-        "y": 5.41189156626506
+        "x": 4.9314698795180725,
+        "y": 2.6642
       },
       "isLocked": false,
-      "linkedName": "Neutral DBump Exit"
+      "linkedName": "Neutral OBump Exit"
     },
     {
       "anchor": {
-        "x": 1.702,
-        "y": 5.839942938659058
+        "x": 3.2598323212336244,
+        "y": 2.6642
       },
       "prevControl": {
-        "x": 2.584947592858927,
-        "y": 5.3704713758731675
+        "x": 4.259832321233624,
+        "y": 2.6642
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Depot Shot"
+      "linkedName": "OBump Shot"
     }
   ],
   "rotationTargets": [],
-  "constraintZones": [
-    {
-      "name": "Constraints Zone",
-      "minWaypointRelativePos": 0,
-      "maxWaypointRelativePos": 0.3841191066997523,
-      "constraints": {
-        "maxVelocity": 3.0,
-        "maxAcceleration": 8.0,
-        "maxAngularVelocity": 540.0,
-        "maxAngularAcceleration": 720.0,
-        "nominalVoltage": 12.0,
-        "unlimited": false
-      }
-    }
-  ],
+  "constraintZones": [],
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "Prepare Depot Shot",
-      "waypointRelativePos": 0.42,
+      "name": "Prepare Bump Shot",
+      "waypointRelativePos": 0,
       "endWaypointRelativePos": null,
       "command": null
     },
@@ -60,7 +46,7 @@
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 2.5,
+    "maxVelocity": 3.0,
     "maxAcceleration": 8.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
@@ -69,13 +55,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 152.0
+    "rotation": -135.0
   },
   "reversed": false,
   "folder": "To Zone Over Bump",
   "idealStartingState": {
     "velocity": 3.0,
-    "rotation": 135.0
+    "rotation": -135.0
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }

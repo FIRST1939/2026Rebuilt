@@ -3,37 +3,37 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 5.9314698795180725,
-        "y": 5.41189156626506
+        "x": 8.25,
+        "y": 6.546
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.9314698795180725,
-        "y": 5.41189156626506
+        "x": 8.25,
+        "y": 4.796
       },
       "isLocked": false,
-      "linkedName": "Neutral DBump Exit"
+      "linkedName": "DCenterline"
     },
     {
       "anchor": {
-        "x": 1.702,
-        "y": 5.839942938659058
+        "x": 5.9314698795180725,
+        "y": 5.41189156626506
       },
       "prevControl": {
-        "x": 2.584947592858927,
-        "y": 5.3704713758731675
+        "x": 7.430922392735305,
+        "y": 5.371367985395103
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Depot Shot"
+      "linkedName": "Neutral DBump Exit"
     }
   ],
   "rotationTargets": [],
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 0,
-      "maxWaypointRelativePos": 0.3841191066997523,
+      "minWaypointRelativePos": 0.75,
+      "maxWaypointRelativePos": 1.0,
       "constraints": {
         "maxVelocity": 3.0,
         "maxAcceleration": 8.0,
@@ -45,22 +45,9 @@
     }
   ],
   "pointTowardsZones": [],
-  "eventMarkers": [
-    {
-      "name": "Prepare Depot Shot",
-      "waypointRelativePos": 0.42,
-      "endWaypointRelativePos": null,
-      "command": null
-    },
-    {
-      "name": "Stop Intake",
-      "waypointRelativePos": 1.0,
-      "endWaypointRelativePos": null,
-      "command": null
-    }
-  ],
+  "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 2.5,
+    "maxVelocity": 2.0,
     "maxAcceleration": 8.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
@@ -68,14 +55,14 @@
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 0,
-    "rotation": 152.0
-  },
-  "reversed": false,
-  "folder": "To Zone Over Bump",
-  "idealStartingState": {
     "velocity": 3.0,
     "rotation": 135.0
   },
-  "useDefaultConstraints": true
+  "reversed": false,
+  "folder": "Intake Neutral",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": -90.0
+  },
+  "useDefaultConstraints": false
 }

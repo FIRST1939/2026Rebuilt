@@ -1,0 +1,109 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 6.089218465702329,
+        "y": 6.528290574963609
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 6.089218465702329,
+        "y": 5.528290574963609
+      },
+      "isLocked": false,
+      "linkedName": "DNeutral Pass 2B"
+    },
+    {
+      "anchor": {
+        "x": 6.4914361012554584,
+        "y": 4.698664085243815
+      },
+      "prevControl": {
+        "x": 5.9914361012554584,
+        "y": 4.698664085243815
+      },
+      "nextControl": {
+        "x": 6.9914361012554584,
+        "y": 4.698664085243815
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 7.729953261462882,
+        "y": 5.0340116675764195
+      },
+      "prevControl": {
+        "x": 7.729953261462882,
+        "y": 4.5340116675764195
+      },
+      "nextControl": {
+        "x": 7.729953261462882,
+        "y": 5.5340116675764195
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 5.9314698795180725,
+        "y": 5.41189156626506
+      },
+      "prevControl": {
+        "x": 6.9314698795180725,
+        "y": 5.41189156626506
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Neutral DBump Exit"
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 1.0,
+      "rotationDegrees": 0.0
+    },
+    {
+      "waypointRelativePos": 2.0,
+      "rotationDegrees": 90.0
+    }
+  ],
+  "constraintZones": [
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 2.5,
+      "maxWaypointRelativePos": 3.0,
+      "constraints": {
+        "maxVelocity": 3.0,
+        "maxAcceleration": 8.0,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    }
+  ],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 2.0,
+    "maxAcceleration": 8.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 3.0,
+    "rotation": 135.0
+  },
+  "reversed": false,
+  "folder": "Intake Neutral",
+  "idealStartingState": {
+    "velocity": 3.5,
+    "rotation": -90.0
+  },
+  "useDefaultConstraints": false
+}

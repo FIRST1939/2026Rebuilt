@@ -7,19 +7,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "DTrench - DCenterline"
+            "pathName": "OTrench - OCenterline"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "DCenterline - Neutral DTrench Exit"
+            "pathName": "OCenterline - Neutral OBump Exit"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Neutral DTrench Exit - Depot Shot"
+            "pathName": "Neutral OBump Exit - OBump Shot"
           }
         },
         {
@@ -29,19 +29,13 @@
               {
                 "type": "wait",
                 "data": {
-                  "waitTime": 4.0
+                  "waitTime": 5.0
                 }
               },
               {
                 "type": "named",
                 "data": {
                   "name": "Shoot"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Raise Climber"
                 }
               }
             ]
@@ -54,34 +48,33 @@
           }
         },
         {
-          "type": "race",
+          "type": "path",
           "data": {
-            "commands": [
-              {
-                "type": "wait",
-                "data": {
-                  "waitTime": 5.5
-                }
-              },
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Depot Shot - Tower"
-                }
-              }
-            ]
+            "pathName": "OBump Shot - ONeutral Pass 2B"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "ONeutral Pass 2B - Neutral OBump Exit"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Neutral OBump Exit - OBump Shot"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "Lower Climber"
+            "name": "Shoot"
           }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": "DTrench Starting",
+  "folder": "OTrench Starting",
   "choreoAuto": false
 }
