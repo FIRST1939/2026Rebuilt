@@ -29,7 +29,8 @@ public class IntakeIOHardware implements IntakeIO {
 
         globalRollerConfig
             .idleMode(IdleMode.kCoast)
-            .voltageCompensation(12.0);
+            .voltageCompensation(12.0)
+            .smartCurrentLimit(IntakeConstants.kRollerCurrentLimit);
 
         globalRollerConfig.encoder
             .positionConversionFactor(IntakeConstants.kRollerGearing)

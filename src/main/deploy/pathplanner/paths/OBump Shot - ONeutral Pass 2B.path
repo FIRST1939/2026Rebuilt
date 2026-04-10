@@ -3,12 +3,12 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.2598323212336244,
+        "x": 3.26,
         "y": 2.6642
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.8456187588605297,
+        "x": 1.845786437626905,
         "y": 1.2499864376269052
       },
       "isLocked": false,
@@ -21,7 +21,7 @@
       },
       "prevControl": {
         "x": 2.4331250000000004,
-        "y": 0.6651999999999996
+        "y": 0.6651999999999998
       },
       "nextControl": {
         "x": 5.433125,
@@ -94,7 +94,7 @@
   "folder": "To Neutral Under Trench",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -135.0
+    "rotation": -145.0
   },
   "useDefaultConstraints": true
 }

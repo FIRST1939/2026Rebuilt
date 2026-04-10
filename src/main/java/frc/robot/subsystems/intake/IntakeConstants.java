@@ -6,7 +6,7 @@ public class IntakeConstants {
     public static final int kRollerFollowerCAN = 29;
     public static final double kRollerGearing = (20.0 / 40.0);
     public static final boolean kRollerInverted = false;
-    public static final int kRollerCurrentlimit = 40;
+    public static final int kRollerCurrentLimit = 60;
 
     public static final double kPivotGearing = (1.0 / 9.0) * (1.0 / 5.0);
     public static final int kPivotCurrentLimit = 40;

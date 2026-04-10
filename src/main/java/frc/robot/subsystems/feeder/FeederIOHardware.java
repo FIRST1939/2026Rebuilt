@@ -24,7 +24,8 @@ public class FeederIOHardware implements FeederIO {
         config
             .idleMode(IdleMode.kBrake)
             .inverted(FeederConstants.kInverted)
-            .voltageCompensation(12.0);
+            .voltageCompensation(12.0)
+            .smartCurrentLimit(FeederConstants.kCurrentLimit);
 
         config.encoder
             .positionConversionFactor(FeederConstants.kFeederGearing)

@@ -5,6 +5,7 @@ public class FeederConstants {
     public static final int kFeederCAN = 34;
     public static final boolean kInverted = false;
     public static final double kFeederGearing = (18.0 / 54.0) * (24.0 / 24.0);
+    public static final int kCurrentLimit = 60;
 
     public static final double kSysIdQuasistaticRampRate = 0.625;
     public static final double kSysIdDynamicStepUp = 6.0;
