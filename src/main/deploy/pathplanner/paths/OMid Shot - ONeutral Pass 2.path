@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.3784360918672713,
-        "y": 0.9941397779163373
+        "x": 1.3784360918672716,
+        "y": 0.9941397779163375
       },
       "isLocked": false,
       "linkedName": "OMid Shot"
@@ -57,6 +57,19 @@
   "constraintZones": [
     {
       "name": "Constraints Zone",
+      "minWaypointRelativePos": 1.34,
+      "maxWaypointRelativePos": 2.0,
+      "constraints": {
+        "maxVelocity": 3.5,
+        "maxAcceleration": 3.5,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    },
+    {
+      "name": "Constraints Zone",
       "minWaypointRelativePos": 0,
       "maxWaypointRelativePos": 0.68,
       "constraints": {
@@ -100,7 +113,7 @@
     "unlimited": true
   },
   "goalEndState": {
-    "velocity": 3.5,
+    "velocity": 0.75,
     "rotation": 90.0
   },
   "reversed": false,
