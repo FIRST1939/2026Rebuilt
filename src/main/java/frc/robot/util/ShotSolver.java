@@ -1,6 +1,10 @@
 package frc.robot.util;
 
+import static edu.wpi.first.units.Units.Inches;
+import static edu.wpi.first.units.Units.Meters;
+
 import org.littletonrobotics.junction.Logger;
+import org.littletonrobotics.junction.networktables.LoggedNetworkBoolean;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -37,6 +41,7 @@ public class ShotSolver {
     }
 
     private ShotSolution m_shotSolution = new ShotSolution(0, 0, new Rotation2d(), 0);
+    private static final LoggedNetworkBoolean m_modifyDistance = new LoggedNetworkBoolean("Modify Shot Distance", true);
 
     public ShotSolution getPPShotSolution(Pose2d robotPose) {
 
@@ -77,6 +82,16 @@ public class ShotSolver {
         // Distance from shooter to hub — used for RPM, hood, and time of flight lookup
         Translation2d shooterToTarget = Util.getHubPosition(useFlipLogic).minus(getShooterPose(robotPose).getTranslation());
         double distanceToTarget = shooterToTarget.getNorm();
+
+        Logger.recordOutput("ShotSolver/Distance Before", distanceToTarget);
+
+        if (m_modifyDistance.get()) {
+
+            distanceToTarget -= Inches.of(10).in(Meters);
+        }
+
+        Logger.recordOutput("ShotSolver/Distance After", distanceToTarget);
+
         ShooterParams params = kShooterMap.get(distanceToTarget);
 
         return new ShotSolution(

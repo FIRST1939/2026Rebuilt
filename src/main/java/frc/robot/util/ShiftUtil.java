@@ -26,6 +26,26 @@ public class ShiftUtil {
         public double getSecondsRemaining() { return m_secondsRemaining; }
     }
 
+    public static boolean gameDataNotSent() {
+
+        Optional<Boolean> redActiveFirst;
+        String gameData = DriverStation.getGameSpecificMessage();
+
+        if (gameData.isEmpty() || DriverStation.isAutonomous() || (DriverStation.isDisabled() && !m_autoRun)) {
+
+            redActiveFirst = Optional.empty();
+        } else {
+
+            switch (gameData.charAt(0)) { // Who Won Auto
+                case 'R' -> redActiveFirst = Optional.of(false);
+                case 'B' -> redActiveFirst = Optional.of(true);
+                default -> redActiveFirst = Optional.empty();
+            }
+        }
+
+        return redActiveFirst.isEmpty();
+    }
+
     public static Optional<Boolean> activeFirst() {
 
         Optional<Boolean> redActiveFirst;

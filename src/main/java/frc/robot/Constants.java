@@ -92,6 +92,8 @@ public final class Constants {
         public static final double kOutpostHoodSetpoint = 0.05;
         public static final double kTowerHoodSetpoint = 0.047;
         public static final double kTrenchHoodSetpoint = 0.0458;
+        public static final double kCornerFlywheelVelocity = 3600.0;
+        public static final double kCornerHoodPosition = 0.0625;
     }
 
     public static class ClimberConstants {

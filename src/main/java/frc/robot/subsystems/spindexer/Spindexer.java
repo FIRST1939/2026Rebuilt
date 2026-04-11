@@ -55,7 +55,7 @@ public class Spindexer extends SubsystemBase {
         Logger.processInputs("Spindexer", m_inputs);
 
         m_isClogged = m_cloggedDebouncer.calculate(m_inputs.spindexerCurrent > 60.0 && Math.abs(m_inputs.spindexerVelocity) < 30.0);
-        Logger.recordOutput("Spindexer Clogged", m_isClogged);
+        Logger.recordOutput("Clogged", m_isClogged);
     }
 
     public boolean isClogged () {

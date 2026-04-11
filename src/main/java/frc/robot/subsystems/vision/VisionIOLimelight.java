@@ -47,17 +47,6 @@ public class VisionIOLimelight implements VisionIO {
     tySubscriber = table.getDoubleTopic("ty").subscribe(0.0);
     megatag2Subscriber =
         table.getDoubleArrayTopic("botpose_orb_wpiblue").subscribe(new double[] {});
-
-    double[] entries = new double[6];
-
-    entries[0] = VisionConstants.robotToCamera0.getX();
-    entries[1] = VisionConstants.robotToCamera0.getY();
-    entries[2] = VisionConstants.robotToCamera0.getZ();
-    entries[3] = Math.toDegrees(VisionConstants.robotToCamera0.getRotation().getX());
-    entries[4] = Math.toDegrees(VisionConstants.robotToCamera0.getRotation().getY());
-    entries[5] = Math.toDegrees(VisionConstants.robotToCamera0.getRotation().getZ());
-
-    table.getEntry("camerapose_robotspace_set").setDoubleArray(entries);
   }
 
   @Override
