@@ -58,10 +58,11 @@ public class Robot extends LoggedRobot {
         MatchClock.syncFMS();
 
         m_robotContainer.updateShotSolutions();
+        updateActiveDisplay();
+
         m_robotContainer.displayShotConditions();
         m_robotContainer.displayTargetHeading();
-
-        updateActiveDisplay();
+        m_robotContainer.displayRobotComponentsInAdvantageScope();
     }
 
     public void updateActiveDisplay () {
@@ -126,6 +127,7 @@ public class Robot extends LoggedRobot {
         }
 
         MatchClock.startTeleopClock();
+        m_robotContainer.clearIntakeState();
     }
 
     @Override
@@ -144,9 +146,8 @@ public class Robot extends LoggedRobot {
         m_robotContainer.simulateBump();
         m_robotContainer.simulateIntakeBody();
         m_robotContainer.simulateShooting();
-
+        
         m_robotContainer.displayFuelSimToAdvantageScope();
-        m_robotContainer.displayRobotComponentsInAdvantageScope();
     }
 
     @Override

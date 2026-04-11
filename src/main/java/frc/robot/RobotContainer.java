@@ -227,6 +227,12 @@ public class RobotContainer {
         return m_autoSelector.get();
     }
 
+    public void clearIntakeState() {
+
+        m_intakeStateManager.clearMegaOverrideGoal();
+        m_intakeStateManager.clearOverrideGoal();
+    }
+
     public void updateShotSolutions() {
 
         m_shotSolver.calculateShotSolution(m_drive.getPose(), m_drive.getFieldRelativeChassisSpeeds());
