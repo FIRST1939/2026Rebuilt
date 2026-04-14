@@ -129,8 +129,7 @@ public class MatchBindings {
                             new RunSpindexerPercentage(bindingParams.spindexer, SpindexerConstants.kSpindexerPercentage),
                             new RunFeederAntiClog(bindingParams.feeder, bindingParams.spindexer),
                             new AgitateIntake(bindingParams.intake, bindingParams.intakeStateManager)
-                        ).onlyWhile(() -> (ShiftUtil.gameDataNotSent() || ShiftUtil.fuelWillScore(bindingParams.shotSolver.getShotSolution().timeOfFlight)) &&
-                        m_hubAlignedDebouncer.calculate(bindingParams.drive.atTargetRotation(bindingParams.shotSolver.getShotSolution().aimHeading)))
+                        ).onlyWhile(() -> ShiftUtil.gameDataNotSent() || ShiftUtil.fuelWillScore(bindingParams.shotSolver.getShotSolution().timeOfFlight))
                     )
                 )
             )
