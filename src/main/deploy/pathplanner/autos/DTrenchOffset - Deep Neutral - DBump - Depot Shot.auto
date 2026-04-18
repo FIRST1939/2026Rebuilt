@@ -25,7 +25,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "ONeutral -Neutral Deep DBump Exit - DTrench Shot"
+            "pathName": "ONeutral Deep - DBump Exit"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Neutral DBump Exit - Depot Shot"
           }
         },
         {
@@ -45,12 +51,6 @@
                 }
               }
             ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Stop Shot"
           }
         }
       ]
