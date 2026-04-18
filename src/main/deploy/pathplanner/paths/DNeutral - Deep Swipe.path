@@ -3,38 +3,43 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.388,
-        "y": 7.431398002848417
+        "x": 10.48783183224163,
+        "y": 7.103343113173217
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.388,
-        "y": 7.431398002848417
+        "x": 10.48783183224163,
+        "y": 6.066235014570363
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Deep Swipe Start"
     },
     {
       "anchor": {
-        "x": 10.56223162299755,
-        "y": 6.676491766742065
+        "x": 9.703043690866084,
+        "y": 2.4359530226528388
       },
       "prevControl": {
-        "x": 10.56223162299755,
-        "y": 7.676491766742065
+        "x": 11.47924860487545,
+        "y": 2.4359530226528388
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "DCenterline"
+      "linkedName": "DNeutralDeepSwipeEnd"
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.71,
+      "rotationDegrees": -90.0
+    }
+  ],
   "constraintZones": [],
   "pointTowardsZones": [],
   "eventMarkers": [
     {
       "name": "Start Intake",
-      "waypointRelativePos": 0.21994650900900903,
+      "waypointRelativePos": 0,
       "endWaypointRelativePos": null,
       "command": null
     }
@@ -45,16 +50,16 @@
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
-    "unlimited": true
+    "unlimited": false
   },
   "goalEndState": {
     "velocity": 3.5,
-    "rotation": -90.0
+    "rotation": 180.0
   },
   "reversed": false,
-  "folder": "DTrench Starting",
+  "folder": "Neutral Starting",
   "idealStartingState": {
-    "velocity": 0.0,
+    "velocity": 3.5,
     "rotation": -90.0
   },
   "useDefaultConstraints": true

@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 8.25,
-        "y": 6.546
+        "x": 10.56223162299755,
+        "y": 6.676491766742065
       },
       "prevControl": null,
       "nextControl": {
-        "x": 8.25,
-        "y": 5.546
+        "x": 10.56223162299755,
+        "y": 5.676491766742065
       },
       "isLocked": false,
       "linkedName": "DCenterline"
