@@ -17,15 +17,15 @@
     {
       "anchor": {
         "x": 5.978017706058952,
-        "y": 5.308069514283087
+        "y": 2.692
       },
       "prevControl": {
         "x": 8.474311751007788,
-        "y": 5.308069514283087
+        "y": 2.692
       },
       "nextControl": {
         "x": 3.3369002548784357,
-        "y": 5.308069514283087
+        "y": 2.692
       },
       "isLocked": false,
       "linkedName": null
@@ -33,31 +33,31 @@
     {
       "anchor": {
         "x": 3.0274576396470163,
-        "y": 5.308069514283087
+        "y": 2.692
       },
       "prevControl": {
         "x": 5.465232589897473,
-        "y": 5.308069514283087
+        "y": 2.692
       },
       "nextControl": {
         "x": 2.5909500733910305,
-        "y": 5.308069514283087
+        "y": 2.692
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.874579172610556,
-        "y": 7.25
+        "x": 2.875,
+        "y": 0.75
       },
       "prevControl": {
-        "x": 1.8745791726105558,
-        "y": 7.25
+        "x": 1.875,
+        "y": 0.75
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "DTrench-Shot"
+      "linkedName": null
     }
   ],
   "rotationTargets": [
