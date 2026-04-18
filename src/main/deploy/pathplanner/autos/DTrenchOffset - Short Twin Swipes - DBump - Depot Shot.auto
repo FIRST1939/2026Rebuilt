@@ -13,19 +13,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "DTrenchOffset - Neutral Deep"
+            "pathName": "DTrenchOffset -  Neutral Short"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "DNeutral - Deep Swipe"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "ONeutral Deep - DBump Exit"
+            "pathName": "DNeutral - Twin Swipes - Neutral DBump Exit "
           }
         },
         {

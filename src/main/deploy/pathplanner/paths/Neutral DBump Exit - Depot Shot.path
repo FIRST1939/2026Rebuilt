@@ -52,6 +52,12 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
+      "name": "Prepare Depot Shot",
+      "waypointRelativePos": 0.4097936007957555,
+      "endWaypointRelativePos": null,
+      "command": null
+    },
+    {
       "name": "Stop Intake",
       "waypointRelativePos": 1.0,
       "endWaypointRelativePos": null,

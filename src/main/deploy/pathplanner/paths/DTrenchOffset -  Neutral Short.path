@@ -1,0 +1,61 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 3.5648062789358343,
+        "y": 7.4645937499990165
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 4.564806278935834,
+        "y": 7.4645937499990165
+      },
+      "isLocked": false,
+      "linkedName": "DTrenchOffset"
+    },
+    {
+      "anchor": {
+        "x": 6.168654703420669,
+        "y": 6.513330831513829
+      },
+      "prevControl": {
+        "x": 6.168654703420669,
+        "y": 7.758248755987483
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "DNeutral - Short"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [
+    {
+      "name": "Start Intake",
+      "waypointRelativePos": 0.8574892241379314,
+      "endWaypointRelativePos": null,
+      "command": null
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 2.5,
+    "maxAcceleration": 8.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 3.0,
+    "rotation": -90.0
+  },
+  "reversed": false,
+  "folder": "DTrenchOffset Starting",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": -90.0
+  },
+  "useDefaultConstraints": true
+}
