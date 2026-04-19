@@ -4,38 +4,38 @@
     {
       "anchor": {
         "x": 9.703043690866084,
-        "y": 2.4359530226528388
+        "y": 5.564
       },
       "prevControl": null,
       "nextControl": {
         "x": 8.703043690866084,
-        "y": 2.4359530226528388
+        "y": 5.564
       },
       "isLocked": false,
-      "linkedName": "DNeutralDeepSwipeEnd"
+      "linkedName": "DDeepSwipeEnd"
     },
     {
       "anchor": {
         "x": 5.9314698795180725,
-        "y": 5.412
+        "y": 2.588
       },
       "prevControl": {
         "x": 6.9314698795180725,
-        "y": 5.412
+        "y": 2.588
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Neutral DBump Exit"
+      "linkedName": "Neutral OBump Exit"
     }
   ],
   "rotationTargets": [
     {
       "waypointRelativePos": 0.45,
-      "rotationDegrees": 130.0
+      "rotationDegrees": -130.0
     },
     {
       "waypointRelativePos": 0.7326292865044246,
-      "rotationDegrees": 140.0
+      "rotationDegrees": -140.0
     }
   ],
   "constraintZones": [],

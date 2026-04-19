@@ -4,12 +4,12 @@
     {
       "anchor": {
         "x": 5.9314698795180725,
-        "y": 5.41189156626506
+        "y": 5.412
       },
       "prevControl": null,
       "nextControl": {
         "x": 2.9314698795180725,
-        "y": 5.41189156626506
+        "y": 5.412
       },
       "isLocked": false,
       "linkedName": "Neutral DBump Exit"
@@ -17,11 +17,11 @@
     {
       "anchor": {
         "x": 1.702,
-        "y": 5.839942938659058
+        "y": 5.84
       },
       "prevControl": {
         "x": 2.584947592858927,
-        "y": 5.3704713758731675
+        "y": 5.3705284372141096
       },
       "nextControl": null,
       "isLocked": false,

@@ -4,12 +4,12 @@
     {
       "anchor": {
         "x": 1.702,
-        "y": 5.839942938659058
+        "y": 5.84
       },
       "prevControl": null,
       "nextControl": {
         "x": 1.7020000000000002,
-        "y": 7.839942938659058
+        "y": 7.84
       },
       "isLocked": false,
       "linkedName": "Depot Shot"
