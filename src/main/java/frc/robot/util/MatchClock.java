@@ -37,6 +37,7 @@ public class MatchClock {
 
     public static void syncFMS() {
 
+        if (DriverStation.getMatchTime() < 0) { return; }
         double fmsTime = Math.ceil(DriverStation.getMatchTime());
 
         if (fmsTime != m_lastFMSTime) {

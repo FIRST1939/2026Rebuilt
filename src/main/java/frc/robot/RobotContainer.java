@@ -52,6 +52,7 @@ import frc.robot.commands.intake.IntakeStateManager.State;
 public class RobotContainer {
 
     private final Drive m_drive;    
+    private final Vision m_vision;
     private final Intake m_intake;
     private final Spindexer m_spindexer;
     private final Feeder m_feeder;
@@ -96,7 +97,7 @@ public class RobotContainer {
                 (Pose2d pose) -> {}
             );
     
-            new Vision(
+            m_vision = new Vision(
                 m_drive::addVisionMeasurement,
                 new VisionIOLimelight(VisionConstants.camera0Name, m_drive::getRotation),
                 new VisionIOLimelight(VisionConstants.camera1Name, m_drive::getRotation)
@@ -158,7 +159,7 @@ public class RobotContainer {
                 (Pose2d pose) -> m_swerveDriveSimulation.setSimulationWorldPose(pose)
             );
 
-            new Vision(
+            m_vision = new Vision(
                 m_drive::addVisionMeasurement,
                 new VisionIOPhotonVisionSim(VisionConstants.camera0Name, VisionConstants.robotToCamera0, m_swerveDriveSimulation::getSimulatedDriveTrainPose),
                 new VisionIOPhotonVisionSim(VisionConstants.camera1Name, VisionConstants.robotToCamera1, m_swerveDriveSimulation::getSimulatedDriveTrainPose)

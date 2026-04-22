@@ -24,6 +24,7 @@ public class IntakeStateManager extends Command {
         IDLE,
         EXTENDED,
         INTAKING,
+        AGITATING,
         AGITATING_IN,
         AGITATING_OUT,
         DEEP_AGITATE_IN,
@@ -126,7 +127,13 @@ public class IntakeStateManager extends Command {
 
             m_intake.setPivotPercentage(IntakeConstants.kPivotIntakePercentage);
             m_intake.setRollerPercentage(IntakeConstants.kRollerIntakePercentage);
-        } else if (goalState == State.AGITATING_IN) {
+        }
+        else if (goalState == State.AGITATING) {
+
+            m_intake.setPivotPercentage(IntakeConstants.kAgitateIntakePercentage);
+            m_intake.setRollerVelocity(IntakeConstants.kRollerAgitateVelocity);
+        } 
+        else if (goalState == State.AGITATING_IN) {
 
             m_intake.setPivotPosition(IntakeConstants.kPivotAgitateInSetpoint);
             m_intake.setRollerVelocity(IntakeConstants.kRollerAgitateVelocity);

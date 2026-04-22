@@ -1,0 +1,43 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "DTrench - Depot"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Depot Shot 2 - DTrench"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "DTrench2 - DCenterline2"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "DCenterline2 - DCenterline2 End"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "DCenterline2 End - DMid Shot"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": null,
+  "choreoAuto": false
+}

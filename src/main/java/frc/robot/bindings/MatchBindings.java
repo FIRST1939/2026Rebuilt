@@ -127,8 +127,7 @@ public class MatchBindings {
                     new RepeatCommand(
                         Commands.parallel(
                             new RunSpindexerPercentage(bindingParams.spindexer, SpindexerConstants.kSpindexerPercentage),
-                            new RunFeederAntiClog(bindingParams.feeder, bindingParams.spindexer),
-                            new AgitateIntake(bindingParams.intake, bindingParams.intakeStateManager)
+                            new RunFeederAntiClog(bindingParams.feeder, bindingParams.spindexer)
                         ).onlyWhile(() -> ShiftUtil.gameDataNotSent() || ShiftUtil.fuelWillScore(bindingParams.shotSolver.getShotSolution().timeOfFlight))
                     )
                 )
@@ -169,8 +168,7 @@ public class MatchBindings {
                     new RepeatCommand(
                         Commands.parallel(
                             new RunSpindexerPercentage(bindingParams.spindexer, SpindexerConstants.kSpindexerPercentage),
-                            new RunFeederAntiClog(bindingParams.feeder, bindingParams.spindexer),
-                            new AgitateIntake(bindingParams.intake, bindingParams.intakeStateManager)
+                            new RunFeederAntiClog(bindingParams.feeder, bindingParams.spindexer)
                         )
                     )
                 )
@@ -204,7 +202,7 @@ public class MatchBindings {
         modeTrigger.and(bindingParams.operatorController.start()).onTrue(Commands.runOnce(() -> bindingParams.intakeStateManager.setGoalState(State.STOWING)));
         //Pivot Intake Stow
 
-        modeTrigger.and(bindingParams.operatorController.a()).onTrue(new DeepAgitateIntake(bindingParams.intake, bindingParams.intakeStateManager));
+        modeTrigger.and(bindingParams.operatorController.a()).whileTrue(new AgitateIntake(bindingParams.intake, bindingParams.intakeStateManager));
         //Pivot Agitate
         
         modeTrigger.and(bindingParams.operatorController.rightBumper()).onTrue(Commands.runOnce(() -> bindingParams.intakeStateManager.setMegaOverrideGoal(State.INTAKING)));

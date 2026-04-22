@@ -41,7 +41,7 @@ public class ShotSolver {
     }
 
     private ShotSolution m_shotSolution = new ShotSolution(0, 0, new Rotation2d(), 0);
-    private static final LoggedNetworkBoolean m_modifyDistance = new LoggedNetworkBoolean("Modify Shot Distance", true);
+    private static final LoggedNetworkBoolean m_modifyDistance = new LoggedNetworkBoolean("Modify Shot Distance", false);
 
     public ShotSolution getPPShotSolution(Pose2d robotPose) {
 

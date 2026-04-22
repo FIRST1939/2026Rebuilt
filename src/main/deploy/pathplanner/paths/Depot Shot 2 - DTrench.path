@@ -1,0 +1,68 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 1.6368795180722886,
+        "y": 6.450024096385542
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 1.9319277108433721,
+        "y": 6.908987951807229
+      },
+      "isLocked": false,
+      "linkedName": "DMid Shot"
+    },
+    {
+      "anchor": {
+        "x": 4.388,
+        "y": 7.431398002848417
+      },
+      "prevControl": {
+        "x": 3.5707325871792777,
+        "y": 7.431398002848417
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "DTrench"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 0,
+      "maxWaypointRelativePos": 1.0,
+      "constraints": {
+        "maxVelocity": 1.5,
+        "maxAcceleration": 8.0,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    }
+  ],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 2.5,
+    "maxAcceleration": 8.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 3.0,
+    "rotation": 180.0
+  },
+  "reversed": false,
+  "folder": "To Neutral Under Trench",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 135.0
+  },
+  "useDefaultConstraints": true
+}

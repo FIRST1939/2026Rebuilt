@@ -62,6 +62,7 @@ public final class Constants {
 
         public static final double kRollerAgitateVelocity = 1250.0;
         public static final double kRollerReverseVelocity = -2750.0;
+		public static final double kAgitateIntakePercentage = -0.10;
     }
 
     public static class SpindexerConstants {

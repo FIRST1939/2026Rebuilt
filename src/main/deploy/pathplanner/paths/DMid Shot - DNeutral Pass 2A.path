@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.6094457831325304,
-        "y": 6.865277108433735
+        "x": 1.6368795180722886,
+        "y": 6.450024096385542
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.5269140284019815,
-        "y": 7.490277108433735
+        "x": 0.5543477633417397,
+        "y": 7.075024096385542
       },
       "isLocked": false,
       "linkedName": "DMid Shot"
@@ -120,7 +120,7 @@
   "folder": "To Neutral Under Trench",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 130.0
+    "rotation": 135.0
   },
   "useDefaultConstraints": true
 }
