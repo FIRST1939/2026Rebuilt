@@ -3,36 +3,45 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.5,
-        "y": 4.0
+        "x": 3.5732667617689007,
+        "y": 0.6515406562054205
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.443880171184022,
-        "y": 5.64586305278174
+        "x": 5.573266761768901,
+        "y": 0.6515406562054205
       },
       "isLocked": false,
-      "linkedName": "Hub"
+      "linkedName": "OTrench"
     },
     {
       "anchor": {
-        "x": 0.435,
-        "y": 4.701340941512126
+        "x": 8.25,
+        "y": 1.5302
       },
       "prevControl": {
-        "x": 0.933780313837375,
-        "y": 4.753095577746078
+        "x": 8.231184022824536,
+        "y": 0.7421112696148362
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Depot Bottom"
+      "linkedName": "OCenterline"
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.06007604562737647,
+      "rotationDegrees": 180.0
+    },
+    {
+      "waypointRelativePos": 0.5,
+      "rotationDegrees": 170.0
+    }
+  ],
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.5,
+      "minWaypointRelativePos": 0.4996623902768399,
       "maxWaypointRelativePos": 1.0,
       "constraints": {
         "maxVelocity": 3.5,
@@ -48,13 +57,13 @@
   "eventMarkers": [
     {
       "name": "Start Intake",
-      "waypointRelativePos": 0.03511141120864224,
+      "waypointRelativePos": 0.21994650900900903,
       "endWaypointRelativePos": null,
       "command": null
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 2.0,
+    "maxVelocity": 3.0,
     "maxAcceleration": 6.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
@@ -62,14 +71,14 @@
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 1.25,
-    "rotation": 90.0
+    "velocity": 0.75,
+    "rotation": 119.99999999999999
   },
   "reversed": false,
   "folder": "Starting",
   "idealStartingState": {
     "velocity": 0.0,
-    "rotation": 180.0
+    "rotation": -100.0
   },
   "useDefaultConstraints": false
 }

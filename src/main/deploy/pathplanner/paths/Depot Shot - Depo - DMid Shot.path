@@ -145,7 +145,7 @@
     "rotation": 135.0
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Intake",
   "idealStartingState": {
     "velocity": 0,
     "rotation": 150.0

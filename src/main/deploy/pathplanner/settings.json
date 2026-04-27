@@ -3,10 +3,10 @@
   "robotLength": 0.855,
   "holonomicMode": true,
   "pathFolders": [
-    "Intake Neutral",
-    "To Zone Over Bump",
+    "Intake",
     "Starting",
     "To Neutral Under Trench",
+    "To Zone Over Bump",
     "To Zone Under Trench"
   ],
   "autoFolders": [

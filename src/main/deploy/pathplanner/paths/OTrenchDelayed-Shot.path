@@ -3,44 +3,37 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.435,
-        "y": 4.701340941512126
+        "x": 3.5732667617689007,
+        "y": 0.6515406562054205
       },
       "prevControl": null,
       "nextControl": {
-        "x": 0.3961840228245363,
-        "y": 5.374151212553496
+        "x": 3.8232667617689007,
+        "y": 0.6515406562054205
       },
       "isLocked": false,
-      "linkedName": "Depot Bottom"
+      "linkedName": null
     },
     {
       "anchor": {
-        "x": 0.44,
-        "y": 6.875035663338089
+        "x": 3.5732667617689007,
+        "y": 0.6515406562054205
       },
       "prevControl": {
-        "x": 0.44,
-        "y": 6.435121255349501
+        "x": 3.3232667617689007,
+        "y": 0.6515406562054205
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Depot Top"
+      "linkedName": "OTrench"
     }
   ],
   "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [
-    {
-      "name": "Prepare Depot Shot",
-      "waypointRelativePos": 0.715732613099252,
-      "endWaypointRelativePos": null,
-      "command": null
-    }
-  ],
+  "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 1.0,
+    "maxVelocity": 2.5,
     "maxAcceleration": 8.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
@@ -48,14 +41,14 @@
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 0.75,
-    "rotation": 90.0
+    "velocity": 0.0,
+    "rotation": -100.0
   },
   "reversed": false,
-  "folder": "Intake",
+  "folder": "Starting",
   "idealStartingState": {
-    "velocity": 0.75,
-    "rotation": 90.0
+    "velocity": 0,
+    "rotation": -90.0
   },
-  "useDefaultConstraints": false
+  "useDefaultConstraints": true
 }

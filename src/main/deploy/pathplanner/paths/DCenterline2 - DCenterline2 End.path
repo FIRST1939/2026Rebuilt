@@ -45,7 +45,7 @@
     "rotation": -90.0
   },
   "reversed": false,
-  "folder": "Intake Neutral",
+  "folder": "Intake",
   "idealStartingState": {
     "velocity": 0.75,
     "rotation": -90.0
