@@ -84,9 +84,9 @@ public class PathPlannerBindings {
 
         ShotSolution depotShotSolution = bindingParams.shotSolver.getPPShotSolution(
             new Pose2d(
-                1.702, 
-                5.84, 
-                Rotation2d.fromDegrees(150.0)
+                1.6, 
+                5.9, 
+                Rotation2d.fromDegrees(150)
             )
         );
 
@@ -135,16 +135,18 @@ public class PathPlannerBindings {
                 Commands.parallel(
                     new RunSpindexerPercentage(bindingParams.spindexer, SpindexerConstants.kSpindexerPercentage),
                     new RunFeederAntiClog(bindingParams.feeder, bindingParams.spindexer),
-                    new AgitateIntake(bindingParams.intake, bindingParams.intakeStateManager),
-                    new RepeatCommand(
-                        Commands.sequence(
-                            Commands.waitSeconds(1.5),
-                            new DeepAgitateIntake(bindingParams.intake, bindingParams.intakeStateManager)
-                        )
-                    )
+                    new AgitateIntake(bindingParams.intake, bindingParams.intakeStateManager)
+                    
                 )
             )
         );
+        
+        NamedCommands.registerCommand(
+            "Agitate",
+            new AgitateIntake(bindingParams.intake, bindingParams.intakeStateManager)
+        );
+
+        
 
         NamedCommands.registerCommand("Raise Climber",
             new RaiseClimberToHeight(

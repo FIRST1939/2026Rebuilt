@@ -52,7 +52,7 @@
         "y": 5.839942938659058
       },
       "prevControl": {
-        "x": 2.044020143325669,
+        "x": 2.0440201433256693,
         "y": 6.779635559444966
       },
       "nextControl": null,
@@ -110,7 +110,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 152.0
+    "rotation": 150.0
   },
   "reversed": false,
   "folder": "To Zone Under Trench",

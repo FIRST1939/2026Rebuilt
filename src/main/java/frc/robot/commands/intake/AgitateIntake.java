@@ -21,6 +21,7 @@ public class AgitateIntake extends Command {
     public void initialize () {
 
         m_intakeStateManager.setGoalState(State.AGITATING);
+        System.out.println("Working");
     }
 
     @Override

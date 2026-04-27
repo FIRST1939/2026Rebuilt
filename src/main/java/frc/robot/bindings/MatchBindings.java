@@ -109,11 +109,11 @@ public class MatchBindings {
         );
 
         modeTrigger.and(bindingParams.driverController.x()).onTrue(Commands.runOnce(bindingParams.drive::stopWithX, bindingParams.drive));
-       // modeTrigger.and(bindingParams.driverController.povUp()).toggleOnTrue(new RaiseClimberToHeight(bindingParams.climber, ClimberConstants.kRaisingClimberSetpoint, ClimberConstants.kRaisingClimberPercentage));
-       // modeTrigger.and(bindingParams.driverController.povDown()).toggleOnTrue(new LowerClimberToHeight(bindingParams.climber, ClimberConstants.kLoweringClimberSetpoint, ClimberConstants.kLoweringClimberPercentage));
+        modeTrigger.and(bindingParams.driverController.povUp()).toggleOnTrue(new RaiseClimberToHeight(bindingParams.climber, ClimberConstants.kRaisingClimberSetpoint, ClimberConstants.kRaisingClimberPercentage));
+        modeTrigger.and(bindingParams.driverController.povDown()).toggleOnTrue(new LowerClimberToHeight(bindingParams.climber, ClimberConstants.kLoweringClimberSetpoint, ClimberConstants.kLoweringClimberPercentage));
 
-        //modeTrigger.and(bindingParams.operatorController.povUp()).toggleOnTrue(new RaiseClimberToHeight(bindingParams.climber, ClimberConstants.kRaisingClimberSetpoint, ClimberConstants.kRaisingClimberPercentage));
-        //modeTrigger.and(bindingParams.operatorController.povDown()).toggleOnTrue(new LowerClimberToHeight(bindingParams.climber, ClimberConstants.kLoweringClimberSetpoint, ClimberConstants.kLoweringClimberPercentage));
+        modeTrigger.and(bindingParams.operatorController.povUp()).toggleOnTrue(new RaiseClimberToHeight(bindingParams.climber, ClimberConstants.kRaisingClimberSetpoint, ClimberConstants.kRaisingClimberPercentage));
+        modeTrigger.and(bindingParams.operatorController.povDown()).toggleOnTrue(new LowerClimberToHeight(bindingParams.climber, ClimberConstants.kLoweringClimberSetpoint, ClimberConstants.kLoweringClimberPercentage));
         modeTrigger.and(bindingParams.operatorController.povLeft()).toggleOnTrue(new ZeroHood(bindingParams.shooter));
 
         modeTrigger.and(bindingParams.operatorController.rightTrigger()).whileTrue(
@@ -175,24 +175,24 @@ public class MatchBindings {
             )
         );
 
-        modeTrigger.and(bindingParams.operatorController.povUp()).whileTrue(
-            Commands.parallel(
-                new RunFlywheelAndHood(bindingParams.shooter,
-                    () -> ShooterConstants.kCornerFlywheelVelocity,
-                    () -> ShooterConstants.kCornerHoodPosition
-                ),
-                Commands.sequence(
-                    Commands.waitUntil(() -> bindingParams.shooter.isAtGoal()),
-                    new RepeatCommand(
-                        Commands.parallel(
-                            new RunSpindexerPercentage(bindingParams.spindexer, SpindexerConstants.kSpindexerPercentage),
-                            new RunFeederAntiClog(bindingParams.feeder, bindingParams.spindexer),
-                            new AgitateIntake(bindingParams.intake, bindingParams.intakeStateManager)
-                        )
-                    )
-                )
-            )
-        );
+        // modeTrigger.and(bindingParams.operatorController.povUp()).whileTrue(
+        //     Commands.parallel(
+        //         new RunFlywheelAndHood(bindingParams.shooter,
+        //             () -> ShooterConstants.kCornerFlywheelVelocity,
+        //             () -> ShooterConstants.kCornerHoodPosition
+        //         ),
+        //         Commands.sequence(
+        //             Commands.waitUntil(() -> bindingParams.shooter.isAtGoal()),
+        //             new RepeatCommand(
+        //                 Commands.parallel(
+        //                     new RunSpindexerPercentage(bindingParams.spindexer, SpindexerConstants.kSpindexerPercentage),
+        //                     new RunFeederAntiClog(bindingParams.feeder, bindingParams.spindexer),
+        //                     new AgitateIntake(bindingParams.intake, bindingParams.intakeStateManager)
+        //                 )
+        //             )
+        //         )
+        //     )
+        // );
 
         modeTrigger.and(bindingParams.operatorController.leftTrigger()).onFalse(new ZeroHood(bindingParams.shooter));
 

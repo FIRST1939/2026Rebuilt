@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 8.25,
-        "y": 6.546
+        "x": 8.25706134094151,
+        "y": 6.629201141226819
       },
       "prevControl": null,
       "nextControl": {
-        "x": 8.25,
-        "y": 5.546
+        "x": 8.25706134094151,
+        "y": 5.629201141226819
       },
       "isLocked": false,
       "linkedName": "DCenterline"
@@ -103,7 +103,7 @@
   "folder": "Intake Neutral",
   "idealStartingState": {
     "velocity": 0.75,
-    "rotation": -90.0
+    "rotation": -119.99999999999999
   },
   "useDefaultConstraints": false
 }

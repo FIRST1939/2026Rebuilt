@@ -3,38 +3,45 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 8.25706134094151,
-        "y": 6.629201141226819
+        "x": 0.44,
+        "y": 6.875035663338089
       },
       "prevControl": null,
       "nextControl": {
-        "x": 8.25706134094151,
-        "y": 5.629201141226819
+        "x": 1.930057061340941,
+        "y": 7.302011412268189
       },
       "isLocked": false,
-      "linkedName": "DCenterline"
+      "linkedName": "Depot Top"
     },
     {
       "anchor": {
-        "x": 8.25,
-        "y": 4.82
+        "x": 1.702,
+        "y": 5.839942938659058
       },
       "prevControl": {
-        "x": 8.25,
-        "y": 5.82
+        "x": 1.904179743223965,
+        "y": 6.732710413694722
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "DCenterline End"
+      "linkedName": "Depot Shot"
     }
   ],
   "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "Stop Intake",
+      "waypointRelativePos": 0,
+      "endWaypointRelativePos": null,
+      "command": null
+    }
+  ],
   "globalConstraints": {
-    "maxVelocity": 1.5,
-    "maxAcceleration": 3.0,
+    "maxVelocity": 1.25,
+    "maxAcceleration": 8.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
@@ -42,13 +49,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -90.0
+    "rotation": 150.0
   },
   "reversed": false,
-  "folder": "Intake Neutral",
+  "folder": null,
   "idealStartingState": {
-    "velocity": 0.75,
-    "rotation": -119.99999999999999
+    "velocity": 1.5,
+    "rotation": 90.0
   },
   "useDefaultConstraints": false
 }
