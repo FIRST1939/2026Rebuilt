@@ -3,39 +3,35 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.5732667617689007,
-        "y": 0.6515406562054205
+        "x": 3.5383012048192777,
+        "y": 0.5818433734939765
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.573266761768901,
-        "y": 0.6515406562054205
+        "x": 5.538301204819278,
+        "y": 0.5818433734939765
       },
       "isLocked": false,
-      "linkedName": "OTrench"
+      "linkedName": null
     },
     {
       "anchor": {
-        "x": 8.25,
-        "y": 1.5302
+        "x": 6.089218465702329,
+        "y": 1.5482
       },
       "prevControl": {
-        "x": 8.231184022824536,
-        "y": 0.7421112696148362
+        "x": 6.070402488526865,
+        "y": 0.7601112696148362
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "OCenterline"
+      "linkedName": "ONeutral Pass 2B"
     }
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.06007604562737647,
-      "rotationDegrees": 180.0
-    },
-    {
-      "waypointRelativePos": 0.5,
-      "rotationDegrees": 170.0
+      "waypointRelativePos": 0.4250950570342202,
+      "rotationDegrees": 90.0
     }
   ],
   "constraintZones": [
@@ -57,7 +53,7 @@
   "eventMarkers": [
     {
       "name": "Start Intake",
-      "waypointRelativePos": 0.21994650900900903,
+      "waypointRelativePos": 0.5718120805369067,
       "endWaypointRelativePos": null,
       "command": null
     }
@@ -72,13 +68,13 @@
   },
   "goalEndState": {
     "velocity": 0.75,
-    "rotation": 119.99999999999999
+    "rotation": 90.0
   },
   "reversed": false,
   "folder": "Starting",
   "idealStartingState": {
     "velocity": 0.0,
-    "rotation": -100.0
+    "rotation": 90.0
   },
   "useDefaultConstraints": false
 }

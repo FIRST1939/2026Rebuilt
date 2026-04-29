@@ -3,28 +3,28 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 8.25,
-        "y": 3.2562
+        "x": 5.888,
+        "y": 3.390265060240964
       },
       "prevControl": null,
       "nextControl": {
-        "x": 8.25,
-        "y": 2.2562000000000006
+        "x": 5.888,
+        "y": 2.3902650602409645
       },
       "isLocked": false,
-      "linkedName": "OCenterline End"
+      "linkedName": "Delayed OCenterline End"
     },
     {
       "anchor": {
-        "x": 8.25,
+        "x": 5.888,
         "y": 1.3582
       },
       "prevControl": {
-        "x": 8.25,
+        "x": 5.888,
         "y": 2.3582
       },
       "nextControl": {
-        "x": 8.25,
+        "x": 5.888,
         "y": 0.8582000000000001
       },
       "isLocked": false,
@@ -36,12 +36,12 @@
         "y": 0.6562
       },
       "prevControl": {
-        "x": 7.046096385542168,
-        "y": 0.6146265060240967
+        "x": 7.242795180722891,
+        "y": 0.669265060240964
       },
       "nextControl": {
-        "x": 3.123445212773196,
-        "y": 0.6900947022206358
+        "x": 3.1231462482448658,
+        "y": 0.6464351635903959
       },
       "isLocked": false,
       "linkedName": null
